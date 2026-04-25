@@ -157,9 +157,9 @@ function parseBetclicHtml(html) {
 
       // League from breadcrumb
       let league = '';
-      const leagueM = cardHtml.match(/breadcrumb_itemLabel[^>]*>([\s\S]*?)<\/span>/g);
-      if (leagueM && leagueM.length > 0) {
-        league = leagueM[leagueM.length - 1].replace(/<[^>]+>/g, '').replace(/•/g, '').trim();
+      const leagueMatches = [...cardHtml.matchAll(/<[^>]*breadcrumb_itemLabel[^>]*>([\s\S]*?)<\/span>/g)];
+      if (leagueMatches.length > 0) {
+        league = leagueMatches[leagueMatches.length - 1][1].replace(/<[^>]+>/g, '').replace(/•/g, '').trim();
       }
 
       results.push({
