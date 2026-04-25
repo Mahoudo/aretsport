@@ -266,35 +266,55 @@ async function getMatches() {
   };
 }
 
+// ─── Static file server ───────────────────────────────────────────────────────
+const fs = require('fs');
+const pathMod = require('path');
+const ROOT = __dirname;
+const MIME = {
+  '.html': 'text/html; charset=utf-8',
+  '.js':   'application/javascript',
+  '.css':  'text/css',
+  '.json': 'application/json',
+  '.png':  'image/png',
+  '.ico':  'image/x-icon',
+  '.svg':  'image/svg+xml',
+  '.webp': 'image/webp',
+  '.webmanifest': 'application/manifest+json',
+};
+
+function serveStatic(req, res) {
+  const urlPath = req.url.split('?')[0];
+  const filePath = pathMod.join(ROOT, urlPath === '/' ? 'index.html' : urlPath);
+  const ext = pathMod.extname(filePath);
+  fs.readFile(filePath, (err, data) => {
+    if (err) { res.writeHead(404); res.end('Not found'); return; }
+    res.writeHead(200, { 'Content-Type': MIME[ext] || 'text/plain' });
+    res.end(data);
+  });
+}
+
 // ─── HTTP Server ──────────────────────────────────────────────────────────────
 const server = http.createServer(async (req, res) => {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
 
-  const path = req.url.split('?')[0];
+  const urlPath = req.url.split('?')[0];
 
-  if (path === '/api/matches') {
+  if (urlPath === '/api/matches') {
     try {
       const data = await getMatches();
-      const body = JSON.stringify(data, null, 0);
-      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(body);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-cache' });
+      res.end(JSON.stringify(data));
     } catch (e) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: false, error: e.message, matches: [] }));
     }
-  } else if (path === '/health' || path === '/') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, service: 'AretSport API', version: '2.0' }));
   } else {
-    res.writeHead(404, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ error: 'Not found' }));
+    serveStatic(req, res);
   }
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`AretSport proxy running on port ${PORT}`);
+server.listen(PORT, () => {
+  console.log(`AretSport dev server → http://localhost:${PORT}  [static + API]`);
 });

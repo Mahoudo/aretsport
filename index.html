@@ -1282,13 +1282,24 @@ function betclicToApp(m, idx) {
   };
 }
 
+// Détection API : Capacitor/APK → Vercel, navigateur local → proxy local, sinon Vercel
+const API_BASE = (window.Capacitor || window.cordova)
+  ? 'https://aretsport.vercel.app'
+  : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? '' // relatif → proxy.py local
+    : 'https://aretsport.vercel.app';
+
 async function fetchBetclicMatches(silent) {
   const dot = document.getElementById('liveDot');
   const lbl = document.getElementById('liveLabel');
   if (dot) dot.classList.add('spin');
   if (lbl) lbl.textContent = '...';
   try {
-    const res = await fetch('/api/matches?t=' + Date.now());
+    // Essaie l'API locale, fallback sur Vercel si 404
+    let res = await fetch(API_BASE + '/api/matches?t=' + Date.now());
+    if (!res.ok && API_BASE === '') {
+      res = await fetch('https://aretsport.vercel.app/api/matches?t=' + Date.now());
+    }
     const data = await res.json();
     if (data.ok && data.matches && data.matches.length > 0) {
       const TOMORROW = offsetDate(TODAY, 1);
