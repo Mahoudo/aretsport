@@ -43,12 +43,20 @@ const ESPN_LEAGUES = [
 ];
 
 const ESPN_STATUS_MAP = {
-  'STATUS_SCHEDULED': 'upcoming',
-  'STATUS_IN_PROGRESS': 'live',
-  'STATUS_FINAL': 'finished',
-  'STATUS_POSTPONED': 'postponed',
-  'STATUS_CANCELED': 'canceled',
-  'STATUS_HALFTIME': 'live',
+  'STATUS_SCHEDULED':    'upcoming',
+  'STATUS_IN_PROGRESS':  'live',
+  'STATUS_FIRST_HALF':   'live',
+  'STATUS_SECOND_HALF':  'live',
+  'STATUS_HALFTIME':     'live',
+  'STATUS_EXTRA_TIME':   'live',
+  'STATUS_PENALTIES':    'live',
+  'STATUS_FINAL':        'finished',
+  'STATUS_FULL_TIME':    'finished',
+  'STATUS_FULL_PEN':     'finished',
+  'STATUS_ABANDONED':    'canceled',
+  'STATUS_POSTPONED':    'postponed',
+  'STATUS_CANCELED':     'canceled',
+  'STATUS_SUSPENDED':    'postponed',
 };
 
 async function fetchESPNLeague(league, dateStr) {
