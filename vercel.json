@@ -1,11 +1,12 @@
 {
   "version": 2,
   "builds": [
-    { "src": "api/matches.js", "use": "@vercel/node" }
+    { "src": "api/matches.js", "use": "@vercel/node" },
+    { "src": "index.html", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/api/matches", "dest": "/api/matches.js" },
-    { "src": "/health", "dest": "/api/matches.js" }
+    { "src": "/(.*)", "dest": "/index.html" }
   ],
   "headers": [
     {
