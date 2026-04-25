@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "sport-predictor",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8090"],
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["server.js"],
       "port": 8090
     }
   ]

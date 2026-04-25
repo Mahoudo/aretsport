@@ -470,7 +470,12 @@ def match_key(m):
 
 
 # ─── HTTP Handler ────────────────────────────────────────────────────────────
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 class Handler(SimpleHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, directory=PROJECT_DIR, **kwargs)
+
     def do_GET(self):
         if self.path == '/api/matches' or self.path.startswith('/api/matches?'):
             self.serve_matches()
