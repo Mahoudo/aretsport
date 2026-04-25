@@ -145,7 +145,7 @@
     .mc-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg3);border-bottom:1px solid var(--border);gap:6px}
     .mc-league{display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--muted)}
     .mc-time{font-size:0.72rem;color:var(--muted);white-space:nowrap}
-    .mc-time.live{color:var(--red);font-weight:700;animation:livePulse 1.5s infinite}
+    .mc-time.live{color:var(--red);font-weight:700;animation:livePulse 1.5s infinite;font-variant-numeric:tabular-nums;letter-spacing:0.01em}
     .risk-pill{padding:2px 8px;border-radius:10px;font-size:0.62rem;font-weight:700;text-transform:uppercase}
     .rp-low{background:rgba(34,197,94,0.15);color:var(--green)}
     .rp-medium{background:rgba(234,179,8,0.15);color:var(--yellow)}
@@ -1280,6 +1280,8 @@ function betclicToApp(m, idx) {
     status: m.status,
     score: m.score ? m.score.home + '-' + m.score.away : null,
     minute: m.minute,
+    _fetchedAt: m.status === 'live' ? Date.now() : null,
+    _minuteAtFetch: m.status === 'live' ? (m.minute || 0) : null,
     sources: srcs,
     betclicUrl: m.url,
     odds: o,  // raw odds {1, X, 2} pour Double Chance
@@ -1338,6 +1340,7 @@ async function fetchBetclicMatches(silent) {
   } catch(e) { /* fallback silently */ }
   finally {
     if (dot) dot.classList.remove('spin');
+    startChrono(); // démarre/relance le chrono live
   }
 }
 
@@ -1720,7 +1723,7 @@ function matchCardHTML(m) {
   const formA = m.away.form.map(f=>`<div class="fd ${f}">${f}</div>`).join('');
 
   let timeHTML = '';
-  if (isLive) timeHTML = `<span class="mc-time live">🔴 ${m.minute != null ? m.minute + "'" : 'LIVE'}</span>`;
+  if (isLive) timeHTML = `<span class="mc-time live" id="chrono-hdr-${m.id}">🔴 ${m.minute != null ? m.minute + "'" : 'LIVE'}</span>`;
   else if (isPast && m.score) timeHTML = `<span class="mc-time" style="font-weight:800;color:var(--text)">${m.score}</span>`;
   else timeHTML = `<span class="mc-time">🕐 ${m.time}</span>`;
 
@@ -1729,7 +1732,7 @@ function matchCardHTML(m) {
     centerContent = `<div class="mc-vs-text">FIN</div><div class="mc-score">${m.score}</div>`;
   } else if (isLive) {
     const [g1,g2] = m.score ? m.score.split('-') : ['?','?'];
-    centerContent = `<div class="mc-vs-text" style="color:var(--red);font-weight:700">${m.minute != null ? m.minute + "'" : '🔴'}</div><div class="mc-score">${g1||'?'}-${g2||'?'}</div>`;
+    centerContent = `<div class="mc-vs-text" style="color:var(--red);font-weight:700" id="chrono-ctr-${m.id}">${m.minute != null ? m.minute + "'" : '🔴'}</div><div class="mc-score">${g1||'?'}-${g2||'?'}</div>`;
   } else {
     centerContent = `<div class="mc-vs-text">VS</div><div style="font-size:1.1rem">⚔️</div>`;
   }
@@ -2887,6 +2890,44 @@ function toggleExtBet(mid, extKey, odd, e, label) {
   renderCoupon();
   buildSheetBets(m); // refresh bet buttons in sheet
   updateBtns();
+}
+
+// ═══════════════════════════════════════════
+// CHRONO LIVE — mise à jour en temps réel
+// ═══════════════════════════════════════════
+let chronoInterval = null;
+
+function getLiveMinute(m) {
+  if (!m._fetchedAt || m._minuteAtFetch == null) return m.minute;
+  const elapsedMs = Date.now() - m._fetchedAt;
+  const elapsedMin = Math.floor(elapsedMs / 60000);
+  return Math.min(90, m._minuteAtFetch + elapsedMin);
+}
+
+function getLiveSecond(m) {
+  if (!m._fetchedAt) return 0;
+  return Math.floor((Date.now() - m._fetchedAt) / 1000) % 60;
+}
+
+function startChrono() {
+  if (chronoInterval) clearInterval(chronoInterval);
+  chronoInterval = setInterval(() => {
+    const allMatches = Object.values(DB).flat();
+    const liveMatches = allMatches.filter(m => m.status === 'live' && m._fetchedAt);
+    if (liveMatches.length === 0) return;
+
+    liveMatches.forEach(m => {
+      const min = getLiveMinute(m);
+      const sec = getLiveSecond(m);
+      const secStr = String(sec).padStart(2, '0');
+      const label = `${min}'<span style="font-size:0.65em;opacity:0.7">:${secStr}</span>`;
+
+      const hdr = document.getElementById(`chrono-hdr-${m.id}`);
+      const ctr = document.getElementById(`chrono-ctr-${m.id}`);
+      if (hdr) hdr.innerHTML = `🔴 ${label}`;
+      if (ctr) ctr.innerHTML = label;
+    });
+  }, 1000);
 }
 
 function doRefresh() {
