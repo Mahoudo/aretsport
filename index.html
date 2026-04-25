@@ -1240,14 +1240,37 @@ function calcProb(odds1, oddsX, odds2) {
   return { h: Math.round(r1/tot*100), d: Math.round(rX/tot*100), a: Math.round(r2/tot*100) };
 }
 
+function estimateOdds(homeForm, awayForm) {
+  // Calcule des cotes estimées depuis la forme (W/D/L sur 5 matchs)
+  const hW = homeForm.filter(f=>f==='W').length;
+  const aW = awayForm.filter(f=>f==='W').length;
+  const hD = homeForm.filter(f=>f==='D').length;
+  const aD = awayForm.filter(f=>f==='D').length;
+  // Probabilités brutes + avantage domicile
+  const pH = Math.max(0.22, Math.min(0.68, (hW*2 + hD - aW) / 10 + 0.38));
+  const pA = Math.max(0.18, Math.min(0.60, (aW*2 + aD - hW) / 10 + 0.28));
+  const pD = Math.max(0.18, 1 - pH - pA);
+  const m = 1.07; // marge bookmaker
+  return {
+    '1': parseFloat((m / pH).toFixed(2)),
+    'X': parseFloat((m / pD).toFixed(2)),
+    '2': parseFloat((m / pA).toFixed(2)),
+  };
+}
+
 function betclicToApp(m, idx) {
-  const o = m.odds;
-  const prob = calcProb(o['1'], o['X'], o['2']);
-  const minOdd = Math.min(o['1']||99, o['2']||99);
-  const risk = minOdd < 1.5 ? 'low' : minOdd < 2.5 ? 'medium' : 'high';
   const seed = m.id.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
   const homeForm = genForm(seed);
   const awayForm = genForm(seed + 7);
+
+  // Utilise les vraies cotes si disponibles, sinon estime depuis la forme
+  const hasRealOdds = m.odds['1'] || m.odds['X'] || m.odds['2'];
+  const o = hasRealOdds ? m.odds : estimateOdds(homeForm, awayForm);
+  const isEstimated = !hasRealOdds;
+
+  const prob = calcProb(o['1'], o['X'], o['2']);
+  const minOdd = Math.min(o['1']||99, o['2']||99);
+  const risk = minOdd < 1.5 ? 'low' : minOdd < 2.5 ? 'medium' : 'high';
   const rec = minOdd < 1.8 && prob.h > 50;
 
   const bets = [
@@ -1262,10 +1285,9 @@ function betclicToApp(m, idx) {
 
   const srcs = (m.sources || [m.source || 'betclic']);
   const srcLabel = srcs.join(' + ');
-  const hasOdds = o['1'] || o['X'] || o['2'];
-  const oddsStr = hasOdds
-    ? `Cotes: 1×${o['1']||'?'} / X×${o['X']||'?'} / 2×${o['2']||'?'}. Probabilité: ${prob.h}% / ${prob.d}% / ${prob.a}%.`
-    : `Aucune cote disponible pour ce match.`;
+  const oddsStr = isEstimated
+    ? `Cotes estimées (IA): 1×${o['1']} / X×${o['X']} / 2×${o['2']}. Probabilité: ${prob.h}% / ${prob.d}% / ${prob.a}%.`
+    : `Cotes: 1×${o['1']||'?'} / X×${o['X']||'?'} / 2×${o['2']||'?'}. Probabilité: ${prob.h}% / ${prob.d}% / ${prob.a}%.`;
 
   return {
     id: m.id + '_btc',
@@ -1276,6 +1298,7 @@ function betclicToApp(m, idx) {
     home: { name: m.home, emoji: teamEmoji(m.home), form: homeForm },
     away: { name: m.away, emoji: teamEmoji(m.away), form: awayForm },
     prob, risk, rec, bets,
+    isEstimated,
     analysis: `[${srcLabel}] ${oddsStr}`,
     status: m.status,
     score: m.score ? m.score.home + '-' + m.score.away : null,
@@ -1286,7 +1309,7 @@ function betclicToApp(m, idx) {
     _stoppageAtFetch: m.status === 'live' ? (m.stoppage || null) : null,
     sources: srcs,
     betclicUrl: m.url,
-    odds: o,  // raw odds {1, X, 2} pour Double Chance
+    odds: o,
   };
 }
 
@@ -2345,7 +2368,7 @@ function renderAI(matches) {
         <div style="height:100%;width:${conf}%;background:${barColor};border-radius:2px;transition:width 0.6s"></div>
       </div>
       <div class="ai-pick-bottom">
-        <span class="ai-pick-odd">×${b.o.toFixed(2)}</span>
+        <span class="ai-pick-odd">×${b.o.toFixed(2)}${m.isEstimated ? '<span style="font-size:0.65em;opacity:0.6" title="Cote estimée par IA"> ~</span>' : ''}</span>
         <span style="font-size:0.72rem;color:var(--muted)">${m.time ? '🕐 ' + m.time : ''}</span>
         <span class="ai-risk-pill rp-${m.risk}">${riskLabel(m.risk)}</span>
       </div>
