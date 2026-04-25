@@ -1,1 +1,1 @@
-web: python proxy.py
+web: node server.js
