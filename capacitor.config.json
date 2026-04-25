@@ -6,7 +6,7 @@
     "androidScheme": "https",
     "cleartext": true,
     "allowNavigation": [
-      "web-production-4b4d2.up.railway.app",
+      "aretsport.vercel.app",
       "*.betclic.ci",
       "*.sofascore.com"
     ]
