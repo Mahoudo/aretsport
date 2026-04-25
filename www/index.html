@@ -1305,6 +1305,7 @@ async function fetchBetclicMatches(silent) {
       const TOMORROW = offsetDate(TODAY, 1);
       const byDate = {};
       data.matches.forEach((m, i) => {
+        if (m.status === 'finished' || m.status === 'canceled' || m.status === 'postponed') return;
         const key = m.date || TODAY;
         if (key === TODAY || key === TOMORROW) {
           if (!byDate[key]) byDate[key] = [];
