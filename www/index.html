@@ -320,6 +320,37 @@
     .settings-sub{font-size:0.72rem;color:var(--muted);margin-top:2px}
     .settings-arrow{color:var(--muted);font-size:0.9rem}
 
+    /* AUTH */
+    .auth-wrap{display:flex;flex-direction:column;align-items:center;padding:24px 20px 32px}
+    .auth-logo{width:72px;height:72px;border-radius:22px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:14px;box-shadow:0 8px 24px rgba(79,110,247,0.35)}
+    .auth-title{font-size:1.4rem;font-weight:800;color:var(--text);margin-bottom:4px}
+    .auth-sub{font-size:0.82rem;color:var(--muted);margin-bottom:28px;text-align:center}
+    .auth-tabs{display:flex;background:var(--bg3);border-radius:12px;padding:4px;margin-bottom:24px;width:100%;max-width:320px}
+    .auth-tab{flex:1;padding:9px;border:none;background:transparent;color:var(--muted);font-size:0.85rem;font-weight:600;border-radius:9px;cursor:pointer;transition:all 0.2s}
+    .auth-tab.active{background:var(--accent);color:white;box-shadow:0 2px 8px rgba(79,110,247,0.4)}
+    .auth-form{width:100%;max-width:320px;display:flex;flex-direction:column;gap:14px}
+    .auth-form.hidden{display:none}
+    .auth-field{display:flex;flex-direction:column;gap:6px}
+    .auth-label{font-size:0.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em}
+    .auth-input{background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:13px 16px;color:var(--text);font-size:0.92rem;outline:none;transition:border-color 0.2s;width:100%}
+    .auth-input:focus{border-color:var(--accent)}
+    .auth-input::placeholder{color:var(--muted)}
+    .auth-btn{padding:15px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;font-weight:700;font-size:0.95rem;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;box-shadow:0 4px 16px rgba(79,110,247,0.35);margin-top:4px}
+    .auth-btn:active{transform:scale(0.97)}
+    .auth-err{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:10px 14px;color:var(--red);font-size:0.82rem;display:none}
+    .auth-err.show{display:block}
+    .auth-sep{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:0.78rem;margin:4px 0}
+    .auth-sep::before,.auth-sep::after{content:'';flex:1;height:1px;background:var(--border)}
+    .auth-google{display:flex;align-items:center;justify-content:center;gap:10px;padding:13px;border:1.5px solid var(--border);border-radius:14px;background:transparent;color:var(--text);font-size:0.88rem;font-weight:600;cursor:pointer;transition:background 0.2s;width:100%}
+    .auth-google:active{background:var(--bg3)}
+
+    /* PROFILE LOGGED IN */
+    .profile-actions{display:flex;gap:10px;margin:0 16px 16px}
+    .profile-action-btn{flex:1;padding:12px;border:1.5px solid var(--border);border-radius:12px;background:transparent;color:var(--text);font-size:0.82rem;font-weight:600;cursor:pointer;transition:background 0.2s;display:flex;align-items:center;justify-content:center;gap:6px}
+    .profile-action-btn:active{background:var(--bg3)}
+    .profile-action-btn.danger{border-color:rgba(239,68,68,0.4);color:var(--red)}
+    .profile-action-btn.danger:active{background:rgba(239,68,68,0.08)}
+
     /* GLOBAL SEARCH OVERLAY */
     #globalSearch{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0);backdrop-filter:blur(0px);pointer-events:none;transition:background 0.25s,backdrop-filter 0.25s;display:flex;flex-direction:column}
     #globalSearch.open{background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);pointer-events:all}
@@ -654,28 +685,91 @@
 
   <!-- PROFIL -->
   <div class="page" id="page-profil">
-    <div class="profile-hero">
-      <div class="avatar">👤</div>
-      <div>
-        <div class="profile-name">Mon Profil</div>
-        <div class="profile-level">🏅 Analyste Confirmé</div>
-        <div class="profile-xp">1240 / 2000 XP</div>
-        <div class="xp-bar"><div class="xp-fill"></div></div>
+
+    <!-- VUE NON CONNECTÉ -->
+    <div id="authView">
+      <div class="auth-wrap">
+        <div class="auth-logo">⚽</div>
+        <div class="auth-title">AretSport</div>
+        <div class="auth-sub">Connecte-toi pour sauvegarder<br>tes coupons et statistiques</div>
+
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Connexion</button>
+          <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Inscription</button>
+        </div>
+
+        <!-- FORMULAIRE CONNEXION -->
+        <form class="auth-form" id="formLogin" onsubmit="doLogin(event)">
+          <div id="loginErr" class="auth-err"></div>
+          <div class="auth-field">
+            <label class="auth-label">Email</label>
+            <input class="auth-input" id="loginEmail" type="email" placeholder="exemple@email.com" autocomplete="email" required/>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label">Mot de passe</label>
+            <input class="auth-input" id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password" required/>
+          </div>
+          <button class="auth-btn" type="submit">Se connecter</button>
+          <div class="auth-sep">ou</div>
+          <button type="button" class="auth-google" onclick="showToast('🔗','Google Sign-In bientôt disponible')">
+            <span>🌐</span> Continuer avec Google
+          </button>
+        </form>
+
+        <!-- FORMULAIRE INSCRIPTION -->
+        <form class="auth-form hidden" id="formRegister" onsubmit="doRegister(event)">
+          <div id="registerErr" class="auth-err"></div>
+          <div class="auth-field">
+            <label class="auth-label">Pseudo</label>
+            <input class="auth-input" id="regName" type="text" placeholder="Ton pseudo" autocomplete="username" required minlength="3"/>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label">Email</label>
+            <input class="auth-input" id="regEmail" type="email" placeholder="exemple@email.com" autocomplete="email" required/>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label">Mot de passe</label>
+            <input class="auth-input" id="regPass" type="password" placeholder="Min. 6 caractères" autocomplete="new-password" required minlength="6"/>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label">Confirmer</label>
+            <input class="auth-input" id="regPass2" type="password" placeholder="Répète le mot de passe" autocomplete="new-password" required minlength="6"/>
+          </div>
+          <button class="auth-btn" type="submit">Créer mon compte</button>
+        </form>
       </div>
     </div>
-    <div class="perf-grid">
-      <div class="perf-card"><div class="perf-val" style="color:var(--green)">23</div><div class="perf-lbl">Paris gagnés</div></div>
-      <div class="perf-card"><div class="perf-val" style="color:var(--red)">9</div><div class="perf-lbl">Paris perdus</div></div>
-      <div class="perf-card"><div class="perf-val" style="color:var(--yellow)">71%</div><div class="perf-lbl">Réussite</div></div>
+
+    <!-- VUE CONNECTÉ -->
+    <div id="profileView" style="display:none">
+      <div class="profile-hero">
+        <div class="avatar" id="profileAvatar">👤</div>
+        <div>
+          <div class="profile-name" id="profileName">Utilisateur</div>
+          <div class="profile-level">🏅 Analyste Confirmé</div>
+          <div class="profile-xp">1240 / 2000 XP</div>
+          <div class="xp-bar"><div class="xp-fill"></div></div>
+        </div>
+      </div>
+      <div class="perf-grid">
+        <div class="perf-card"><div class="perf-val" style="color:var(--green)">23</div><div class="perf-lbl">Paris gagnés</div></div>
+        <div class="perf-card"><div class="perf-val" style="color:var(--red)">9</div><div class="perf-lbl">Paris perdus</div></div>
+        <div class="perf-card"><div class="perf-val" style="color:var(--yellow)">71%</div><div class="perf-lbl">Réussite</div></div>
+      </div>
+      <div class="profile-actions">
+        <button class="profile-action-btn" onclick="showToast('✏️','Modifier le profil bientôt disponible')">✏️ Modifier</button>
+        <button class="profile-action-btn danger" onclick="doLogout()">🚪 Déconnexion</button>
+      </div>
+      <div class="sec-head"><div class="sec-title">⚙️ Paramètres</div></div>
+      <div class="settings-list">
+        <div class="settings-item" onclick="showToast('🔔','Notifications configurées')"><div class="settings-icon">🔔</div><div><div class="settings-label">Notifications</div><div class="settings-sub">Matchs live, résultats</div></div><span class="settings-arrow">›</span></div>
+        <div class="settings-item" onclick="showToast('🌙','Thème sombre activé')"><div class="settings-icon">🌙</div><div><div class="settings-label">Thème</div><div class="settings-sub">Sombre</div></div><span class="settings-arrow">›</span></div>
+        <div class="settings-item" onclick="showToast('🌐','Langue: Français')"><div class="settings-icon">🌐</div><div><div class="settings-label">Langue</div><div class="settings-sub">Français</div></div><span class="settings-arrow">›</span></div>
+        <div class="settings-item" onclick="showToast('🛡️','Jeu responsable')"><div class="settings-icon">🛡️</div><div><div class="settings-label">Jeu responsable</div><div class="settings-sub">Limites et plafonds</div></div><span class="settings-arrow">›</span></div>
+        <div class="settings-item" onclick="showToast('ℹ️','Version 2.5.0')"><div class="settings-icon">ℹ️</div><div><div class="settings-label">À propos</div><div class="settings-sub">Version 2.5.0</div></div><span class="settings-arrow">›</span></div>
+      </div>
     </div>
-    <div class="sec-head"><div class="sec-title">⚙️ Paramètres</div></div>
-    <div class="settings-list">
-      <div class="settings-item" onclick="showToast('🔔','Notifications configurées')"><div class="settings-icon">🔔</div><div><div class="settings-label">Notifications</div><div class="settings-sub">Matchs live, résultats</div></div><span class="settings-arrow">›</span></div>
-      <div class="settings-item" onclick="showToast('🌙','Thème sombre activé')"><div class="settings-icon">🌙</div><div><div class="settings-label">Thème</div><div class="settings-sub">Sombre</div></div><span class="settings-arrow">›</span></div>
-      <div class="settings-item" onclick="showToast('🌐','Langue: Français')"><div class="settings-icon">🌐</div><div><div class="settings-label">Langue</div><div class="settings-sub">Français</div></div><span class="settings-arrow">›</span></div>
-      <div class="settings-item" onclick="showToast('🛡️','Jeu responsable')"><div class="settings-icon">🛡️</div><div><div class="settings-label">Jeu responsable</div><div class="settings-sub">Limites et plafonds</div></div><span class="settings-arrow">›</span></div>
-      <div class="settings-item" onclick="showToast('ℹ️','Version 2.5.0')"><div class="settings-icon">ℹ️</div><div><div class="settings-label">À propos</div><div class="settings-sub">Version 2.5.0</div></div><span class="settings-arrow">›</span></div>
-    </div>
+
   </div>
 
 </div><!-- /pages -->
@@ -1188,20 +1282,13 @@ function betclicToApp(m, idx) {
   };
 }
 
-// Détection automatique : APK Capacitor → API cloud, navigateur → localhost
-const API_BASE = (window.Capacitor || window.cordova)
-  ? 'https://aretsport.vercel.app'
-  : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-      ? 'http://localhost:8090'
-      : '');  // même domaine si hébergé sur serveur
-
 async function fetchBetclicMatches(silent) {
   const dot = document.getElementById('liveDot');
   const lbl = document.getElementById('liveLabel');
   if (dot) dot.classList.add('spin');
   if (lbl) lbl.textContent = '...';
   try {
-    const res = await fetch(API_BASE + '/api/matches?t=' + Date.now());
+    const res = await fetch('/api/matches?t=' + Date.now());
     const data = await res.json();
     if (data.ok && data.matches && data.matches.length > 0) {
       const TOMORROW = offsetDate(TODAY, 1);
@@ -2794,6 +2881,110 @@ function showToast(icon,msg){
   clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
 }
+
+// ═══════════════════════════════════════════
+// AUTHENTIFICATION (localStorage)
+// ═══════════════════════════════════════════
+const AUTH_KEY = 'aretsport_user';
+
+function getUser() {
+  try { return JSON.parse(localStorage.getItem(AUTH_KEY)); } catch { return null; }
+}
+
+function saveUser(u) {
+  localStorage.setItem(AUTH_KEY, JSON.stringify(u));
+}
+
+function renderAuthPage() {
+  const user = getUser();
+  const authView = document.getElementById('authView');
+  const profileView = document.getElementById('profileView');
+  if (user) {
+    authView.style.display = 'none';
+    profileView.style.display = 'block';
+    const initials = user.name ? user.name.slice(0,2).toUpperCase() : '👤';
+    const avatar = document.getElementById('profileAvatar');
+    const nameEl = document.getElementById('profileName');
+    if (avatar) avatar.textContent = initials;
+    if (nameEl) nameEl.textContent = user.name || user.email;
+  } else {
+    authView.style.display = 'block';
+    profileView.style.display = 'none';
+  }
+}
+
+function switchAuthTab(tab) {
+  const isLogin = tab === 'login';
+  document.getElementById('tabLogin').classList.toggle('active', isLogin);
+  document.getElementById('tabRegister').classList.toggle('active', !isLogin);
+  document.getElementById('formLogin').classList.toggle('hidden', !isLogin);
+  document.getElementById('formRegister').classList.toggle('hidden', isLogin);
+  document.getElementById('loginErr').classList.remove('show');
+  document.getElementById('registerErr').classList.remove('show');
+}
+
+function doLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginErr');
+
+  // Récupère les comptes enregistrés
+  const accounts = JSON.parse(localStorage.getItem('aretsport_accounts') || '[]');
+  const account = accounts.find(a => a.email === email);
+
+  if (!account) {
+    errEl.textContent = '❌ Aucun compte trouvé avec cet email.';
+    errEl.classList.add('show'); return;
+  }
+  if (account.pass !== btoa(pass)) {
+    errEl.textContent = '❌ Mot de passe incorrect.';
+    errEl.classList.add('show'); return;
+  }
+
+  saveUser({ email: account.email, name: account.name });
+  errEl.classList.remove('show');
+  renderAuthPage();
+  showToast('✅', `Bienvenue ${account.name} !`);
+}
+
+function doRegister(e) {
+  e.preventDefault();
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const pass2 = document.getElementById('regPass2').value;
+  const errEl = document.getElementById('registerErr');
+
+  if (pass !== pass2) {
+    errEl.textContent = '❌ Les mots de passe ne correspondent pas.';
+    errEl.classList.add('show'); return;
+  }
+
+  const accounts = JSON.parse(localStorage.getItem('aretsport_accounts') || '[]');
+  if (accounts.find(a => a.email === email)) {
+    errEl.textContent = '❌ Cet email est déjà utilisé.';
+    errEl.classList.add('show'); return;
+  }
+
+  accounts.push({ email, name, pass: btoa(pass) });
+  localStorage.setItem('aretsport_accounts', JSON.stringify(accounts));
+  saveUser({ email, name });
+  errEl.classList.remove('show');
+  renderAuthPage();
+  showToast('🎉', `Compte créé ! Bienvenue ${name} !`);
+}
+
+function doLogout() {
+  localStorage.removeItem(AUTH_KEY);
+  renderAuthPage();
+  showToast('👋', 'Déconnecté avec succès');
+}
+
+// Init auth au chargement
+document.addEventListener('DOMContentLoaded', () => {
+  renderAuthPage();
+});
 </script>
 </body>
 </html>
