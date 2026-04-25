@@ -1280,8 +1280,10 @@ function betclicToApp(m, idx) {
     status: m.status,
     score: m.score ? m.score.home + '-' + m.score.away : null,
     minute: m.minute,
+    stoppage: m.stoppage || null,
     _fetchedAt: m.status === 'live' ? Date.now() : null,
-    _minuteAtFetch: m.status === 'live' ? (m.minute || 0) : null,
+    _minuteAtFetch: m.status === 'live' ? (m.minute != null ? m.minute : 0) : null,
+    _stoppageAtFetch: m.status === 'live' ? (m.stoppage || null) : null,
     sources: srcs,
     betclicUrl: m.url,
     odds: o,  // raw odds {1, X, 2} pour Double Chance
@@ -2898,15 +2900,34 @@ function toggleExtBet(mid, extKey, odd, e, label) {
 let chronoInterval = null;
 
 function getLiveMinute(m) {
-  if (!m._fetchedAt || m._minuteAtFetch == null) return m.minute;
+  if (!m._fetchedAt || m._minuteAtFetch == null) return m.minute != null ? m.minute : 0;
   const elapsedMs = Date.now() - m._fetchedAt;
   const elapsedMin = Math.floor(elapsedMs / 60000);
-  return Math.min(90, m._minuteAtFetch + elapsedMin);
+  const base = m._minuteAtFetch + elapsedMin;
+  // Cap à 45 pour la première mi-temps, 90 pour la seconde
+  if (m._minuteAtFetch < 45) return Math.min(45, base);
+  return Math.min(90, base);
 }
 
 function getLiveSecond(m) {
   if (!m._fetchedAt) return 0;
   return Math.floor((Date.now() - m._fetchedAt) / 1000) % 60;
+}
+
+function getLiveLabel(m) {
+  const min = getLiveMinute(m);
+  const sec = getLiveSecond(m);
+  const secStr = String(sec).padStart(2, '0');
+  // Arrêts de jeu : si on est à 45 ou 90 et qu'il y avait du stoppage
+  const isStop45 = min >= 45 && m._minuteAtFetch < 46 && m._stoppageAtFetch;
+  const isStop90 = min >= 90;
+  if (isStop45 || isStop90) {
+    const base = isStop90 ? 90 : 45;
+    const extra = Math.floor((Date.now() - m._fetchedAt) / 60000) - (m._minuteAtFetch - base < 0 ? 0 : m._minuteAtFetch - base);
+    const stop = Math.max(1, (m._stoppageAtFetch || 0) + Math.floor(extra));
+    return `${base}<span style="font-size:0.75em">+${stop}'</span><span style="font-size:0.6em;opacity:0.7">:${secStr}</span>`;
+  }
+  return `${min}'<span style="font-size:0.65em;opacity:0.7">:${secStr}</span>`;
 }
 
 function startChrono() {
@@ -2917,11 +2938,7 @@ function startChrono() {
     if (liveMatches.length === 0) return;
 
     liveMatches.forEach(m => {
-      const min = getLiveMinute(m);
-      const sec = getLiveSecond(m);
-      const secStr = String(sec).padStart(2, '0');
-      const label = `${min}'<span style="font-size:0.65em;opacity:0.7">:${secStr}</span>`;
-
+      const label = getLiveLabel(m);
       const hdr = document.getElementById(`chrono-hdr-${m.id}`);
       const ctr = document.getElementById(`chrono-ctr-${m.id}`);
       if (hdr) hdr.innerHTML = `🔴 ${label}`;

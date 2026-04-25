@@ -90,14 +90,21 @@ async function fetchESPNLeague(league, dateStr) {
         const mm = String(dateObj.getUTCMinutes()).padStart(2, '0');
         const timeStr = `${hh}:${mm}`;
 
-        let score = null, minute = null;
+        let score = null, minute = null, stoppage = null;
         if (matchStatus === 'live' || matchStatus === 'finished') {
           const hs = home.score, as_ = away.score;
           if (hs != null && as_ != null) score = { home: String(hs), away: String(as_) };
           if (matchStatus === 'live') {
             const clock = comp.status?.displayClock || '';
-            const m = clock.match(/(\d+)/);
-            if (m) minute = parseInt(m[1]);
+            // "45'+2'" → base=45, stop=2 | "67'" → base=67 | "HT" → 45
+            if (clock === 'HT') { minute = 45; }
+            else {
+              const parts = clock.match(/(\d+)(?:'\+(\d+)'?)?/);
+              if (parts) {
+                minute = parseInt(parts[1]);
+                if (parts[2]) stoppage = parseInt(parts[2]);
+              }
+            }
           }
         }
 
@@ -117,6 +124,7 @@ async function fetchESPNLeague(league, dateStr) {
           time: timeStr,
           date: matchDate,
           minute,
+          stoppage,
           score,
           status: matchStatus,
           odds: { '1': odds1, X: oddsX, '2': odds2 },
@@ -188,7 +196,7 @@ function parseBetclicHtml(html) {
       if (oddMs[0]) odds['1'] = parseOdd(oddMs[0][1]);
       if (oddMs[1]) odds['X'] = parseOdd(oddMs[1][1]);
       if (oddMs[2]) odds['2'] = parseOdd(oddMs[2][1]);
-      const leagueMs = [...cardHtml.matchAll(/breadcrumb_itemLabel[^>]*>([\s\S]*?)<\/span>/g)];
+      const leagueMs = [...cardHtml.matchAll(/<[^>]*breadcrumb_itemLabel[^>]*>([\s\S]*?)<\/span>/g)];
       const league = leagueMs.length ? leagueMs[leagueMs.length - 1][1].replace(/<[^>]+>/g, '').replace(/•/g, '').trim() : '';
       results.push({ id: mid, source: 'betclic', league, home, away, time: timeStr, date: todayIso, minute: null, score, status: isLive ? 'live' : 'upcoming', odds, url: BETCLIC_BASE + href });
     } catch { continue; }
