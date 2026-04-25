@@ -6,7 +6,7 @@
     "androidScheme": "https",
     "cleartext": true,
     "allowNavigation": [
-      "aretsport-api.onrender.com",
+      "web-production-4b4d2.up.railway.app",
       "*.betclic.ci",
       "*.sofascore.com"
     ]

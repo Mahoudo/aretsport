@@ -1190,7 +1190,7 @@ function betclicToApp(m, idx) {
 
 // Détection automatique : APK Capacitor → API cloud, navigateur → localhost
 const API_BASE = (window.Capacitor || window.cordova)
-  ? 'https://aretsport-api.onrender.com'
+  ? 'https://web-production-4b4d2.up.railway.app'
   : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
       ? 'http://localhost:8090'
       : '');  // même domaine si hébergé sur serveur
