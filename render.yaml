@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: aretsport-api
+    env: python
+    plan: free
+    buildCommand: pip install requests beautifulsoup4 lxml
+    startCommand: python proxy.py
+    envVars:
+      - key: PORT
+        value: 10000

@@ -1,0 +1,28 @@
+{
+  "appId": "ci.aretsport.app",
+  "appName": "AretSport",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true,
+    "allowNavigation": [
+      "aretsport-api.onrender.com",
+      "*.betclic.ci",
+      "*.sofascore.com"
+    ]
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false,
+    "backgroundColor": "#0d0f1a"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#0d0f1a",
+      "androidSplashResourceName": "splash",
+      "showSpinner": false
+    }
+  }
+}

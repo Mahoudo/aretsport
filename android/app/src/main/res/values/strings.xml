@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AretSport</string>
+    <string name="title_activity_main">AretSport</string>
+    <string name="package_name">ci.aretsport.app</string>
+    <string name="custom_url_scheme">ci.aretsport.app</string>
+</resources>

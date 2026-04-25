@@ -32,7 +32,7 @@ def parse_date_from_time(time_str):
                 pass
     return None
 
-PORT = 8090
+PORT = int(os.environ.get('PORT', 8090))
 
 # ─── Betclic ────────────────────────────────────────────────────────────────
 BETCLIC_BASE = "https://www.betclic.ci"
