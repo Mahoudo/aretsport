@@ -637,6 +637,7 @@
   <div class="page" id="page-matches">
     <div class="filter-scroll" id="filterChips">
       <div class="fc active" onclick="filterM('all',this)">🌍 Tous</div>
+      <div class="fc" onclick="filterM('top7',this)">🏆 Top</div>
       <div class="fc" onclick="filterM('low',this)">🟢 Faible</div>
       <div class="fc" onclick="filterM('medium',this)">🟡 Moyen</div>
       <div class="fc" onclick="filterM('high',this)">🔴 Élevé</div>
@@ -1963,10 +1964,26 @@ function gsGoToMatch(date, mid) {
   }, 100);
 }
 
+// Mots-clés précis pour les 7 grands championnats
+// Matchent Betclic ("Angl. Premier League") ET ESPN ("English Premier League")
+function isTop7(m) {
+  const lg = (m.league || '').toLowerCase().replace(/\./g, '').trim();
+  return (
+    lg.includes('premier league') ||
+    lg.includes('bundesliga') ||
+    lg.includes('laliga') || lg.includes('la liga') ||
+    lg.includes('ligue 1') ||
+    (lg.includes('serie a') && (lg.includes('italian') || lg.includes('italie'))) ||
+    lg.includes('primeira liga') || lg.includes('liga betclic') ||
+    lg.includes('eredivisie')
+  );
+}
+
 function applyFilter(q) {
   if (q === undefined) q = document.getElementById('searchInput')?.value || '';
   let list = DB[selectedDate] || [];
-  if (currentFilterVal==='recommended') list = list.filter(m=>m.rec);
+  if (currentFilterVal==='top7')       list = list.filter(isTop7);
+  else if (currentFilterVal==='recommended') list = list.filter(m=>m.rec);
   else if (currentFilterVal !== 'all') list = list.filter(m=>m.risk===currentFilterVal);
   if (q) list = list.filter(m=>
     m.home.name.toLowerCase().includes(q.toLowerCase())||
