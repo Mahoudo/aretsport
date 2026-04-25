@@ -1,11 +1,14 @@
 /**
- * AretSport Proxy Server - Node.js version
- * Aggregates football matches from betclic.ci + Sofascore
+ * AretSport Dev Server — ESPN + Betclic
+ * Sert les fichiers statiques + /api/matches
  */
 
 const http = require('http');
 const https = require('https');
+const fs = require('fs');
+const pathMod = require('path');
 const PORT = parseInt(process.env.PORT || '8090');
+const ROOT = __dirname;
 
 // ─── HTTP Helper ──────────────────────────────────────────────────────────────
 function fetchUrl(url, headers = {}, timeout = 15000) {
@@ -22,73 +25,89 @@ function fetchUrl(url, headers = {}, timeout = 15000) {
 }
 
 // ─── Date helpers ─────────────────────────────────────────────────────────────
-function today() {
-  return new Date().toISOString().slice(0, 10);
-}
-function tomorrow() {
-  const d = new Date(); d.setDate(d.getDate() + 1);
-  return d.toISOString().slice(0, 10);
-}
-function tsToTimeAndDate(ts) {
-  const d = new Date(ts * 1000);
-  const hh = String(d.getUTCHours()).padStart(2, '0');
-  const mm = String(d.getUTCMinutes()).padStart(2, '0');
-  return {
-    time: `${hh}:${mm}`,
-    date: d.toISOString().slice(0, 10)
-  };
-}
+function today() { return new Date().toISOString().slice(0, 10); }
+function tomorrow() { const d = new Date(); d.setDate(d.getDate() + 1); return d.toISOString().slice(0, 10); }
+function toDateStr(d) { return d.toISOString().slice(0, 10); }
 
-// ─── Sofascore ────────────────────────────────────────────────────────────────
-const SOFA_HEADERS = {
-  'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36',
-  'Accept': 'application/json',
-  'Referer': 'https://www.sofascore.com/',
+// ─── ESPN API ─────────────────────────────────────────────────────────────────
+const ESPN_LEAGUES = [
+  'eng.1', 'esp.1', 'ger.1', 'fra.1', 'ita.1', 'por.1', 'ned.1', 'tur.1',
+  'bel.1', 'sco.1', 'usa.1', 'bra.1', 'arg.1', 'mex.1', 'afr.nations',
+  'conmebol.copa_libertadores', 'conmebol.copa_sudamericana',
+  'uefa.champions_league', 'uefa.europa', 'uefa.europa.conf_league',
+];
+
+const ESPN_STATUS_MAP = {
+  'STATUS_SCHEDULED': 'upcoming',
+  'STATUS_IN_PROGRESS': 'live',
+  'STATUS_FINAL': 'finished',
+  'STATUS_POSTPONED': 'postponed',
+  'STATUS_CANCELED': 'canceled',
+  'STATUS_HALFTIME': 'live',
 };
-const STATUS_MAP = { notstarted: 'upcoming', inprogress: 'live', finished: 'finished', postponed: 'postponed', canceled: 'canceled' };
 
-async function fetchSofascore(dateStr) {
+async function fetchESPNLeague(league, dateStr) {
+  const compact = dateStr.replace(/-/g, '');
+  const url = `https://site.api.espn.com/apis/site/v2/sports/soccer/${league}/scoreboard?dates=${compact}&limit=100`;
   try {
-    const { status, body } = await fetchUrl(
-      `https://api.sofascore.com/api/v1/sport/football/scheduled-events/${dateStr}`,
-      SOFA_HEADERS
-    );
+    const { status, body } = await fetchUrl(url, {
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36',
+      'Accept': 'application/json',
+    });
     if (status !== 200) return [];
     const data = JSON.parse(body);
     const events = data.events || [];
     const results = [];
+
     for (const ev of events) {
       try {
-        const home = ev.homeTeam?.name || '';
-        const away = ev.awayTeam?.name || '';
+        const comp = ev.competitions?.[0];
+        if (!comp) continue;
+        const competitors = comp.competitors || [];
+        const home = competitors.find(c => c.homeAway === 'home');
+        const away = competitors.find(c => c.homeAway === 'away');
         if (!home || !away) continue;
 
-        let league = ev.tournament?.name || '';
-        const category = ev.tournament?.category?.name || '';
-        if (category && !league.includes(category)) league = `${category} • ${league}`;
+        const homeName = home.team?.displayName || home.team?.name || '';
+        const awayName = away.team?.displayName || away.team?.name || '';
+        if (!homeName || !awayName) continue;
 
-        const { time, date } = ev.startTimestamp ? tsToTimeAndDate(ev.startTimestamp) : { time: '', date: dateStr };
-        const rawStatus = ev.status?.type || 'notstarted';
-        const matchStatus = STATUS_MAP[rawStatus] || 'upcoming';
+        const leagueName = data.leagues?.[0]?.name || league;
+        const statusType = comp.status?.type?.name || 'STATUS_SCHEDULED';
+        const matchStatus = ESPN_STATUS_MAP[statusType] || 'upcoming';
 
-        let minute = null, score = null;
+        const dateObj = new Date(ev.date);
+        const matchDate = toDateStr(dateObj);
+        const hh = String(dateObj.getUTCHours()).padStart(2, '0');
+        const mm = String(dateObj.getUTCMinutes()).padStart(2, '0');
+        const timeStr = `${hh}:${mm}`;
+
+        let score = null, minute = null, stoppage = null;
         if (matchStatus === 'live' || matchStatus === 'finished') {
-          const hc = ev.homeScore?.current;
-          const ac = ev.awayScore?.current;
-          if (hc != null && ac != null) score = { home: String(hc), away: String(ac) };
-          if (matchStatus === 'live' && ev.time?.currentPeriodStartTimestamp) {
-            minute = Math.min(Math.floor((Date.now() / 1000 - ev.time.currentPeriodStartTimestamp) / 60), 90);
+          const hs = home.score, as_ = away.score;
+          if (hs != null && as_ != null) score = { home: String(hs), away: String(as_) };
+          if (matchStatus === 'live') {
+            const clock = comp.status?.displayClock || '';
+            if (clock === 'HT') { minute = 45; }
+            else {
+              const parts = clock.match(/(\d+)(?:'\+(\d+)'?)?/);
+              if (parts) { minute = parseInt(parts[1]); if (parts[2]) stoppage = parseInt(parts[2]); }
+            }
           }
         }
 
         results.push({
-          id: `ss_${ev.id}`,
-          source: 'sofascore',
-          league, home, away, time, date,
-          minute, score,
+          id: `espn_${ev.id}`,
+          source: 'espn',
+          league: leagueName,
+          home: homeName,
+          away: awayName,
+          time: timeStr,
+          date: matchDate,
+          minute, stoppage, score,
           status: matchStatus,
           odds: { '1': null, X: null, '2': null },
-          url: `https://www.sofascore.com/match/${ev.id}`,
+          url: ev.links?.[0]?.href || `https://www.espn.com/soccer/match/_/gameId/${ev.id}`,
         });
       } catch { continue; }
     }
@@ -96,8 +115,32 @@ async function fetchSofascore(dateStr) {
   } catch { return []; }
 }
 
-// ─── Betclic (simple HTML parse without cheerio) ──────────────────────────────
+async function fetchESPN(dateStr) {
+  const results = await Promise.allSettled(ESPN_LEAGUES.map(l => fetchESPNLeague(l, dateStr)));
+  const seen = new Set();
+  const all = [];
+  for (const r of results) {
+    if (r.status === 'fulfilled') {
+      for (const m of r.value) {
+        if (!seen.has(m.id)) { seen.add(m.id); all.push(m); }
+      }
+    }
+  }
+  return all;
+}
+
+// ─── Betclic (HTML scraping) ──────────────────────────────────────────────────
 const BETCLIC_BASE = 'https://www.betclic.ci';
+const BETCLIC_PAGES = [
+  '/football-sfootball',
+  '/football-sfootball/top-football-europeen-p0',
+  '/football-sfootball/espagne-laliga-c7',
+  '/football-sfootball/angl-premier-league-c3',
+  '/football-sfootball/ligue-1-mcdonald-s-c4',
+  '/football-sfootball/italie-serie-a-c6',
+  '/football-sfootball/football-champions-league-c2',
+  '/football-sfootball/allemagne-bundesliga-c5',
+];
 const BETCLIC_HEADERS = {
   'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36',
   'Accept-Language': 'fr-FR,fr;q=0.9',
@@ -113,9 +156,6 @@ function parseOdd(text) {
 function parseBetclicHtml(html) {
   const results = [];
   const todayIso = today();
-  const tomorrowIso = tomorrow();
-
-  // Extract cards with basic regex - look for cardEvent links
   const cardRe = /<a[^>]+class="[^"]*cardEvent[^"]*"[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g;
   let cardMatch;
   while ((cardMatch = cardRe.exec(html)) !== null) {
@@ -123,73 +163,35 @@ function parseBetclicHtml(html) {
       const href = cardMatch[1];
       const cardHtml = cardMatch[2];
       const isLive = cardMatch[0].includes('is-live');
-
-      // Match ID
       const midM = href.match(/-m(\d+)/);
       const mid = 'bc_' + (midM ? midM[1] : href);
-
-      // Teams
       const homeM = cardHtml.match(/data-qa="contestant-1-label"[^>]*>([\s\S]*?)<\/div>/);
       const awayM = cardHtml.match(/data-qa="contestant-2-label"[^>]*>([\s\S]*?)<\/div>/);
       const home = homeM ? homeM[1].replace(/<[^>]+>/g, '').trim() : '';
       const away = awayM ? awayM[1].replace(/<[^>]+>/g, '').trim() : '';
       if (!home || !away) continue;
-
-      // Time
-      let timeStr = '';
       const timeM = cardHtml.match(/(\d{1,2}:\d{2})/);
-      if (timeM) timeStr = timeM[1];
-
-      // Score
+      const timeStr = timeM ? timeM[1] : '';
       let score = null;
-      const scoreM = cardHtml.match(/data-qa="scoreboard-score"[^>]*>([\s\S]*?)<\/div>/);
-      if (scoreM && isLive) {
-        const nums = scoreM[1].match(/\d+/g);
-        if (nums && nums.length >= 2) score = { home: nums[0], away: nums[1] };
+      if (isLive) {
+        const sM = cardHtml.match(/data-qa="scoreboard-score"[^>]*>([\s\S]*?)<\/div>/);
+        if (sM) { const nums = sM[1].match(/\d+/g); if (nums?.length >= 2) score = { home: nums[0], away: nums[1] }; }
       }
-
-      // Odds (look for odd values like "1.50", "2.30" etc)
-      const oddMatches = [...cardHtml.matchAll(/class="[^"]*is-odd[^"]*"[\s\S]*?(\d+[.,]\d+)/g)];
+      const oddMs = [...cardHtml.matchAll(/class="[^"]*is-odd[^"]*"[\s\S]*?(\d+[.,]\d+)/g)];
       const odds = { '1': null, X: null, '2': null };
-      if (oddMatches.length >= 1) odds['1'] = parseOdd(oddMatches[0][1]);
-      if (oddMatches.length >= 2) odds['X'] = parseOdd(oddMatches[1][1]);
-      if (oddMatches.length >= 3) odds['2'] = parseOdd(oddMatches[2][1]);
-
-      // League from breadcrumb
-      let league = '';
-      const leagueMatches = [...cardHtml.matchAll(/<[^>]*breadcrumb_itemLabel[^>]*>([\s\S]*?)<\/span>/g)];
-      if (leagueMatches.length > 0) {
-        league = leagueMatches[leagueMatches.length - 1][1].replace(/<[^>]+>/g, '').replace(/•/g, '').trim();
-      }
-
-      results.push({
-        id: mid, source: 'betclic',
-        league, home, away,
-        time: timeStr,
-        date: isLive ? todayIso : todayIso,
-        minute: null, score,
-        status: isLive ? 'live' : 'upcoming',
-        odds,
-        url: BETCLIC_BASE + href,
-      });
+      if (oddMs[0]) odds['1'] = parseOdd(oddMs[0][1]);
+      if (oddMs[1]) odds['X'] = parseOdd(oddMs[1][1]);
+      if (oddMs[2]) odds['2'] = parseOdd(oddMs[2][1]);
+      const leagueMs = [...cardHtml.matchAll(/<[^>]*breadcrumb_itemLabel[^>]*>([\s\S]*?)<\/span>/g)];
+      const league = leagueMs.length ? leagueMs[leagueMs.length - 1][1].replace(/<[^>]+>/g, '').replace(/•/g, '').trim() : '';
+      results.push({ id: mid, source: 'betclic', league, home, away, time: timeStr, date: todayIso, minute: null, stoppage: null, score, status: isLive ? 'live' : 'upcoming', odds, url: BETCLIC_BASE + href });
     } catch { continue; }
   }
   return results;
 }
 
-const BETCLIC_PAGES = [
-  '/football-sfootball',
-  '/football-sfootball/top-football-europeen-p0',
-  '/football-sfootball/espagne-laliga-c7',
-  '/football-sfootball/angl-premier-league-c3',
-  '/football-sfootball/ligue-1-mcdonald-s-c4',
-  '/football-sfootball/italie-serie-a-c6',
-  '/football-sfootball/football-champions-league-c2',
-];
-
 async function fetchBetclic() {
-  const seen = new Set();
-  const results = [];
+  const seen = new Set(), results = [];
   await Promise.allSettled(BETCLIC_PAGES.map(async (path) => {
     try {
       const { status, body } = await fetchUrl(BETCLIC_BASE + path, BETCLIC_HEADERS);
@@ -198,7 +200,7 @@ async function fetchBetclic() {
           if (!seen.has(m.id)) { seen.add(m.id); results.push(m); }
         }
       }
-    } catch { }
+    } catch {}
   }));
   return results;
 }
@@ -206,29 +208,26 @@ async function fetchBetclic() {
 // ─── Name normalization & dedup ───────────────────────────────────────────────
 function normName(name) {
   let n = name.toLowerCase();
-  for (const s of ['fc', 'sc', 'ac', 'cf', 'rc', 'fk', 'sk', 'bk', 'as', 'ss', 'cd', 'sd', 'ud']) {
+  for (const s of ['fc','sc','ac','cf','rc','fk','sk','bk','as','ss','cd','sd','ud']) {
     n = n.replace(new RegExp(`\\b${s}\\b`, 'g'), '');
   }
   const map = { é:'e',è:'e',ê:'e',ë:'e',à:'a',â:'a',ô:'o',ù:'u',û:'u',ü:'u',î:'i',ï:'i',ç:'c' };
   for (const [a, b] of Object.entries(map)) n = n.replace(new RegExp(a, 'g'), b);
   return n.replace(/[^a-z0-9]/g, '');
 }
-function matchKey(m) {
-  return `${normName(m.home).slice(0,8)}|${normName(m.away).slice(0,8)}|${m.date}`;
-}
+function matchKey(m) { return `${normName(m.home).slice(0,8)}|${normName(m.away).slice(0,8)}|${m.date}`; }
 
 // ─── Main aggregation ─────────────────────────────────────────────────────────
 async function getMatches() {
   const td = today(), tm = tomorrow();
-  const [betclicMatches, sofaToday, sofaTomorrow] = await Promise.all([
+  const [betclicMatches, espnToday, espnTomorrow] = await Promise.all([
     fetchBetclic(),
-    fetchSofascore(td),
-    fetchSofascore(tm),
+    fetchESPN(td),
+    fetchESPN(tm),
   ]);
-  const sofascoreMatches = [...sofaToday, ...sofaTomorrow];
+  const espnAll = [...espnToday, ...espnTomorrow];
 
-  const seenKeys = {};
-  const all = [];
+  const seenKeys = {}, all = [];
 
   function addMatches(list) {
     for (const m of list) {
@@ -237,7 +236,8 @@ async function getMatches() {
         const ex = all[seenKeys[k]];
         if (!ex.odds['1'] && m.odds['1']) ex.odds = m.odds;
         if (!ex.score && m.score) ex.score = m.score;
-        if (!ex.minute && m.minute) ex.minute = m.minute;
+        if (ex.minute == null && m.minute != null) ex.minute = m.minute;
+        if (ex.stoppage == null && m.stoppage != null) ex.stoppage = m.stoppage;
         if (m.status === 'live') ex.status = 'live';
         if (!ex.sources) ex.sources = [ex.source];
         if (!ex.sources.includes(m.source)) ex.sources.push(m.source);
@@ -249,27 +249,25 @@ async function getMatches() {
     }
   }
 
-  addMatches(betclicMatches);
-  addMatches(sofascoreMatches);
+  addMatches(betclicMatches);  // betclic en priorité (a les cotes)
+  addMatches(espnAll);         // ESPN complète avec tous les matchs
 
-  const filtered = all.filter(m => [td, tm].includes(m.date) && ['live', 'upcoming'].includes(m.status));
-  filtered.sort((a, b) => {
-    if (a.status !== b.status) return a.status === 'live' ? -1 : 1;
-    return (a.date + a.time).localeCompare(b.date + b.time);
-  });
+  const filtered = all
+    .filter(m => [td, tm].includes(m.date) && ['live', 'upcoming'].includes(m.status))
+    .sort((a, b) => {
+      if (a.status !== b.status) return a.status === 'live' ? -1 : 1;
+      return (a.date + a.time).localeCompare(b.date + b.time);
+    });
 
   return {
     ok: true,
     matches: filtered,
     count: filtered.length,
-    sources: { betclic: betclicMatches.length, sofascore: sofascoreMatches.length },
+    sources: { betclic: betclicMatches.length, espn: espnAll.length },
   };
 }
 
 // ─── Static file server ───────────────────────────────────────────────────────
-const fs = require('fs');
-const pathMod = require('path');
-const ROOT = __dirname;
 const MIME = {
   '.html': 'text/html; charset=utf-8',
   '.js':   'application/javascript',
@@ -316,5 +314,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`AretSport dev server → http://localhost:${PORT}  [static + API]`);
+  console.log(`AretSport dev server → http://localhost:${PORT}  [ESPN + Betclic]`);
 });
