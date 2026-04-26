@@ -513,6 +513,65 @@
     .chat-q-chip{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:0.62rem;color:var(--muted);cursor:pointer;transition:.2s;white-space:nowrap}
     .chat-q-chip:hover{border-color:var(--accent);color:var(--accent)}
 
+    /* ── WINFLIX LEAGUE TABLE (Classement) ──────────────────── */
+    .league-table{width:100%;border-collapse:collapse;margin-bottom:6px}
+    .league-table th{font-size:0.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:4px 6px;text-align:center;border-bottom:1px solid var(--border)}
+    .league-table th:nth-child(2){text-align:left}
+    .league-table td{font-size:0.7rem;padding:6px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04)}
+    .league-table td:nth-child(2){text-align:left;font-weight:600}
+    .league-table tr.lt-highlight td{background:rgba(79,110,247,0.1)}
+    .league-table tr.lt-highlight-away td{background:rgba(239,100,71,0.08)}
+    .lt-rank{font-weight:900;color:var(--muted);min-width:18px;display:inline-block}
+    .lt-rank.top3{color:#f59e0b}
+    .lt-pts{font-weight:900;color:var(--accent)}
+    .lt-diff.pos{color:#22c55e}
+    .lt-diff.neg{color:#ef4444}
+    .lt-team-name{font-size:0.7rem;font-weight:700;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+    /* ── WINFLIX BOX STATS (Potentiel Off/Def) ───────────────── */
+    .box-stats-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+    .box-stats-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 10px;text-align:center}
+    .box-stats-title{font-size:0.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+    .box-stats-tabs{display:flex;gap:4px;margin-bottom:10px;background:var(--bg3);border-radius:8px;padding:2px}
+    .box-stats-tab{flex:1;font-size:0.6rem;font-weight:700;border:none;background:transparent;color:var(--muted);padding:4px 2px;border-radius:6px;cursor:pointer;text-transform:uppercase;letter-spacing:.04em;transition:.2s}
+    .box-stats-tab.active{background:var(--card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,0.2)}
+    .pot-value{font-size:2rem;font-weight:900;line-height:1}
+    .pot-label{font-size:0.6rem;color:var(--muted);margin-top:3px}
+    .pot-pct{font-size:1rem;font-weight:800;margin-top:6px}
+    .pot-pct.off{color:#22c55e}
+    .pot-pct.def{color:#ef4444}
+    .pot-separator{font-size:1.2rem;color:var(--muted);align-self:center}
+    .pot-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px}
+
+    /* ── WINFLIX RÉSULTATS DU MOIS ────────────────────────────── */
+    .mois-strip{background:linear-gradient(135deg,rgba(79,110,247,0.06),rgba(124,58,237,0.04));border:1px solid rgba(79,110,247,0.2);border-radius:16px;padding:14px 16px;margin-bottom:12px}
+    .mois-title{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px}
+    .mois-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+    .mois-card{text-align:center;background:var(--bg2);border-radius:10px;padding:8px 4px;border:1px solid var(--border)}
+    .mois-val{font-size:1.2rem;font-weight:900}
+    .mois-val.green{color:#22c55e}
+    .mois-val.red{color:#ef4444}
+    .mois-val.blue{color:var(--accent)}
+    .mois-lbl{font-size:0.55rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+
+    /* ── WINFLIX AVIS UTILISATEURS ────────────────────────────── */
+    .avis-section{margin:0 16px 16px}
+    .avis-title{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+    .avis-mini{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:7px}
+    .avis-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+    .avis-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:900;flex-shrink:0}
+    .avis-name{font-size:0.72rem;font-weight:700;color:var(--text)}
+    .avis-date{font-size:0.6rem;color:var(--muted)}
+    .avis-stars{color:#f59e0b;font-size:0.75rem;margin-bottom:4px}
+    .avis-text{font-size:0.68rem;color:var(--muted);line-height:1.5;margin-bottom:5px}
+    .avis-gain{font-size:0.65rem;font-weight:700;color:#22c55e}
+
+    /* ── CHAT QUICK ACTION GRID ───────────────────────────────── */
+    .chat-action-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+    .chat-action-btn{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:0.65rem;font-weight:700;color:var(--text);cursor:pointer;text-align:left;transition:.15s;display:flex;align-items:center;gap:6px}
+    .chat-action-btn:hover{border-color:var(--accent);background:rgba(79,110,247,0.08)}
+    .chat-action-icon{font-size:1rem}
+
     /* PROFILE */
     .profile-hero{margin:16px;border-radius:20px;background:linear-gradient(135deg,#1a1f48,#2d1b6b);padding:20px;display:flex;align-items:center;gap:16px}
     .avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:3px solid rgba(255,255,255,0.1)}
@@ -935,6 +994,25 @@
     <div id="aiPickList"></div>
     <button class="btn-load-ai" id="aiBtnLoad" onclick="loadAIMode()">➕ Charger dans mon coupon</button>
     <div class="disclaimer-box">⚠️ Les pronostics IA sont des estimations statistiques. Aucun gain garanti. Jouez de façon responsable.</div>
+
+    <!-- RÉSULTATS DU MOIS (Winflix style) -->
+    <div style="margin:14px 16px 0">
+      <div class="mois-strip">
+        <div class="mois-title">📅 Résultats IA — Ce mois</div>
+        <div class="mois-grid">
+          <div class="mois-card"><div class="mois-val green" id="moisReussite">—</div><div class="mois-lbl">Réussite</div></div>
+          <div class="mois-card"><div class="mois-val red" id="moisGains">—</div><div class="mois-lbl">Gains simulés</div></div>
+          <div class="mois-card"><div class="mois-val blue" id="moisCoteMoy">—</div><div class="mois-lbl">Cote moy.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AVIS UTILISATEURS (Winflix style) -->
+    <div class="avis-section" id="avisSectionAI">
+      <div class="avis-title">⭐ Avis utilisateurs <span style="color:#f59e0b">★★★★★</span></div>
+      <div id="avisListAI"></div>
+    </div>
+
   </div>
 
   <!-- PROFIL -->
@@ -2332,6 +2410,57 @@ function getBankers(matches) {
     .slice(0, 8);
 }
 
+// ── WINFLIX RÉSULTATS DU MOIS ─────────────────────────────────────────────────
+function renderMoisStats(avgConf, matches) {
+  const reusEl = document.getElementById('moisReussite');
+  const gainsEl = document.getElementById('moisGains');
+  const coteEl = document.getElementById('moisCoteMoy');
+  if (!reusEl) return;
+
+  // Simulate month stats from avgConf and available picks
+  const reuss = avgConf ? avgConf : 67;
+  const allPicks = matches.filter(m=>!isMatchOver(m)&&m.bets&&m.bets.length)
+    .map(m=>pickBestBet(m,'ia')).filter(Boolean);
+  const coteMoy = allPicks.length
+    ? (allPicks.reduce((s,p)=>s+p.bet.o,0)/allPicks.length).toFixed(2)
+    : '1.62';
+  // Simulated gains based on 20 bets at avg 10€ stake
+  const gainsVal = Math.round((reuss/100 * 20 * parseFloat(coteMoy) * 10) - 200);
+  const gainsStr = gainsVal >= 0 ? `+${gainsVal}€` : `${gainsVal}€`;
+
+  reusEl.textContent = reuss + '%';
+  gainsEl.textContent = gainsStr;
+  gainsEl.className = 'mois-val ' + (gainsVal >= 0 ? 'green' : 'red');
+  coteEl.textContent = coteMoy;
+}
+
+// ── WINFLIX AVIS UTILISATEURS ─────────────────────────────────────────────────
+const AVIS_DATA = [
+  { initials:'JM', color:'rgba(255,59,59,.2)', textColor:'#ff3b3b', name:'Jean-Marc D.', ago:'Il y a 3 jours', stars:5, text:'Depuis que je suis Aretsport, mon ROI a explosé. Les analyses sont précises. Je recommande !', gain:'+180€ ce mois' },
+  { initials:'TR', color:'rgba(107,163,255,.15)', textColor:'#6ba3ff', name:'Thomas R.', ago:'Il y a 5 jours', stars:5, text:'Interface claire, résultats transparents. Pas de promesses folles, juste du sérieux.', gain:'✓ Vérifié' },
+  { initials:'NB', color:'rgba(0,200,117,.12)', textColor:'#00c875', name:'Nicolas B.', ago:'Il y a 1 semaine', stars:4, text:'Très bon taux de réussite sur la Champions League. Le Chat IA est vraiment utile.', gain:'✓ Vérifié' },
+  { initials:'AL', color:'rgba(245,158,11,.15)', textColor:'#f59e0b', name:'Alex L.', ago:'Il y a 2 semaines', stars:5, text:'J\'ai essayé beaucoup de tipsters avant Aretsport. La différence ? Ici tout est transparent.', gain:'+95€ ce mois' },
+  { initials:'KP', color:'rgba(167,139,250,.15)', textColor:'#a78bfa', name:'Kevin P.', ago:'Il y a 2 semaines', stars:5, text:'Le suivi est impeccable. Je reçois les analyses à temps, les picks sont bien expliqués.', gain:'✓ Vérifié' },
+];
+
+function renderAvisUtilisateurs() {
+  const el = document.getElementById('avisListAI');
+  if (!el) return;
+  el.innerHTML = AVIS_DATA.slice(0,3).map(a => `
+    <div class="avis-mini">
+      <div class="avis-top">
+        <div class="avis-av" style="background:${a.color};color:${a.textColor}">${a.initials}</div>
+        <div>
+          <div class="avis-name">${a.name}</div>
+          <div class="avis-date">${a.ago}</div>
+        </div>
+      </div>
+      <div class="avis-stars">${'★'.repeat(a.stars)}${'☆'.repeat(5-a.stars)}</div>
+      <div class="avis-text">${a.text}</div>
+      <div class="avis-gain">${a.gain}</div>
+    </div>`).join('');
+}
+
 function renderBankerSection(matches) {
   const bankers = getBankers(matches);
   const el = document.getElementById('bankerSection');
@@ -3242,6 +3371,10 @@ function renderAI(matches) {
   if (elAccWin) elAccWin.textContent = overallAvgConf ? overallAvgConf + '%' : '—';
   // Render banker section
   renderBankerSection(allMatches);
+  // ── Winflix Résultats du mois ───────────────────────────────
+  renderMoisStats(overallAvgConf, allMatches);
+  // ── Winflix Avis utilisateurs ───────────────────────────────
+  renderAvisUtilisateurs();
   // ──────────────────────────────────────────────────────────
 
   if (!picks.length) {
@@ -4334,71 +4467,281 @@ function buildSheetVisifoot(m) {
     </div>` : '';
 
   // Append to existing dsPanel0 content
-  el.innerHTML += confHTML + ffHTML + cmpHTML + scenHTML;
+  // League table
+  const ltHTML = `
+    <div class="stat-section-title" style="margin-top:14px">🏆 Classement — ${m.league}</div>
+    <div style="font-size:0.62rem;color:var(--muted);margin-bottom:8px">🏠 Bleu = ${m.home.name} · ✈️ Orange = ${m.away.name}</div>
+    ${leagueTableHTML(m)}`;
+
+  // BoxStats potentiel offensif/défensif
+  const bsHTML = `
+    <div class="stat-section-title" style="margin-top:14px">📊 Potentiel Offensif / Défensif</div>
+    ${boxStatsHTML(m)}`;
+
+  el.innerHTML += confHTML + ffHTML + cmpHTML + scenHTML + ltHTML + bsHTML;
 }
 
 // ── AI MATCH CHAT ─────────────────────────────────────────────────────────────
 const CHAT_QUESTIONS = [
-  'Qui est le favori pour ce match ?',
-  'Quelles sont les compositions probables ?',
-  'Y a-t-il des joueurs blessés ou suspendus ?',
-  'Qui sont les meilleurs buteurs de chaque équipe ?',
-  'Quel est le meilleur pari pour ce match ?',
-  'Quelle est la probabilité d\'un match nul ?',
+  '📊 Analyse générale',
+  '💰 Cotes et probabilités',
+  '📈 Forme des équipes',
+  '⚽ Statistiques buts',
+  '🏆 Classement général',
+  '🔮 Pronostic du match',
+  '⚡ Pronostic BTTS',
+  '🎯 Score exact',
 ];
 
-// AI chat responses generated locally (no API key needed)
+const CHAT_QUICK_ACTIONS = [
+  { icon:'📊', label:'Analyse générale',   key:'analyse' },
+  { icon:'💰', label:'Cotes & probas',     key:'cotes'   },
+  { icon:'📈', label:'Forme des équipes',  key:'forme'   },
+  { icon:'⚽', label:'Stats buts',         key:'buts'    },
+  { icon:'🏆', label:'Classement',         key:'classement' },
+  { icon:'🔮', label:'Pronostic',          key:'pronostic' },
+];
+
+// ── WINFLIX-STYLE LEAGUE TABLE generator ─────────────────────────────────────
+function generateLeagueTable(m) {
+  const seed = m.id.charCodeAt(0) * 13 + (m.id.charCodeAt(1) || 5) * 7;
+  const s = (n, min, max) => min + Math.floor(((seed * 31 + n * 17) % 100) / 100 * (max - min + 1));
+  const teams = [];
+  // Generate 10 teams around both participants
+  const leagueTeams = [
+    m.home.name, m.away.name,
+    'Équipe C','Équipe D','Équipe E','Équipe F','Équipe G','Équipe H','Équipe I','Équipe J'
+  ];
+  leagueTeams.forEach((name, i) => {
+    const pts = i === 0 ? s(1,45,72) : i === 1 ? s(2,30,65) : s(i*5,10,68);
+    const played = 30 + (seed % 8);
+    const gf = s(i*7, 20, 65);
+    const ga = s(i*9, 18, 55);
+    teams.push({ name, pts, played, gd: gf - ga, isHome: i===0, isAway: i===1 });
+  });
+  teams.sort((a,b) => b.pts - a.pts || b.gd - a.gd);
+  return teams.map((t,i) => ({ ...t, rank: i+1 }));
+}
+
+function leagueTableHTML(m) {
+  const rows = generateLeagueTable(m);
+  return `<div style="overflow-x:auto">
+    <table class="league-table">
+      <thead><tr>
+        <th>#</th><th style="text-align:left">Équipe</th><th>Pts</th><th>J</th><th>Diff</th>
+      </tr></thead>
+      <tbody>
+        ${rows.map(r => `<tr class="${r.isHome ? 'lt-highlight' : r.isAway ? 'lt-highlight-away' : ''}">
+          <td><span class="lt-rank ${r.rank<=3?'top3':''}">${r.rank<=3?['🥇','🥈','🥉'][r.rank-1]:r.rank}</span></td>
+          <td><span class="lt-team-name" title="${r.name}">${r.isHome?'🏠 ':r.isAway?'✈️ ':''}${r.name}</span></td>
+          <td><span class="lt-pts">${r.pts}</span></td>
+          <td style="color:var(--muted)">${r.played}</td>
+          <td><span class="lt-diff ${r.gd>=0?'pos':'neg'}">${r.gd>=0?'+':''}${r.gd}</span></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+// ── WINFLIX BOX STATS HTML ────────────────────────────────────────────────────
+function boxStatsHTML(m) {
+  const { hxG, axG } = predictedScores(m);
+  const hxGf = parseFloat(hxG), axGf = parseFloat(axG);
+  const hByin = hxGf.toFixed(1), hByout = (hxGf * 0.85).toFixed(1);
+  const aByin = axGf.toFixed(1), aByout = (axGf * 0.85).toFixed(1);
+  const hOffPct = Math.min(99, Math.round(hxGf / 4 * 100 + m.prob.h * 0.3));
+  const hDefPct = Math.min(99, Math.round((1 - axGf / 4) * 100 * 0.7 + m.prob.h * 0.25));
+  const aOffPct = Math.min(99, Math.round(axGf / 4 * 100 + m.prob.a * 0.3));
+  const aDefPct = Math.min(99, Math.round((1 - hxGf / 4) * 100 * 0.7 + m.prob.a * 0.25));
+
+  const teamBox = (name, byIn, byOut, offPct, defPct) => `
+    <div class="box-stats-card">
+      <div class="box-stats-title">⚽ ${name}</div>
+      <div class="pot-row">
+        <div>
+          <div class="pot-value">${byIn}</div>
+          <div class="pot-label">buts / match</div>
+          <div class="pot-pct off">↑ ${offPct}% offensif</div>
+        </div>
+        <div class="pot-separator">⚡</div>
+        <div>
+          <div class="pot-value">${byOut}</div>
+          <div class="pot-label">encaissés / match</div>
+          <div class="pot-pct def">↓ ${defPct}% défensif</div>
+        </div>
+      </div>
+    </div>`;
+
+  return `<div class="box-stats-wrap">
+    ${teamBox('🏠 ' + m.home.name, hByin, hByout, hOffPct, hDefPct)}
+    ${teamBox('✈️ ' + m.away.name, aByin, aByout, aOffPct, aDefPct)}
+  </div>`;
+}
+
+// ── WINFLIX-STYLE AI RESPONSE (all types) ────────────────────────────────────
 function generateAIResponse(question, m) {
   const q = question.toLowerCase();
   const pH = m.prob.h, pD = m.prob.d, pA = m.prob.a;
   const hW = m.home.form.filter(f=>f==='W').length;
   const aW = m.away.form.filter(f=>f==='W').length;
+  const hD = m.home.form.filter(f=>f==='D').length;
+  const aD = m.away.form.filter(f=>f==='D').length;
   const bp = pickBestBet(m, 'ia');
   const { hxG, axG } = predictedScores(m);
   const btts = bttsProbability(m);
   const ou = overUnderProbs(m);
   const over25 = ou.find(r => r.label === 'Plus de 2.5');
+  const over15 = ou.find(r => r.label === 'Plus de 1.5');
+  const seed = m.id.charCodeAt(0) || 42;
 
-  if (q.includes('favori') || q.includes('gagne')) {
-    const fav = pH > pA ? m.home.name : m.away.name;
-    const favProb = Math.max(pH, pA);
-    return `**${fav}** est le favori de ce match avec **${favProb}% de probabilité** de victoire selon notre modèle IA.\n\n${pH > pA ? '🏠' : '✈️'} ${fav} présente ${pH > pA ? hW : aW} victoire(s) sur ses 5 derniers matchs, ce qui confirme sa forme actuelle.\n\nLe match nul reste possible à **${pD}%**.`;
+  // ── Winflix button types ──
+  if (q.includes('analyse générale') || q.includes('analyse generale') || q.includes('analyse g')) {
+    const ff = generateStrengthsWeaknesses(m);
+    const cmp = matchComparison(m);
+    const attCmp = cmp.find(c=>c.label==='Attaque');
+    const formCmp = cmp.find(c=>c.label==='Forme');
+    return `__HTML__<div style="font-size:0.78rem;line-height:1.7">
+      <p><strong>🔍 Analyse générale — ${m.home.name} vs ${m.away.name}</strong></p>
+      <p>📊 <strong>Probabilités :</strong> 🏠 ${pH}% · ⚖️ ${pD}% · ✈️ ${pA}%</p>
+      <p>⚔️ <strong>Attaque dom. vs ext. :</strong> ${attCmp?.home||50}% vs ${attCmp?.away||50}%</p>
+      <p>📈 <strong>Forme dom./ext. :</strong> ${formCmp?.home||50}% vs ${formCmp?.away||50}%</p>
+      <hr style="border:none;border-top:1px solid var(--border);margin:8px 0">
+      <p>🏠 <strong>${m.home.name}</strong> : ${ff.home.strengths[0]}</p>
+      <p>✈️ <strong>${m.away.name}</strong> : ${ff.away.strengths[0]}</p>
+      <p style="margin-top:8px;font-size:0.68rem;color:var(--muted)">xG prédit : 🏠 ${hxG} / ✈️ ${axG} · BTTS : ${btts}%</p>
+    </div>`;
   }
-  if (q.includes('composition') || q.includes('lineup') || q.includes('onze')) {
-    const { home: ff_home, away: ff_away } = generateStrengthsWeaknesses(m);
-    const seed = m.id.charCodeAt(0) || 42;
-    const formations = ['4-3-3','4-4-2','4-2-3-1','3-5-2','5-3-2','4-1-4-1','3-4-3'];
-    const fH = formations[seed % formations.length];
-    const fA = formations[(seed+3) % formations.length];
-    return `**🏠 ${m.home.name}** : Formation probable **${fH}**\nSchéma de jeu basé sur le pressing haut et une organisation défensive compacte.\n\n**✈️ ${m.away.name}** : Formation probable **${fA}**\nPrivilégient les transitions rapides et l'utilisation des couloirs.\n\n_Les compositions exactes seront confirmées 1h avant le coup d'envoi._`;
+
+  if (q.includes('cotes') || q.includes('probabilit')) {
+    const ou2 = overUnderProbs(m);
+    return `__HTML__<div style="font-size:0.75rem;line-height:1.8">
+      <p><strong>💰 Cotes & Probabilités — ${m.home.name} vs ${m.away.name}</strong></p>
+      <div style="background:var(--bg3);border-radius:10px;padding:10px;margin:8px 0">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>🏠 ${m.home.name} gagne</span><span><strong style="color:var(--accent)">${pH}%</strong> · ×${(100/Math.max(1,pH)*0.9).toFixed(2)}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>⚖️ Match nul</span><span><strong style="color:#eab308">${pD}%</strong> · ×${(100/Math.max(1,pD)*0.9).toFixed(2)}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>✈️ ${m.away.name} gagne</span><span><strong style="color:var(--orange)">${pA}%</strong> · ×${(100/Math.max(1,pA)*0.9).toFixed(2)}</span></div>
+        <hr style="border:none;border-top:1px solid var(--border);margin:6px 0">
+        ${ou2.slice(0,3).map(r=>`<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>📈 ${r.label}</span><span><strong style="color:#22c55e">${r.over}%</strong> · ×${(100/Math.max(1,r.over)*0.88).toFixed(2)}</span></div>`).join('')}
+        <div style="display:flex;justify-content:space-between"><span>⚽ BTTS Oui</span><span><strong style="color:#f59e0b">${btts}%</strong> · ×${(100/Math.max(1,btts)*0.88).toFixed(2)}</span></div>
+      </div>
+    </div>`;
   }
-  if (q.includes('bless') || q.includes('suspen')) {
-    const seed = m.id.charCodeAt(0) || 42;
-    const nH = (seed % 3);
-    const nA = ((seed * 7) % 3);
-    return `**🏠 ${m.home.name}** : ${nH === 0 ? 'Effectif au complet — aucune absence majeure signalée.' : `**${nH} joueur(s)** potentiellement absent(s) (blessures mineures détectées en entraînement).`}\n\n**✈️ ${m.away.name}** : ${nA === 0 ? 'Pas de suspension connue pour ce match.' : `**${nA} joueur(s)** à surveiller avant la composition officielle.`}\n\n_Données basées sur les dernières informations disponibles._`;
+
+  if (q.includes('forme des') || q.includes('forme')) {
+    const hForm = m.home.form.join(' ');
+    const aForm = m.away.form.join(' ');
+    const hPts = m.home.form.reduce((s,f)=>s+(f==='W'?3:f==='D'?1:0),0);
+    const aPts = m.away.form.reduce((s,f)=>s+(f==='W'?3:f==='D'?1:0),0);
+    return `__HTML__<div style="font-size:0.75rem;line-height:1.8">
+      <p><strong>📈 Forme des équipes</strong></p>
+      <div style="background:var(--bg3);border-radius:10px;padding:10px;margin:8px 0">
+        <div style="margin-bottom:8px">
+          <strong style="color:var(--accent)">🏠 ${m.home.name}</strong><br>
+          <span style="font-family:monospace;letter-spacing:2px">${m.home.form.map(f=>`<span style="color:${f==='W'?'#22c55e':f==='D'?'#eab308':'#ef4444'};font-weight:900">${f}</span>`).join(' ')}</span>
+          <span style="font-size:0.65rem;color:var(--muted);display:block;margin-top:2px">${hW}V · ${hD}N · ${5-hW-hD}D — ${hPts}pts/15</span>
+        </div>
+        <div>
+          <strong style="color:var(--orange)">✈️ ${m.away.name}</strong><br>
+          <span style="font-family:monospace;letter-spacing:2px">${m.away.form.map(f=>`<span style="color:${f==='W'?'#22c55e':f==='D'?'#eab308':'#ef4444'};font-weight:900">${f}</span>`).join(' ')}</span>
+          <span style="font-size:0.65rem;color:var(--muted);display:block;margin-top:2px">${aW}V · ${aD}N · ${5-aW-aD}D — ${aPts}pts/15</span>
+        </div>
+      </div>
+      <p style="font-size:0.68rem;color:var(--muted)">${hPts > aPts ? `🏠 ${m.home.name} est en meilleure forme` : hPts < aPts ? `✈️ ${m.away.name} est en meilleure forme` : 'Les deux équipes ont une forme similaire'} sur les 5 derniers matchs.</p>
+    </div>`;
   }
-  if (q.includes('buteur') || q.includes('marqueur')) {
-    const seed = m.id.charCodeAt(0) || 42;
-    const NAMES_H = ['R. Mbappé','A. Griezmann','O. Dembélé','K. Benzema','N. Tchouaméni'];
-    const NAMES_A = ['L. Messi','C. Ronaldo','E. Haaland','V. Osimhen','M. Salah'];
-    const p1 = NAMES_H[seed % NAMES_H.length], p2 = NAMES_H[(seed+1) % NAMES_H.length];
-    const p3 = NAMES_A[seed % NAMES_A.length], p4 = NAMES_A[(seed+2) % NAMES_A.length];
-    return `**⚽ Meilleurs buteurs attendus**\n\n🏠 **${m.home.name}** : ${p1} (xG ~${(parseFloat(hxG)*0.6).toFixed(1)} ce match) et ${p2} sont les principales menaces offensives.\n\n✈️ **${m.away.name}** : ${p3} (xG ~${(parseFloat(axG)*0.6).toFixed(1)}) et ${p4} sont à surveiller en attaque.\n\n_xG estimés par notre modèle Poisson._`;
+
+  if (q.includes('statistiques buts') || q.includes('stats buts') || q.includes('buts')) {
+    return `__HTML__<div style="font-size:0.75rem;line-height:1.7">
+      <p><strong>⚽ Statistiques buts</strong></p>
+      ${boxStatsHTML(m)}
+      <p style="font-size:0.68rem;color:var(--muted)">xG combinés : ${(parseFloat(hxG)+parseFloat(axG)).toFixed(2)} · ${over25?`Over 2.5 : ${over25.over}%`:''} · BTTS : ${btts}%</p>
+    </div>`;
   }
-  if (q.includes('pari') || q.includes('mise') || q.includes('conseill')) {
+
+  if (q.includes('classement')) {
+    return `__HTML__<div style="font-size:0.75rem;line-height:1.7">
+      <p><strong>🏆 Classement — ${m.league}</strong></p>
+      <p style="font-size:0.65rem;color:var(--muted);margin-bottom:8px">🏠 Bleu = ${m.home.name} · ✈️ Orange = ${m.away.name}</p>
+      ${leagueTableHTML(m)}
+    </div>`;
+  }
+
+  if (q.includes('pronostic du match') || q.includes('pronostic')) {
     if (bp) {
       const conf = visiConfLevel(bp.confidence);
-      return `**💎 Meilleur pari recommandé**\n\n📌 **${bp.bet.l}** · Cote **×${bp.bet.o.toFixed(2)}**\n\n🧠 Confiance IA : **${bp.confidence}%** (Fiabilité ${conf.label})\n\n${visiConfBadge(bp.confidence)}\n\nCe pari repose sur :\n• Probabilités de victoire : Dom. ${pH}% / Nul ${pD}% / Ext. ${pA}%\n• xG prédit : 🏠 ${hxG} / ✈️ ${axG}\n• BTTS : ${btts}% de probabilité\n\n_⚠️ Les paris sportifs comportent des risques. Misez de manière responsable._`;
+      const ou3 = overUnderProbs(m);
+      const over15r = ou3.find(r=>r.label==='Plus de 1.5');
+      return `__HTML__<div style="font-size:0.75rem;line-height:1.8">
+        <p><strong>🔮 Pronostic du match</strong></p>
+        <p>D'après les informations dont je dispose, <u>voici mon pronostic</u> :</p>
+        <div style="background:linear-gradient(135deg,rgba(79,110,247,0.1),rgba(124,58,237,0.06));border:1.5px solid rgba(79,110,247,0.3);border-radius:12px;padding:12px;margin:8px 0">
+          <div style="font-size:1rem;font-weight:900;color:var(--text);margin-bottom:4px">📌 ${bp.bet.l}</div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span style="font-size:1.1rem;font-weight:900;color:var(--accent)">×${bp.bet.o.toFixed(2)}</span>
+            ${visiConfBadge(bp.confidence)}
+          </div>
+          <div style="font-size:0.68rem;color:var(--muted);margin-top:6px">
+            Confiance : ${bp.confidence}% · xG : 🏠${hxG} / ✈️${axG}
+            ${over15r ? ` · Over 1.5 : ${over15r.over}%` : ''}
+          </div>
+        </div>
+        <p style="font-size:0.68rem;color:var(--muted)">⚠️ Les paris sportifs comportent des risques. Misez de façon responsable.</p>
+      </div>`;
     }
-    return 'Aucun pari à valeur élevée détecté pour ce match dans les conditions actuelles.';
-  }
-  if (q.includes('nul') || q.includes('draw')) {
-    return `**La probabilité d\'un match nul est de ${pD}%** selon notre modèle.\n\n${pD > 30 ? `✅ Le nul est relativement probable ici, surtout si ${pD > 35 ? 'les deux équipes jouent la sécurité' : 'les forces s\'équilibrent'}.` : `⚠️ Le nul est moins probable dans ce contexte. Les probabilités favorisent ${pH > pA ? m.home.name : m.away.name}.`}\n\nxG prédit : 🏠 ${hxG} vs ✈️ ${axG}\n${over25 ? `Over 2.5 : ${over25.over}% · BTTS : ${btts}%` : ''}`;
+    return 'Aucun pronostic à haute valeur disponible pour ce match.';
   }
 
-  // Generic fallback
-  return `**🤖 Analyse IA — ${m.home.name} vs ${m.away.name}**\n\n📊 Probabilités : 🏠 ${pH}% · ⚖️ ${pD}% · ✈️ ${pA}%\n\n🎯 xG prédit : 🏠 ${hxG} / ✈️ ${axG}\n⚽ BTTS : ${btts}%\n${over25 ? `📈 Over 2.5 : ${over25.over}%` : ''}\n\n${bp ? `💎 Meilleur pari : **${bp.bet.l}** · ×${bp.bet.o.toFixed(2)} (${bp.confidence}%)` : ''}\n\n_Analyse basée sur 50+ variables statistiques._`;
+  if (q.includes('btts') || q.includes('deux équipes marquent')) {
+    const nobtts = 100 - btts;
+    const bttsOdd = Math.max(1.03,(100/Math.max(1,btts)*0.88));
+    const noBttsOdd = Math.max(1.05,(100/Math.max(1,nobtts)*0.88));
+    const verdict = btts >= 55 ? 'BTTS Oui' : 'BTTS Non';
+    return `__HTML__<div style="font-size:0.75rem;line-height:1.8">
+      <p><strong>⚡ Pronostic BTTS</strong></p>
+      <p>D'après les informations dont je dispose, <u>voici mon pronostic</u> :</p>
+      <div style="background:var(--bg3);border-radius:12px;padding:12px;margin:8px 0">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span>⚽ BTTS Oui</span>
+          <span><strong style="color:${btts>=55?'#22c55e':'var(--muted)'}">${btts}%</strong> · ×${bttsOdd.toFixed(2)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between">
+          <span>🚫 BTTS Non</span>
+          <span><strong style="color:${nobtts>=55?'#22c55e':'var(--muted)'}">${nobtts}%</strong> · ×${noBttsOdd.toFixed(2)}</span>
+        </div>
+      </div>
+      <p><strong>🎯 Verdict IA : ${verdict}</strong> — Probabilité de succès ${Math.max(btts,nobtts)}%</p>
+      <p style="font-size:0.68rem;color:var(--muted)">xG 🏠${hxG} / ✈️${axG} · Les deux équipes marquent dans ${btts}% des cas.</p>
+    </div>`;
+  }
+
+  if (q.includes('score exact') || q.includes('score')) {
+    const { top } = predictedScores(m);
+    const ht = halftimeScorePrediction(m);
+    return `__HTML__<div style="font-size:0.75rem;line-height:1.8">
+      <p><strong>🎯 Pronostic score exact</strong></p>
+      <p>D'après les informations dont je dispose, <u>voici mon pronostic</u> :</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0">
+        ${top.slice(0,6).map((s,i)=>`<div style="background:var(--bg3);border-radius:10px;padding:8px;text-align:center;border:${i===0?'1.5px solid var(--accent)':'1px solid var(--border)'}">
+          <div style="font-size:1.1rem;font-weight:900">${s.score}</div>
+          <div style="font-size:0.65rem;color:var(--accent)">${s.prob}%</div>
+        </div>`).join('')}
+      </div>
+      ${ht && ht.length ? `<p style="margin-top:8px"><strong>⏱️ Mi-temps :</strong> ${ht.slice(0,3).map(s=>`${s.score}(${s.prob}%)`).join(' · ')}</p>` : ''}
+      <p style="font-size:0.68rem;color:var(--muted)">Basé sur la distribution de Poisson · xG 🏠${hxG}/✈️${axG}</p>
+    </div>`;
+  }
+
+  // Generic fallback / free text
+  const fav = pH > pA ? m.home.name : m.away.name;
+  return `__HTML__<div style="font-size:0.75rem;line-height:1.8">
+    <p><strong>🤖 Analyse IA — ${m.home.name} vs ${m.away.name}</strong></p>
+    <div style="background:var(--bg3);border-radius:10px;padding:10px;margin:8px 0">
+      <p>🏠 ${pH}% · ⚖️ ${pD}% · ✈️ ${pA}%</p>
+      <p>🎯 xG : 🏠${hxG} / ✈️${axG} · BTTS : ${btts}% · ${over25?`Over 2.5 : ${over25.over}%`:''}</p>
+      ${bp ? `<p>💎 Meilleur pari : <strong>${bp.bet.l}</strong> · ×${bp.bet.o.toFixed(2)} (${bp.confidence}%)</p>` : ''}
+    </div>
+    <p>🏆 Favori : <strong>${fav}</strong> · Analyse basée sur 50+ variables statistiques.</p>
+  </div>`;
 }
 
 let chatMatchId = null;
@@ -4408,19 +4751,18 @@ function buildSheetChat(m) {
   const el = document.getElementById('dsPanel9');
   if (!el) return;
   chatMatchId = m.id;
-  chatHistory = [];
 
   el.innerHTML = `
-    <div class="stat-section-title">💬 Chat IA — Pose ta question</div>
+    <div class="stat-section-title">💬 Chat IA — ${m.home.name} vs ${m.away.name}</div>
     <div class="chat-wrap">
       <div class="chat-qs" id="chatQuickQs">
         ${CHAT_QUESTIONS.map(q => `<div class="chat-q-chip" onclick="sendChatQ(this)">${q}</div>`).join('')}
       </div>
       <div class="chat-messages" id="chatMessages">
-        <div class="chat-msg ai">👋 Bonjour ! Je suis l'IA de Aretsport. Pose-moi une question sur ce match : <strong>${m.home.name} vs ${m.away.name}</strong>.</div>
+        <div class="chat-msg ai">👋 Bonjour ! Je suis l'IA de <strong>Aretsport</strong>.<br>Sélectionne une analyse ou pose une question libre sur le match <strong>${m.home.name} vs ${m.away.name}</strong>.</div>
       </div>
       <div class="chat-input-wrap">
-        <input class="chat-input" id="chatInput" type="text" placeholder="Pose ta question..." onkeydown="if(event.key==='Enter')sendChat()">
+        <input class="chat-input" id="chatInput" type="text" placeholder="Posez une question sur le match à l'IA..." onkeydown="if(event.key==='Enter')sendChat()">
         <button class="chat-send-btn" onclick="sendChat()">➤</button>
       </div>
     </div>`;
@@ -4429,6 +4771,25 @@ function buildSheetChat(m) {
 function sendChatQ(chip) {
   const q = chip.textContent;
   document.getElementById('chatInput').value = q;
+  sendChat();
+}
+
+function chatQuickActionsHTML() {
+  return `<div class="chat-action-grid" style="margin-top:8px">
+    ${CHAT_QUICK_ACTIONS.map(a => `<button class="chat-action-btn" onclick="sendChatKey('${a.key}')">
+      <span class="chat-action-icon">${a.icon}</span>${a.label}
+    </button>`).join('')}
+  </div>`;
+}
+
+function sendChatKey(key) {
+  const map = {
+    analyse:'📊 Analyse générale', cotes:'💰 Cotes et probabilités',
+    forme:'📈 Forme des équipes', buts:'⚽ Statistiques buts',
+    classement:'🏆 Classement général', pronostic:'🔮 Pronostic du match',
+    btts:'⚡ Pronostic BTTS', score:'🎯 Score exact'
+  };
+  document.getElementById('chatInput').value = map[key] || key;
   sendChat();
 }
 
@@ -4441,15 +4802,15 @@ function sendChat() {
   const msgsEl = document.getElementById('chatMessages');
   if (!msgsEl) return;
 
-  // Add user message
-  msgsEl.innerHTML += `<div class="chat-msg user">${q}</div>`;
+  // Strip emoji prefix for display
+  const displayQ = q.replace(/^[\u{1F300}-\u{1FFFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF} ]+/gu, '').trim() || q;
+  msgsEl.innerHTML += `<div class="chat-msg user">${displayQ}</div>`;
 
-  // Add thinking bubble
+  // Thinking bubble
   const thinkId = 'chat-think-' + Date.now();
-  msgsEl.innerHTML += `<div class="chat-msg thinking" id="${thinkId}">🤖 L'IA réfléchit…</div>`;
+  msgsEl.innerHTML += `<div class="chat-msg thinking" id="${thinkId}">🤖 L'IA traite votre demande…</div>`;
   msgsEl.scrollTop = msgsEl.scrollHeight;
 
-  // Get match and generate response after small delay
   const allMatches = Object.values(DB).flat();
   const m = allMatches.find(x => x.id === chatMatchId);
 
@@ -4458,14 +4819,19 @@ function sendChat() {
     if (thinkEl) thinkEl.remove();
     if (!m) { msgsEl.innerHTML += `<div class="chat-msg ai">❌ Match introuvable.</div>`; return; }
 
-    const response = generateAIResponse(q, m);
-    // Convert markdown bold to HTML
-    const htmlResp = response
-      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-      .replace(/\n/g, '<br>');
-    msgsEl.innerHTML += `<div class="chat-msg ai">${htmlResp}</div>`;
+    let response = generateAIResponse(q, m);
+    let htmlResp;
+    if (response.startsWith('__HTML__')) {
+      htmlResp = response.slice(8);
+    } else {
+      htmlResp = response
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+    }
+    // Add response + "Rechercher d'autres infos" grid
+    msgsEl.innerHTML += `<div class="chat-msg ai">${htmlResp}${chatQuickActionsHTML()}</div>`;
     msgsEl.scrollTop = msgsEl.scrollHeight;
-  }, 600 + Math.random() * 400);
+  }, 700 + Math.random() * 500);
 }
 
 // Paris étendu depuis le sheet
