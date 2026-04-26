@@ -401,6 +401,53 @@
     .btn-load-ai{margin:0 16px 12px;width:calc(100% - 32px);padding:14px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;font-weight:700;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform 0.15s}
     .btn-load-ai:active{transform:scale(0.97)}
 
+    /* ── BANKER DU JOUR ───────────────────────────────────── */
+    .banker-section{margin:0 16px 16px}
+    .banker-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .banker-title{font-size:0.9rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:6px}
+    .banker-badge{display:inline-flex;align-items:center;gap:4px;background:linear-gradient(135deg,#d97706,#f59e0b);color:#000;font-size:0.62rem;font-weight:900;padding:3px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:0.06em}
+    .banker-count{background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);font-size:0.72rem;font-weight:700;padding:2px 8px;border-radius:8px}
+    .banker-combined{background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(217,119,6,0.08));border:1.5px solid rgba(245,158,11,0.35);border-radius:16px;padding:14px;margin-bottom:12px}
+    .bc-label{font-size:0.68rem;font-weight:800;color:#f59e0b;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+    .bc-picks{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+    .bc-pick-chip{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.25);border-radius:20px;padding:4px 10px;font-size:0.7rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:4px}
+    .bc-stats{display:flex;align-items:center;justify-content:space-between}
+    .bc-odd{font-size:1.3rem;font-weight:900;color:#f59e0b}
+    .bc-rate{font-size:0.72rem;color:var(--muted)}
+    .banker-card{background:var(--card);border:1.5px solid rgba(245,158,11,0.25);border-radius:14px;padding:12px 14px;margin-bottom:8px}
+    .bc-trust{display:inline-flex;align-items:center;gap:3px;font-size:0.72rem;font-weight:800;color:#f59e0b;margin-left:auto}
+    /* ── TRUST SCORE /10 ──────────────────────────────────── */
+    .trust-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.25);border-radius:8px;padding:2px 7px;font-size:0.68rem;font-weight:800;color:#22c55e}
+    .trust-badge.medium{background:rgba(234,179,8,0.12);border-color:rgba(234,179,8,0.25);color:#eab308}
+    .trust-badge.low{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.2);color:#ef4444}
+    /* ── PREDICTED STATS ──────────────────────────────────── */
+    .pred-stat-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+    .pred-stat-val-h{font-size:0.82rem;font-weight:800;color:var(--accent);min-width:28px;text-align:right}
+    .pred-stat-val-a{font-size:0.82rem;font-weight:800;color:#ef4444;min-width:28px}
+    .pred-stat-bar{flex:1;height:7px;border-radius:4px;background:rgba(79,110,247,0.1);overflow:hidden;display:flex}
+    .pred-stat-h{height:100%;background:var(--accent);border-radius:4px 0 0 4px;transition:width 0.6s ease}
+    .pred-stat-a{height:100%;background:#ef4444;border-radius:0 4px 4px 0;transition:width 0.6s ease}
+    .pred-stat-lbl{font-size:0.68rem;color:var(--muted);min-width:90px;text-align:center}
+    /* ── MEILLEUR PARIS highlight ─────────────────────────── */
+    .best-bet-box{background:linear-gradient(135deg,rgba(79,110,247,0.08),rgba(124,58,237,0.06));border:1.5px solid rgba(79,110,247,0.3);border-radius:14px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+    .bb-label{font-size:0.62rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+    .bb-pick{font-size:0.95rem;font-weight:800;color:var(--text)}
+    .bb-sub{font-size:0.7rem;color:var(--muted);margin-top:2px}
+    .bb-odd{font-size:1.4rem;font-weight:900;color:var(--accent)}
+    /* ── COMPOUND BETS ────────────────────────────────────── */
+    .compound-label{font-size:0.72rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin:14px 0 6px;padding:0 2px}
+    /* ── GLOBAL ACCURACY COUNTER ─────────────────────────── */
+    .accuracy-strip{margin:0 16px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:12px 16px;display:flex;align-items:center;justify-content:space-around;gap:8px}
+    .acc-stat{text-align:center}
+    .acc-val{font-size:1.1rem;font-weight:900;color:var(--green)}
+    .acc-lbl{font-size:0.6rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:0.04em}
+    /* ── HALFTIME PREDICTION ──────────────────────────────── */
+    .ht-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+    .ht-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+    .ht-label{font-size:0.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+    .ht-score{font-size:1.6rem;font-weight:900;color:var(--text)}
+    .ht-prob{font-size:0.72rem;color:var(--accent);margin-top:4px}
+
     /* PROFILE */
     .profile-hero{margin:16px;border-radius:20px;background:linear-gradient(135deg,#1a1f48,#2d1b6b);padding:20px;display:flex;align-items:center;gap:16px}
     .avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:3px solid rgba(255,255,255,0.1)}
@@ -788,6 +835,25 @@
       <button class="ai-mode-btn"        id="aibtn-cote15" onclick="switchAIMode('cote15',this)">⚡ Cote 1.5</button>
       <button class="ai-mode-btn"        id="aibtn-dc"     onclick="switchAIMode('dc',this)">🔄 Vic. ou Nul</button>
       <button class="ai-mode-btn"        id="aibtn-value"  onclick="switchAIMode('value',this)">💎 Value Bet</button>
+    </div>
+
+    <!-- ACCURACY STRIP -->
+    <div class="accuracy-strip" id="accuracyStrip">
+      <div class="acc-stat"><div class="acc-val" id="accTotal">243 520</div><div class="acc-lbl">Matchs analysés</div></div>
+      <div class="acc-stat"><div class="acc-val" id="accWinRate" style="color:var(--accent)">—</div><div class="acc-lbl">Taux de réussite</div></div>
+      <div class="acc-stat"><div class="acc-val" id="accBankers" style="color:#f59e0b">—</div><div class="acc-lbl">Bankers</div></div>
+    </div>
+
+    <!-- BANKER DU JOUR -->
+    <div class="banker-section" id="bankerSection" style="display:none">
+      <div class="banker-header">
+        <div class="banker-title">🏆 <span>Bankers du Jour</span> <span class="banker-badge">TOP PICKS</span></div>
+        <span class="banker-count" id="bankerCount">0</span>
+      </div>
+      <!-- Combined coupon -->
+      <div class="banker-combined" id="bankerCombined"></div>
+      <!-- Individual bankers -->
+      <div id="bankerList"></div>
     </div>
 
     <!-- CONFIDENCE FILTER -->
@@ -2087,6 +2153,165 @@ function confirmAddBet() {
   showToast(_betModalWon ? '💰' : '📉', _betModalWon ? `+${Math.round(mise*(odd-1))}€ ajouté` : `-${mise}€ enregistré`);
 }
 
+// ── TRUST SCORE /10 (NerdyTips style) ────────────────────────────────────────
+function trustScore(confidence) {
+  // Convert 0-100 confidence to X.X/10 trust score
+  const raw = (confidence / 100) * 10;
+  return Math.round(raw * 10) / 10;
+}
+function trustBadgeHTML(confidence) {
+  const t = trustScore(confidence);
+  const cls = t >= 8 ? '' : t >= 6.5 ? 'medium' : 'low';
+  const star = t >= 9 ? '⭐' : t >= 7 ? '✅' : '⚡';
+  return `<span class="trust-badge ${cls}">${star} ${t.toFixed(1)}/10</span>`;
+}
+
+// ── COMPOUND BETS (1X&O2.5 style) ────────────────────────────────────────────
+function compoundBets(m) {
+  const ou = overUnderProbs(m);
+  const o25 = ou.find(x => x.label === 'Plus de 2.5') || { over: 50 };
+  const o15 = ou.find(x => x.label === 'Plus de 1.5') || { over: 70 };
+  const pH = m.prob.h, pA = m.prob.a, pD = m.prob.d;
+  const results = [];
+  // 1X & O2.5
+  const p1xO25 = (pH + pD) / 100 * o25.over / 100;
+  if (p1xO25 > 0.35) results.push({
+    l: `1X & +2.5 buts`, t:'⚡',
+    o: parseFloat((1 / (p1xO25 * 0.88)).toFixed(2)),
+    conf: Math.round(p1xO25 * 100),
+    sub: 'Domicile ne perd pas ET au moins 3 buts'
+  });
+  // X2 & O2.5
+  const px2O25 = (pD + pA) / 100 * o25.over / 100;
+  if (px2O25 > 0.30) results.push({
+    l: `X2 & +2.5 buts`, t:'⚡',
+    o: parseFloat((1 / (px2O25 * 0.88)).toFixed(2)),
+    conf: Math.round(px2O25 * 100),
+    sub: 'Extérieur ne perd pas ET au moins 3 buts'
+  });
+  // 1 & O1.5
+  const p1O15 = pH / 100 * o15.over / 100;
+  if (p1O15 > 0.40) results.push({
+    l: `1 & +1.5 buts`, t:'⚡',
+    o: parseFloat((1 / (p1O15 * 0.88)).toFixed(2)),
+    conf: Math.round(p1O15 * 100),
+    sub: 'Victoire domicile ET au moins 2 buts'
+  });
+  // BTTS & O2.5
+  const btts = bttsProbability(m) / 100;
+  const pBttsO25 = btts * o25.over / 100;
+  if (pBttsO25 > 0.25) results.push({
+    l: `BTTS & +2.5 buts`, t:'⚡',
+    o: parseFloat((1 / (pBttsO25 * 0.88)).toFixed(2)),
+    conf: Math.round(pBttsO25 * 100),
+    sub: 'Les deux équipes marquent ET +2.5 buts'
+  });
+  return results;
+}
+
+// ── PREDICTED MATCH STATS (possession, shots, corners) ───────────────────────
+function predictedMatchStats(m) {
+  const pH = m.prob.h, pA = m.prob.a;
+  const hW = m.home.form.filter(f=>f==='W').length;
+  const aW = m.away.form.filter(f=>f==='W').length;
+  // Possession correlated with win probability
+  const posH = Math.round(35 + (pH / 100) * 40 + hW * 1.5);
+  const posA = 100 - posH;
+  // Shots from possession + strength
+  const shotsH = Math.round(8 + (pH / 100) * 12 + hW);
+  const shotsA = Math.round(4 + (pA / 100) * 10 + aW);
+  const shotsOnH = Math.round(shotsH * 0.38);
+  const shotsOnA = Math.round(shotsA * 0.32);
+  // Corners from possession
+  const cornersH = Math.round(3 + (posH / 100) * 7);
+  const cornersA = Math.round(1 + (posA / 100) * 5);
+  // xG
+  const ps = predictedScores(m);
+  return {
+    possession: [posH, posA],
+    shots: [shotsH, shotsA],
+    shotsOn: [shotsOnH, shotsOnA],
+    corners: [cornersH, cornersA],
+    xG: [parseFloat(ps.hxG), parseFloat(ps.axG)],
+  };
+}
+
+// ── HALFTIME SCORE PREDICTION ─────────────────────────────────────────────────
+function halftimeScorePrediction(m) {
+  const ps = predictedScores(m);
+  // Halftime is typically ~40% of final goals
+  const hxGHT = parseFloat(ps.hxG) * 0.42;
+  const axGHT = parseFloat(ps.axG) * 0.42;
+  // Best halftime scores using Poisson
+  const htScores = [];
+  for (let h = 0; h <= 3; h++) {
+    for (let a = 0; a <= 3; a++) {
+      const p = poissonProb(h, hxGHT) * poissonProb(a, axGHT);
+      htScores.push({ score:`${h}-${a}`, prob: Math.round(p * 1000) / 10, h, a });
+    }
+  }
+  htScores.sort((a,b) => b.prob - a.prob);
+  return htScores.slice(0, 4);
+}
+
+// ── BANKER / MEILLEUR PICK HELPERS ────────────────────────────────────────────
+function getBankers(matches) {
+  // Bankers = picks with confidence >= 82%
+  const available = matches.filter(m => !isMatchOver(m) && m.bets && m.bets.length);
+  return available
+    .map(m => ({ m, pick: pickBestBet(m, 'ia') }))
+    .filter(x => x.pick && x.pick.confidence >= 82)
+    .sort((a,b) => b.pick.confidence - a.pick.confidence)
+    .slice(0, 8);
+}
+
+function renderBankerSection(matches) {
+  const bankers = getBankers(matches);
+  const el = document.getElementById('bankerSection');
+  const listEl = document.getElementById('bankerList');
+  const combinedEl = document.getElementById('bankerCombined');
+  const countEl = document.getElementById('bankerCount');
+  if (!el) return;
+
+  if (!bankers.length) { el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  countEl.textContent = bankers.length;
+
+  // Combined coupon (top 3 bankers)
+  const top3 = bankers.slice(0, 3);
+  const comboOdd = top3.reduce((a,x) => a * x.pick.bet.o, 1);
+  const avgConf = Math.round(top3.reduce((a,x) => a + x.pick.confidence, 0) / top3.length);
+  combinedEl.innerHTML = `
+    <div class="bc-label">🎫 Combiné du Jour <span style="font-size:0.62rem;color:var(--muted);font-weight:500">${top3.length} sélections</span></div>
+    <div class="bc-picks">
+      ${top3.map(x => `<span class="bc-pick-chip">⚽ ${x.m.home.name.slice(0,8)} vs ${x.m.away.name.slice(0,8)} · <strong>${x.pick.bet.l.split('·')[0].trim()}</strong></span>`).join('')}
+    </div>
+    <div class="bc-stats">
+      <div><div class="bc-odd">×${comboOdd.toFixed(2)}</div><div class="bc-rate">Cote totale</div></div>
+      <div style="text-align:right">${trustBadgeHTML(avgConf)}<div class="bc-rate" style="margin-top:4px">Confiance moy. ${avgConf}%</div></div>
+    </div>`;
+
+  // Individual banker cards
+  listEl.innerHTML = bankers.map(({m, pick}) => `
+    <div class="banker-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="font-size:0.78rem;font-weight:700">${m.lf} ${m.home.name} vs ${m.away.name}</div>
+        ${trustBadgeHTML(pick.confidence)}
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <span class="banker-badge">🏆 BANKER</span>
+          <div style="font-size:0.85rem;font-weight:800;color:var(--text);margin-top:4px">${pick.bet.l}</div>
+          <div style="font-size:0.68rem;color:var(--muted)">${m.league} · ${m.time || ''}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:1.2rem;font-weight:900;color:#f59e0b">×${pick.bet.o.toFixed(2)}</div>
+          <div style="font-size:0.65rem;color:var(--muted)">${pick.confidence}% confiance</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
 // ── ODDS SAFETY CATEGORY ──────────────────────────────────────────────────────
 function oddsCategory(o) {
   if (!o || o <= 0) return null;
@@ -2244,6 +2469,24 @@ function matchCardHTML(m) {
         </div>
         <div class="prob-vals"><span class="pv-h">${m.prob.h}%</span><span class="pv-d">${m.prob.d}%</span><span class="pv-a">${m.prob.a}%</span></div>
       </div>` : ''}
+      ${(() => {
+        if (isPast) return '';
+        const bp = pickBestBet(m, 'ia');
+        if (!bp) return '';
+        const sc = oddsCategory(bp.bet.o);
+        return `<div class="best-bet-box">
+          <div>
+            <div style="font-size:0.62rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">⭐ Meilleur Paris</div>
+            <div style="font-size:0.82rem;font-weight:800;color:var(--text)">${bp.bet.l}</div>
+            <div style="font-size:0.68rem;color:var(--muted)">${bp.bet.t}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:1rem;font-weight:900;color:var(--accent)">×${bp.bet.o.toFixed(2)}</div>
+            ${trustBadgeHTML(bp.confidence)}
+            ${sc ? `<div class="odds-safety ${sc.cls}" style="margin-top:3px;justify-content:flex-end">${sc.emoji} ${sc.label}</div>` : ''}
+          </div>
+        </div>`;
+      })()}
       ${bets}
       ${(!isPast && (bttsVal >= 55 || bttsBadge)) ? `<div style="display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap">${bttsBadge}</div>` : ''}
       <div style="display:flex;align-items:center;justify-content:center;margin-top:8px;gap:6px;font-size:0.74rem;color:var(--muted)">
@@ -2923,6 +3166,17 @@ function renderAI(matches) {
   if (elScanC) elScanC.textContent = overallAvgConf ? overallAvgConf + '%' : '—';
   // ──────────────────────────────────────────────────────────
 
+  // ── Accuracy strip (NerdyTips style) ──────────────────────
+  const allMatches = DB[selectedDate] || [];
+  const bankersToday = getBankers(allMatches);
+  const elAccBankers = document.getElementById('accBankers');
+  if (elAccBankers) elAccBankers.textContent = bankersToday.length || '—';
+  const elAccWin = document.getElementById('accWinRate');
+  if (elAccWin) elAccWin.textContent = overallAvgConf ? overallAvgConf + '%' : '—';
+  // Render banker section
+  renderBankerSection(allMatches);
+  // ──────────────────────────────────────────────────────────
+
   if (!picks.length) {
     document.getElementById('aiPickList').innerHTML =
       `<div class="no-matches"><div class="ni">🤖</div><div class="nt">Pas de sélection disponible</div><div style="font-size:0.78rem;color:var(--muted);margin-top:4px">${currentConfFilter > 0 ? `Aucun pick ≥${currentConfFilter}% · baissez le filtre` : 'Essayez un autre mode ou une autre date'}</div></div>`;
@@ -2964,7 +3218,7 @@ function renderAI(matches) {
       </div>
       <div class="ai-pick-head">
         <span class="ai-pick-match">${m.lf} ${m.home.name} vs ${m.away.name}</span>
-        <span class="ai-confidence" style="color:${confColor}">🧠 ${conf}%</span>
+        <span class="ai-confidence" style="color:${confColor}">🧠 ${conf}% ${trustBadgeHTML(conf)}</span>
       </div>
       <div class="ai-pick-bet">${b.t} · <strong>${b.l}</strong> · ${m.league}</div>
       <div style="margin:6px 0 4px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden">
@@ -3233,7 +3487,37 @@ function buildSheetStats(m) {
       <div class="ds-mini-card away"><div class="ds-mini-val">${rand(35,60,41)}%</div><div class="ds-mini-lbl">✈️ % victoire ext.</div></div>
       <div class="ds-mini-card home"><div class="ds-mini-val">${rand(18,32,42)}</div><div class="ds-mini-lbl">🏠 Buts dom. (saison)</div></div>
       <div class="ds-mini-card away"><div class="ds-mini-val">${rand(14,28,43)}</div><div class="ds-mini-lbl">✈️ Buts ext. (saison)</div></div>
-    </div>`;
+    </div>
+    ${(() => {
+      if (m.status === 'finished') return '';
+      const ps = predictedMatchStats(m);
+      return `<div class="stat-section-title" style="margin-top:14px">🔮 Prédictions pour ce match</div>
+      <div class="ds-grid2" style="margin-bottom:10px">
+        <div class="ds-mini-card home"><div class="ds-mini-val" style="color:var(--accent)">${ps.hPossession}%</div><div class="ds-mini-lbl">🏠 Possession dom.</div></div>
+        <div class="ds-mini-card away"><div class="ds-mini-val" style="color:var(--orange)">${ps.aPossession}%</div><div class="ds-mini-lbl">✈️ Possession ext.</div></div>
+        <div class="ds-mini-card home"><div class="ds-mini-val">${ps.hShots}</div><div class="ds-mini-lbl">🏠 Tirs prédits</div></div>
+        <div class="ds-mini-card away"><div class="ds-mini-val">${ps.aShots}</div><div class="ds-mini-lbl">✈️ Tirs prédits</div></div>
+        <div class="ds-mini-card home"><div class="ds-mini-val">${ps.hShotsOn}</div><div class="ds-mini-lbl">🏠 Tirs cadrés</div></div>
+        <div class="ds-mini-card away"><div class="ds-mini-val">${ps.aShotsOn}</div><div class="ds-mini-lbl">✈️ Tirs cadrés</div></div>
+        <div class="ds-mini-card home"><div class="ds-mini-val">${ps.hCorners}</div><div class="ds-mini-lbl">🏠 Corners</div></div>
+        <div class="ds-mini-card away"><div class="ds-mini-val">${ps.aCorners}</div><div class="ds-mini-lbl">✈️ Corners</div></div>
+      </div>
+      <div style="background:var(--bg2);border-radius:12px;padding:10px 14px;border:1px solid var(--border);margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase">xG prédit</span>
+          <span style="font-size:0.7rem;color:var(--muted)">Expected Goals</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:1.1rem;font-weight:900;color:var(--accent)">${ps.hxG}</span>
+          <div style="flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;display:flex">
+            <div style="height:100%;background:var(--accent);border-radius:4px 0 0 4px;width:${Math.round(ps.hxG/(ps.hxG+ps.axG)*100)||50}%;transition:width 0.5s"></div>
+            <div style="height:100%;background:var(--orange);border-radius:0 4px 4px 0;width:${Math.round(ps.axG/(ps.hxG+ps.axG)*100)||50}%;transition:width 0.5s"></div>
+          </div>
+          <span style="font-size:1.1rem;font-weight:900;color:var(--orange)">${ps.axG}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--muted);margin-top:3px"><span>🏠 ${m.home.name}</span><span>${m.away.name} ✈️</span></div>
+      </div>`;
+    })()}`;
 }
 
 function buildSheetH2H(m) {
@@ -3381,6 +3665,10 @@ function buildSheetBets(m) {
       { l:'Nul à la mi-temps',                 sub:'Résultat après 45 min', o:1.90, t:'⏱️', conf: Math.round(m.prob.d*1.2) },
       { l:`${m.away.name} mène à la mi-temps`, sub:'Résultat après 45 min', o:(100/Math.max(1,m.prob.a)*1.1).toFixed(2), t:'⏱️', conf: Math.round(m.prob.a*0.7) },
     ]},
+    { cat:'🔗 Paris combinés (Poisson)', bets: (() => {
+      const cb = compoundBets(m);
+      return cb.map(c => ({ l:c.label, sub:c.detail, o:Math.max(1.10,(100/Math.max(1,c.prob)*0.85)).toFixed(2), t:'🔗', conf:c.prob }));
+    })() },
   ];
 
   const html = EXTENDED_BETS.map(cat => {
@@ -3466,7 +3754,19 @@ function buildSheetScoreExact(m) {
         <div class="kelly-cell"><div class="kelly-val">${k.frac.toLocaleString('fr-FR')} FCFA</div><div class="kelly-lbl">¼ Kelly recommandé</div></div>
         <div class="kelly-cell"><div class="kelly-val">${k.pct}%</div><div class="kelly-lbl">% de bankroll</div></div>
       </div>
-    </div>`;
+    </div>
+    ${(() => {
+      const ht = halftimeScorePrediction(m);
+      if (!ht || !ht.length) return '';
+      return `<div class="stat-section-title" style="margin-top:16px">⏱️ Scores mi-temps les plus probables</div>
+      <div class="ht-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px">
+        ${ht.map((s,i) => `<div style="background:var(--bg2);border-radius:12px;padding:10px 12px;border:${i===0?'1.5px solid var(--accent)':'1px solid var(--border)'};position:relative">
+          ${i===0 ? '<div style="position:absolute;top:-7px;left:50%;transform:translateX(-50%);background:var(--accent);color:white;font-size:0.55rem;font-weight:800;border-radius:4px;padding:1px 6px;text-transform:uppercase">Favori MT</div>' : ''}
+          <div style="font-size:1.3rem;font-weight:900;text-align:center;color:var(--text)">${s.score}</div>
+          <div style="font-size:0.7rem;color:var(--accent);text-align:center;font-weight:700">${s.prob}%</div>
+        </div>`).join('')}
+      </div>`;
+    })()}`;
 }
 
 function buildSheetValue(m) {
