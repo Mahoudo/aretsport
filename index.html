@@ -2222,52 +2222,88 @@ function pickBestBet(m, mode) {
   if (!m.bets || !m.bets.length) return null;
 
   if (mode === 'safe') {
-    // Cherche le pari avec cote ≤ 1.60 la plus basse (favori fort)
-    const sorted = m.bets
-      .map((b,i)=>({b,i}))
-      .filter(x => x.b.o >= 1.10 && x.b.o <= 1.60)
-      .sort((a,b)=>a.b.o - b.b.o);
+    // Vise 90%+ : DC ou victoire avec prob >= 75%, cote ≤ 1.50
+    const pH = m.prob.h, pA = m.prob.a, pD = m.prob.d;
+    const o = m.odds || {};
+    // DC 1X si prob >= 75%
+    if (o['1'] && o['X']) {
+      const odd1x = parseFloat((1 / (1/o['1'] + 1/o['X'])).toFixed(2));
+      if (pH + pD >= 75 && odd1x >= 1.03 && odd1x <= 1.50) {
+        return { bet: {l:`Double Chance 1X · ${m.home.name} ou Nul`, o:odd1x, t:'DC'}, betIdx:-1, confidence: Math.min(Math.round((pH+pD)*0.95), 93) };
+      }
+    }
+    // DC X2 si prob >= 75%
+    if (o['2'] && o['X']) {
+      const oddx2 = parseFloat((1 / (1/o['2'] + 1/o['X'])).toFixed(2));
+      if (pA + pD >= 75 && oddx2 >= 1.03 && oddx2 <= 1.50) {
+        return { bet: {l:`Double Chance X2 · Nul ou ${m.away.name}`, o:oddx2, t:'DC'}, betIdx:-1, confidence: Math.min(Math.round((pA+pD)*0.95), 93) };
+      }
+    }
+    // Victoire directe si prob >= 75% et cote ≤ 1.50
+    const sorted = m.bets.map((b,i)=>({b,i}))
+      .filter(x => x.b.o >= 1.05 && x.b.o <= 1.50 && x.b.t === '1X2')
+      .sort((a,b) => a.b.o - b.b.o);
     if (!sorted.length) return null;
-    const conf = Math.round(97 - sorted[0].b.o * 30); // plus la cote est basse, plus la conf est haute
-    return {bet: sorted[0].b, betIdx: sorted[0].i, confidence: Math.min(conf, 96)};
+    const topProb = sorted[0].b.l.startsWith('1') ? pH : pA;
+    if (topProb < 70) return null;
+    const conf = Math.round(97 - sorted[0].b.o * 28);
+    return { bet: sorted[0].b, betIdx: sorted[0].i, confidence: Math.min(conf, 94) };
   }
 
   if (mode === 'cote15') {
-    // Cherche le pari dont la cote est la plus proche de 1.50
-    const sorted = m.bets
-      .map((b,i)=>({b,i}))
-      .filter(x => x.b.o >= 1.30 && x.b.o <= 1.80)
-      .sort((a,b) => Math.abs(a.b.o - 1.50) - Math.abs(b.b.o - 1.50));
-    if (!sorted.length) return null;
-    const dist = Math.abs(sorted[0].b.o - 1.50);
-    const conf = Math.round(80 - dist * 40);
-    return {bet: sorted[0].b, betIdx: sorted[0].i, confidence: Math.max(55, Math.min(conf, 84))};
+    // Cote autour de 1.50 — uniquement DC ou victoire avec prob >= 65%
+    const pH = m.prob.h, pA = m.prob.a, pD = m.prob.d;
+    const o = m.odds || {};
+    // Cherche DC proche de 1.50
+    const candidates = [];
+    if (o['1'] && o['X']) {
+      const odd1x = parseFloat((1 / (1/o['1'] + 1/o['X'])).toFixed(2));
+      if (pH + pD >= 65 && odd1x >= 1.20 && odd1x <= 1.80)
+        candidates.push({ bet:{l:`Double Chance 1X · ${m.home.name} ou Nul`, o:odd1x, t:'DC'}, betIdx:-1, prob: pH+pD });
+    }
+    if (o['2'] && o['X']) {
+      const oddx2 = parseFloat((1 / (1/o['2'] + 1/o['X'])).toFixed(2));
+      if (pA + pD >= 65 && oddx2 >= 1.20 && oddx2 <= 1.80)
+        candidates.push({ bet:{l:`Double Chance X2 · Nul ou ${m.away.name}`, o:oddx2, t:'DC'}, betIdx:-1, prob: pA+pD });
+    }
+    // Victoire directe avec prob >= 65%
+    m.bets.filter(b => b.t === '1X2' && b.o >= 1.20 && b.o <= 1.80).forEach((b,i) => {
+      const prob = b.l.startsWith('1') ? pH : (b.l.startsWith('2') ? pA : pD);
+      if (prob >= 65) candidates.push({ bet:b, betIdx:i, prob });
+    });
+    if (!candidates.length) return null;
+    // Trier par proximité à 1.50
+    candidates.sort((a,b) => Math.abs(a.bet.o - 1.50) - Math.abs(b.bet.o - 1.50));
+    const best = candidates[0];
+    const dist = Math.abs(best.bet.o - 1.50);
+    const conf = Math.round(best.prob * 0.9 - dist * 20);
+    return { bet: best.bet, betIdx: best.betIdx, confidence: Math.max(65, Math.min(conf, 88)) };
   }
 
   if (mode === 'dc') {
     const o = m.odds || {};
     const o1 = o['1'], ox = o['X'], o2 = o['2'];
-    // Calcul Double Chance : 1X (dom ou nul) et X2 (ext ou nul)
-    // odd_1X ≈ 1 / (1/o1 + 1/ox) avec marge bookmaker réduite
     let best = null, bestConf = 0;
+    // DC 1X : exige prob >= 65% pour qualité
     if (o1 && ox) {
       const odd1x = parseFloat((1 / (1/o1 + 1/ox) * 0.95).toFixed(2));
       const prob1x = m.prob.h + m.prob.d;
-      if (odd1x >= 1.05 && odd1x <= 2.0 && prob1x >= 55) {
-        const conf = Math.min(Math.round(prob1x * 0.92), 91);
+      if (odd1x >= 1.05 && odd1x <= 2.0 && prob1x >= 65) {
+        const conf = Math.min(Math.round(prob1x * 0.94), 93);
         if (conf > bestConf) {
-          best = { bet: {l: `Double Chance 1X · ${m.home.name} ou Nul`, o: odd1x, t: 'DC'}, betIdx: -1, confidence: conf, dcType: '1x' };
+          best = { bet: {l:`Double Chance 1X · ${m.home.name} ou Nul`, o:odd1x, t:'DC'}, betIdx:-1, confidence:conf };
           bestConf = conf;
         }
       }
     }
+    // DC X2 : exige prob >= 65%
     if (o2 && ox) {
       const oddx2 = parseFloat((1 / (1/o2 + 1/ox) * 0.95).toFixed(2));
       const probx2 = m.prob.a + m.prob.d;
-      if (oddx2 >= 1.05 && oddx2 <= 2.0 && probx2 >= 55) {
-        const conf = Math.min(Math.round(probx2 * 0.92), 91);
+      if (oddx2 >= 1.05 && oddx2 <= 2.0 && probx2 >= 65) {
+        const conf = Math.min(Math.round(probx2 * 0.94), 93);
         if (conf > bestConf) {
-          best = { bet: {l: `Double Chance X2 · Nul ou ${m.away.name}`, o: oddx2, t: 'DC'}, betIdx: -1, confidence: conf, dcType: 'x2' };
+          best = { bet: {l:`Double Chance X2 · Nul ou ${m.away.name}`, o:oddx2, t:'DC'}, betIdx:-1, confidence:conf };
           bestConf = conf;
         }
       }
@@ -2275,46 +2311,56 @@ function pickBestBet(m, mode) {
     return best;
   }
 
-  // mode 'ia' — priorité : Double Chance > Over 1.5 > victoire directe si très sûre
+  // ── mode 'ia' : analyse complète → viser 90% de réussite ──────────────────
   const pH = m.prob.h, pA = m.prob.a, pD = m.prob.d;
 
-  // 1) Favori très fort (>= 65%) → victoire directe
-  if (pH >= 65) {
+  // 1) Victoire directe seulement si favori très dominant (>= 72%)
+  if (pH >= 72) {
     const b1 = m.bets.find(b => b.t === '1X2' && b.l.startsWith('1 —'));
-    if (b1 && b1.o >= 1.10 && b1.o <= 2.20)
-      return { bet: b1, betIdx: m.bets.indexOf(b1), confidence: Math.min(Math.round(pH * 0.9), 89) };
+    if (b1 && b1.o >= 1.10 && b1.o <= 2.0)
+      return { bet:b1, betIdx:m.bets.indexOf(b1), confidence: Math.min(Math.round(pH*0.92), 91) };
   }
-  if (pA >= 62) {
+  if (pA >= 70) {
     const b2 = m.bets.find(b => b.t === '1X2' && b.l.startsWith('2 —'));
-    if (b2 && b2.o >= 1.10 && b2.o <= 2.20)
-      return { bet: b2, betIdx: m.bets.indexOf(b2), confidence: Math.min(Math.round(pA * 0.88), 86) };
+    if (b2 && b2.o >= 1.10 && b2.o <= 2.0)
+      return { bet:b2, betIdx:m.bets.indexOf(b2), confidence: Math.min(Math.round(pA*0.90), 89) };
   }
 
-  // 2) Double Chance — choisir le meilleur côté (dom ou ext)
+  // 2) Double Chance si prob combinée >= 68%
   const dc1x = m.bets.find(b => b.t === 'DC' && b.l.includes('1X'));
   const dcx2 = m.bets.find(b => b.t === 'DC' && b.l.includes('X2'));
-  const bestDC = (dc1x && dcx2)
-    ? (pH + pD >= pA + pD ? dc1x : dcx2)
-    : (dc1x || dcx2);
-  if (bestDC && bestDC.o >= 1.05 && bestDC.o <= 1.90) {
-    const probDC = bestDC === dc1x ? pH + pD : pA + pD;
-    return { bet: bestDC, betIdx: m.bets.indexOf(bestDC), confidence: Math.min(Math.round(probDC * 0.88), 90) };
+  const prob1x = pH + pD, probx2 = pA + pD;
+  const bestDCprob = prob1x >= probx2 ? prob1x : probx2;
+  const bestDC = prob1x >= probx2 ? dc1x : dcx2;
+  if (bestDC && bestDCprob >= 68 && bestDC.o >= 1.05 && bestDC.o <= 2.0) {
+    return { bet:bestDC, betIdx:m.bets.indexOf(bestDC), confidence: Math.min(Math.round(bestDCprob*0.91), 91) };
   }
 
-  // 3) Over 1.5 buts
+  // 3) Over 1.5 buts si cote très attractive (forte attaque des deux équipes)
   const over = m.bets.find(b => b.t === 'OVER');
-  if (over && over.o >= 1.05 && over.o <= 1.65)
-    return { bet: over, betIdx: m.bets.indexOf(over), confidence: 72 };
+  if (over && over.o >= 1.05 && over.o <= 1.40)
+    return { bet:over, betIdx:m.bets.indexOf(over), confidence:78 };
 
-  // 4) Dernier recours — victoire domicile si cote raisonnable
-  const b1 = m.bets.find(b => b.t === '1X2' && b.l.startsWith('1 —'));
-  if (b1 && b1.o >= 1.10 && b1.o <= 1.90 && pH >= 48)
-    return { bet: b1, betIdx: m.bets.indexOf(b1), confidence: 62 };
+  // 4) Dernier recours DC si prob >= 60%
+  if (bestDC && bestDCprob >= 60 && bestDC.o >= 1.05 && bestDC.o <= 1.70) {
+    return { bet:bestDC, betIdx:m.bets.indexOf(bestDC), confidence: Math.min(Math.round(bestDCprob*0.88), 85) };
+  }
+
   return null;
 }
 
+function isMatchOver(m) {
+  // Un match est terminé si son statut est 'finished', ou si son chrono live >= 90 min
+  if (m.status === 'finished') return true;
+  if (m.status === 'live') {
+    const min = getLiveMinute(m);
+    if (min >= 90) return true;
+  }
+  return false;
+}
+
 function getAIPicks(matches, mode) {
-  const available = matches.filter(m => m.status !== 'finished' && m.bets && m.bets.length);
+  const available = matches.filter(m => !isMatchOver(m) && m.bets && m.bets.length);
   const withPick = available
     .map(m => ({ m, pick: pickBestBet(m, mode) }))
     .filter(x => x.pick !== null);
@@ -2332,19 +2378,20 @@ function getAIPicks(matches, mode) {
       .slice(0, 4);
   }
   if (mode === 'dc') {
-    // Double Chance — trier par confiance desc, max 4
+    // Double Chance — confiance >= 70, trier par confiance desc, max 5
     return withPick
+      .filter(x => x.pick.confidence >= 70)
       .sort((a,b) => b.pick.confidence - a.pick.confidence)
-      .slice(0, 4);
+      .slice(0, 5);
   }
-  // ia : priorité DC et Over 1.5 — trier par confiance desc, max 5 picks
-  // Séparer DC/Over (moins risqués) des picks 1X2 simples
-  const safe = withPick.filter(x => x.pick.bet.t === 'DC' || x.pick.bet.t === 'OVER');
-  const direct = withPick.filter(x => x.pick.bet.t === '1X2');
-  safe.sort((a,b) => b.pick.confidence - a.pick.confidence);
-  direct.sort((a,b) => b.pick.confidence - a.pick.confidence);
-  // Mélanger : max 3 DC/Over + 1-2 directs si besoin
-  const merged = [...safe.slice(0, 4), ...direct.slice(0, 2)];
+  // ia : viser 90% — confiance minimale 68, DC et Over en priorité
+  const highConf = withPick.filter(x => x.pick.confidence >= 68);
+  const safePicks = highConf.filter(x => x.pick.bet.t === 'DC' || x.pick.bet.t === 'OVER');
+  const directPicks = highConf.filter(x => x.pick.bet.t === '1X2');
+  safePicks.sort((a,b) => b.pick.confidence - a.pick.confidence);
+  directPicks.sort((a,b) => b.pick.confidence - a.pick.confidence);
+  // Max 4 DC/Over + 1 direct (ex: Bayern Munich favori à 75%+)
+  const merged = [...safePicks.slice(0, 4), ...directPicks.slice(0, 1)];
   return merged.slice(0, 5);
 }
 
