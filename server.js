@@ -79,6 +79,8 @@ async function fetchESPNLeague(league, dateStr) {
         const homeName = home.team?.displayName || home.team?.name || '';
         const awayName = away.team?.displayName || away.team?.name || '';
         if (!homeName || !awayName) continue;
+        const homeLogo = home.team?.logo || null;
+        const awayLogo = away.team?.logo || null;
 
         const leagueName = data.leagues?.[0]?.name || league;
         const statusType = comp.status?.type?.name || 'STATUS_SCHEDULED';
@@ -110,6 +112,8 @@ async function fetchESPNLeague(league, dateStr) {
           league: leagueName,
           home: homeName,
           away: awayName,
+          homeLogo,
+          awayLogo,
           time: timeStr,
           date: matchDate,
           minute, stoppage, score,
@@ -247,6 +251,8 @@ async function getMatches() {
         if (ex.minute == null && m.minute != null) ex.minute = m.minute;
         if (ex.stoppage == null && m.stoppage != null) ex.stoppage = m.stoppage;
         if (m.status === 'live') ex.status = 'live';
+        if (!ex.homeLogo && m.homeLogo) ex.homeLogo = m.homeLogo;
+        if (!ex.awayLogo && m.awayLogo) ex.awayLogo = m.awayLogo;
         if (!ex.sources) ex.sources = [ex.source];
         if (!ex.sources.includes(m.source)) ex.sources.push(m.source);
       } else {

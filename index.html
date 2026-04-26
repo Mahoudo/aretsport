@@ -153,7 +153,8 @@
     .mc-body{padding:14px}
     .mc-teams{display:flex;align-items:center;gap:8px;margin-bottom:12px}
     .mc-team{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
-    .mc-logo{width:44px;height:44px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+    .mc-logo{width:44px;height:44px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden}
+    .mc-logo img{width:34px;height:34px;object-fit:contain;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))}
     .mc-name{font-size:0.78rem;font-weight:700;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
     .mc-form{display:flex;gap:2px;justify-content:center}
     .fd{width:12px;height:12px;border-radius:50%;font-size:0.5rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:white}
@@ -1280,6 +1281,26 @@ function betclicToApp(m, idx) {
     { l: '2 — ' + m.away, o: o['2'] || 0, t: '1X2' },
   ].filter(b => b.o > 0);
 
+  // Double Chance : 1X (domicile ou nul)
+  if (o['1'] && o['X']) {
+    const odd1x = parseFloat((1 / (1/o['1'] + 1/o['X'])).toFixed(2));
+    if (odd1x >= 1.03) bets.push({ l: `Double Chance 1X · ${m.home} ou Nul`, o: odd1x, t: 'DC' });
+  }
+  // Double Chance : X2 (nul ou extérieur)
+  if (o['2'] && o['X']) {
+    const oddx2 = parseFloat((1 / (1/o['2'] + 1/o['X'])).toFixed(2));
+    if (oddx2 >= 1.03) bets.push({ l: `Double Chance X2 · Nul ou ${m.away}`, o: oddx2, t: 'DC' });
+  }
+  // Plus de 1.5 buts : estimé via la forme offensive des deux équipes
+  const hWins = homeForm.filter(f => f === 'W').length;
+  const aWins = awayForm.filter(f => f === 'W').length;
+  const scoringIdx = hWins + aWins; // 0-10
+  const over15Prob = Math.min(0.93, 0.58 + scoringIdx * 0.03);
+  const over15Odd = parseFloat((1.06 / over15Prob).toFixed(2));
+  if (over15Odd >= 1.05 && over15Odd <= 1.65) {
+    bets.push({ l: 'Plus de 1.5 buts', o: over15Odd, t: 'OVER' });
+  }
+
   let timeDisplay = m.time || '';
   const timeMatch = timeDisplay.match(/(\d{1,2}:\d{2})/);
   if (timeMatch) timeDisplay = timeMatch[1];
@@ -1296,8 +1317,8 @@ function betclicToApp(m, idx) {
     lf: leagueFlag(m.league),
     comp: m.league,
     time: timeDisplay,
-    home: { name: m.home, emoji: teamEmoji(m.home), form: homeForm },
-    away: { name: m.away, emoji: teamEmoji(m.away), form: awayForm },
+    home: { name: m.home, emoji: teamEmoji(m.home), form: homeForm, logo: m.homeLogo || null },
+    away: { name: m.away, emoji: teamEmoji(m.away), form: awayForm, logo: m.awayLogo || null },
     prob, risk, rec, bets,
     isEstimated,
     analysis: `[${srcLabel}] ${oddsStr}`,
@@ -1358,7 +1379,7 @@ async function fetchBetclicMatches(silent) {
         const liveCount = (byDate[TODAY] || []).filter(m => m.status === 'live').length;
         if (lbl) lbl.textContent = liveCount > 0 ? `${liveCount} LIVE` : 'LIVE';
         if (!silent) {
-          const srcInfo = data.sources ? `betclic:${data.sources.betclic} · sofascore:${data.sources.sofascore}` : '';
+          const srcInfo = data.sources ? `betclic:${data.sources.betclic} · espn:${data.sources.espn}` : '';
           showToast('🔄', `${loaded} matchs chargés — ${srcInfo}`);
         }
       }
@@ -1802,9 +1823,9 @@ function matchCardHTML(m) {
     </div>
     <div class="mc-body">
       <div class="mc-teams">
-        <div class="mc-team"><div class="mc-logo">${m.home.emoji}</div><div class="mc-name">${m.home.name}</div><div class="mc-form">${formH}</div></div>
+        <div class="mc-team"><div class="mc-logo">${m.home.logo ? `<img src="${m.home.logo}" alt="${m.home.name}" onerror="this.replaceWith(document.createTextNode('${m.home.emoji}'))">` : m.home.emoji}</div><div class="mc-name">${m.home.name}</div><div class="mc-form">${formH}</div></div>
         <div class="mc-vs">${centerContent}</div>
-        <div class="mc-team"><div class="mc-logo">${m.away.emoji}</div><div class="mc-name">${m.away.name}</div><div class="mc-form">${formA}</div></div>
+        <div class="mc-team"><div class="mc-logo">${m.away.logo ? `<img src="${m.away.logo}" alt="${m.away.name}" onerror="this.replaceWith(document.createTextNode('${m.away.emoji}'))">` : m.away.emoji}</div><div class="mc-name">${m.away.name}</div><div class="mc-form">${formA}</div></div>
       </div>
       ${resultBadge}
       ${!isPast ? `<div class="prob-wrap">
@@ -1968,15 +1989,21 @@ function gsGoToMatch(date, mid) {
 // Matchent Betclic ("Angl. Premier League") ET ESPN ("English Premier League")
 function isTop7(m) {
   const lg = (m.league || '').toLowerCase().replace(/\./g, '').trim();
-  return (
-    lg.includes('premier league') ||
-    lg.includes('bundesliga') ||
-    lg.includes('laliga') || lg.includes('la liga') ||
-    lg.includes('ligue 1') ||
-    (lg.includes('serie a') && (lg.includes('italian') || lg.includes('italie'))) ||
-    lg.includes('primeira liga') || lg.includes('liga betclic') ||
-    lg.includes('eredivisie')
-  );
+  // English Premier League (ESPN: "english premier league", Betclic: "angl premier league")
+  const isPL = (lg.includes('premier league') && (lg.includes('angl') || lg.includes('english')));
+  // Bundesliga (exclude others)
+  const isBL = lg.includes('bundesliga') && !lg.includes('2') && !lg.includes('ii');
+  // La Liga (ESPN: "spanish laliga", Betclic: "espagne laliga")
+  const isLL = (lg.includes('laliga') || lg.includes('la liga')) && (lg.includes('espagne') || lg.includes('spanish') || lg.includes('esp'));
+  // Ligue 1 (Betclic: "ligue 1 mcdonald", ESPN: "french ligue 1")
+  const isL1 = lg.includes('ligue 1') && (lg.includes('french') || lg.includes('mcdonald') || lg.includes('france'));
+  // Serie A Italian only
+  const isSA = lg.includes('serie a') && (lg.includes('italian') || lg.includes('italie') || lg.includes('ita'));
+  // Liga Portugal / Liga Betclic
+  const isPT = lg.includes('primeira liga') || lg.includes('liga betclic') || (lg.includes('portuguese') && lg.includes('liga'));
+  // Eredivisie (Netherlands)
+  const isED = lg.includes('eredivisie') || (lg.includes('dutch') && lg.includes('eredivisie'));
+  return isPL || isBL || isLL || isL1 || isSA || isPT || isED;
 }
 
 function applyFilter(q) {
@@ -2248,11 +2275,42 @@ function pickBestBet(m, mode) {
     return best;
   }
 
-  // mode 'ia' — pari recommandé (rec = true), meilleure cote attractive
-  if (!m.rec) return null;
-  const b = m.bets[0];
-  const conf = m.prob.h > 60 ? 88 : m.prob.h > 50 ? 75 : 68;
-  return {bet: b, betIdx: 0, confidence: conf};
+  // mode 'ia' — priorité : Double Chance > Over 1.5 > victoire directe si très sûre
+  const pH = m.prob.h, pA = m.prob.a, pD = m.prob.d;
+
+  // 1) Favori très fort (>= 65%) → victoire directe
+  if (pH >= 65) {
+    const b1 = m.bets.find(b => b.t === '1X2' && b.l.startsWith('1 —'));
+    if (b1 && b1.o >= 1.10 && b1.o <= 2.20)
+      return { bet: b1, betIdx: m.bets.indexOf(b1), confidence: Math.min(Math.round(pH * 0.9), 89) };
+  }
+  if (pA >= 62) {
+    const b2 = m.bets.find(b => b.t === '1X2' && b.l.startsWith('2 —'));
+    if (b2 && b2.o >= 1.10 && b2.o <= 2.20)
+      return { bet: b2, betIdx: m.bets.indexOf(b2), confidence: Math.min(Math.round(pA * 0.88), 86) };
+  }
+
+  // 2) Double Chance — choisir le meilleur côté (dom ou ext)
+  const dc1x = m.bets.find(b => b.t === 'DC' && b.l.includes('1X'));
+  const dcx2 = m.bets.find(b => b.t === 'DC' && b.l.includes('X2'));
+  const bestDC = (dc1x && dcx2)
+    ? (pH + pD >= pA + pD ? dc1x : dcx2)
+    : (dc1x || dcx2);
+  if (bestDC && bestDC.o >= 1.05 && bestDC.o <= 1.90) {
+    const probDC = bestDC === dc1x ? pH + pD : pA + pD;
+    return { bet: bestDC, betIdx: m.bets.indexOf(bestDC), confidence: Math.min(Math.round(probDC * 0.88), 90) };
+  }
+
+  // 3) Over 1.5 buts
+  const over = m.bets.find(b => b.t === 'OVER');
+  if (over && over.o >= 1.05 && over.o <= 1.65)
+    return { bet: over, betIdx: m.bets.indexOf(over), confidence: 72 };
+
+  // 4) Dernier recours — victoire domicile si cote raisonnable
+  const b1 = m.bets.find(b => b.t === '1X2' && b.l.startsWith('1 —'));
+  if (b1 && b1.o >= 1.10 && b1.o <= 1.90 && pH >= 48)
+    return { bet: b1, betIdx: m.bets.indexOf(b1), confidence: 62 };
+  return null;
 }
 
 function getAIPicks(matches, mode) {
@@ -2279,16 +2337,21 @@ function getAIPicks(matches, mode) {
       .sort((a,b) => b.pick.confidence - a.pick.confidence)
       .slice(0, 4);
   }
-  // ia : trier par confiance, max 4
-  return withPick
-    .sort((a,b) => b.pick.confidence - a.pick.confidence)
-    .slice(0, 4);
+  // ia : priorité DC et Over 1.5 — trier par confiance desc, max 5 picks
+  // Séparer DC/Over (moins risqués) des picks 1X2 simples
+  const safe = withPick.filter(x => x.pick.bet.t === 'DC' || x.pick.bet.t === 'OVER');
+  const direct = withPick.filter(x => x.pick.bet.t === '1X2');
+  safe.sort((a,b) => b.pick.confidence - a.pick.confidence);
+  direct.sort((a,b) => b.pick.confidence - a.pick.confidence);
+  // Mélanger : max 3 DC/Over + 1-2 directs si besoin
+  const merged = [...safe.slice(0, 4), ...direct.slice(0, 2)];
+  return merged.slice(0, 5);
 }
 
 const AI_MODE_META = {
   ia: {
     title: 'Coupon Optimisé IA',
-    sub: 'Sélection automatique des meilleurs paris basée sur nos modèles prédictifs.',
+    sub: 'Priorité Double Chance & Plus de 1.5 buts — moins de risque, meilleur taux de réussite.',
     sectionTitle: '⭐ Sélections IA',
     badge: '<span class="coupon-type-badge ctb-ia">🤖 IA Standard</span>',
     loadLabel: '➕ Charger sélections IA dans mon coupon',
