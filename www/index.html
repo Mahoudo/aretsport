@@ -297,6 +297,60 @@
     .br-sum-val{font-size:1.1rem;font-weight:800}
     .br-sum-lbl{font-size:0.62rem;color:var(--muted);margin-top:2px}
 
+    /* ── ODDS SAFETY BADGE ────────────────────────────────── */
+    .odds-safety{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:8px;font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.04em}
+    .os-safe{background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.25)}
+    .os-mod{background:rgba(234,179,8,0.15);color:#eab308;border:1px solid rgba(234,179,8,0.25)}
+    .os-high{background:rgba(249,115,22,0.15);color:#f97316;border:1px solid rgba(249,115,22,0.25)}
+    .os-risky{background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.25)}
+    /* ── BTTS / OVER-UNDER ────────────────────────────────── */
+    .ou-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+    .ou-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px;display:flex;align-items:center;gap:10px}
+    .ou-prob{flex:1}
+    .ou-label{font-size:0.72rem;font-weight:700;color:var(--text);margin-bottom:4px}
+    .ou-bar-wrap{height:5px;border-radius:3px;background:rgba(79,110,247,0.15);overflow:hidden}
+    .ou-bar-fill{height:100%;border-radius:3px;transition:width 0.6s ease}
+    .ou-pct{font-size:0.9rem;font-weight:900;min-width:38px;text-align:right}
+    .btts-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+    .btts-label{font-size:0.82rem;font-weight:700;color:var(--text)}
+    .btts-sub{font-size:0.68rem;color:var(--muted);margin-top:2px}
+    .btts-pct{font-size:1.2rem;font-weight:900;color:var(--green)}
+    /* ── TACTICAL TAB ─────────────────────────────────────── */
+    .tac-section{margin-bottom:16px}
+    .tac-title{font-size:0.72rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px}
+    .formation-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
+    .formation-team{text-align:center}
+    .formation-name{font-size:1.6rem;font-weight:900;color:var(--accent);font-family:monospace;letter-spacing:0.05em}
+    .formation-team-name{font-size:0.68rem;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .formation-vs{font-size:0.78rem;font-weight:800;color:var(--muted);padding:0 12px}
+    .tac-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .tac-bar-label{font-size:0.72rem;color:var(--text);font-weight:600;flex:0 0 110px}
+    .tac-bar-outer{flex:1;height:8px;background:rgba(79,110,247,0.12);border-radius:4px;overflow:hidden;display:flex}
+    .tac-bar-h{height:100%;border-radius:4px 0 0 4px;transition:width 0.6s ease}
+    .tac-bar-a{height:100%;border-radius:0 4px 4px 0;transition:width 0.6s ease}
+    .tac-bar-val{font-size:0.68rem;font-weight:700;min-width:30px;text-align:right;color:var(--muted)}
+    .momentum-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px}
+    .momentum-track{position:relative;height:12px;background:linear-gradient(90deg,rgba(239,68,68,0.3),rgba(234,179,8,0.2),rgba(34,197,94,0.3));border-radius:6px;margin:8px 0 4px}
+    .momentum-needle{position:absolute;top:50%;width:18px;height:18px;background:white;border-radius:50%;border:3px solid var(--accent);transform:translate(-50%,-50%);transition:left 0.8s ease;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+    .momentum-labels{display:flex;justify-content:space-between;font-size:0.6rem;color:var(--muted)}
+    .factor-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg3);border-radius:10px;margin-bottom:6px}
+    .factor-icon{font-size:1.1rem;flex-shrink:0}
+    .factor-text{flex:1;font-size:0.78rem;color:var(--text)}
+    .factor-val{font-size:0.78rem;font-weight:700;color:var(--muted)}
+    /* ── IA SCAN ANIMATION ────────────────────────────────── */
+    .scan-strip{background:rgba(0,0,0,0.3);border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-family:monospace;font-size:0.7rem;color:#a78bfa;display:flex;align-items:center;gap:8px;overflow:hidden}
+    .scan-dot{width:8px;height:8px;border-radius:50%;background:#a78bfa;flex-shrink:0;animation:scanPulse 1.2s infinite}
+    @keyframes scanPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+    .scan-text{white-space:nowrap;overflow:hidden;flex:1}
+    .scan-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+    .scan-stat-card{background:rgba(0,0,0,0.25);border:1px solid rgba(124,58,237,0.2);border-radius:10px;padding:10px;text-align:center}
+    .scan-stat-val{font-size:1.1rem;font-weight:900;color:#a78bfa}
+    .scan-stat-lbl{font-size:0.6rem;color:rgba(167,139,250,0.6);margin-top:2px;text-transform:uppercase;letter-spacing:0.05em}
+    /* ── CONFIDENCE FILTER ────────────────────────────────── */
+    .conf-filter-wrap{display:flex;gap:6px;padding:8px 16px 0;flex-wrap:wrap}
+    .conf-filter-btn{padding:5px 12px;border-radius:16px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:0.72rem;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+    .conf-filter-btn.active{background:var(--accent);color:white;border-color:var(--accent);box-shadow:0 2px 8px rgba(79,110,247,0.35)}
+
     /* coupon type badge */
     .coupon-type-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:10px;font-size:0.68rem;font-weight:700;margin-bottom:6px}
     .ctb-safe{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.25)}
@@ -709,6 +763,17 @@
       <div class="ai-hero-badge">🤖 Intelligence Artificielle</div>
       <div class="ai-hero-title" id="aiHeroTitle">Coupon Optimisé IA</div>
       <div class="ai-hero-sub" id="aiHeroSub">Sélection automatique des meilleurs paris.</div>
+      <!-- LIVE SCAN STRIP -->
+      <div class="scan-strip" id="aiScanStrip">
+        <div class="scan-dot"></div>
+        <div class="scan-text" id="aiScanText">SCANNING MARKET… analyse en cours</div>
+      </div>
+      <!-- SCAN STATS -->
+      <div class="scan-stats">
+        <div class="scan-stat-card"><div class="scan-stat-val" id="scanMatchCount">—</div><div class="scan-stat-lbl">Matchs scannés</div></div>
+        <div class="scan-stat-card"><div class="scan-stat-val" id="scanValueCount">—</div><div class="scan-stat-lbl">Value bets</div></div>
+        <div class="scan-stat-card"><div class="scan-stat-val" id="scanConfAvg">—</div><div class="scan-stat-lbl">Confiance moy.</div></div>
+      </div>
       <div class="ai-stats">
         <div><div class="ai-stat-val" id="aiOddTotal">—</div><div class="ai-stat-lbl">Cote totale</div></div>
         <div><div class="ai-stat-val" id="aiConf">—</div><div class="ai-stat-lbl">Confiance</div></div>
@@ -725,7 +790,15 @@
       <button class="ai-mode-btn"        id="aibtn-value"  onclick="switchAIMode('value',this)">💎 Value Bet</button>
     </div>
 
-    <div class="sec-head" style="margin-top:4px">
+    <!-- CONFIDENCE FILTER -->
+    <div class="conf-filter-wrap" id="confFilterWrap">
+      <button class="conf-filter-btn active" onclick="setConfFilter(0,this)">Tous</button>
+      <button class="conf-filter-btn" onclick="setConfFilter(70,this)">≥70%</button>
+      <button class="conf-filter-btn" onclick="setConfFilter(75,this)">≥75%</button>
+      <button class="conf-filter-btn" onclick="setConfFilter(80,this)">≥80%</button>
+    </div>
+
+    <div class="sec-head" style="margin-top:8px">
       <div class="sec-title" id="aiSectionTitle">⭐ Sélections IA — <span id="aiDateLabel"></span></div>
     </div>
     <div id="aiPickList"></div>
@@ -993,6 +1066,7 @@
       <div class="ds-tab" onclick="dsTab(5,this)">💎 Value</div>
       <div class="ds-tab" onclick="dsTab(6,this)">🧠 Analyse IA</div>
       <div class="ds-tab" onclick="dsTab(7,this)">⭐ Joueurs</div>
+      <div class="ds-tab" onclick="dsTab(8,this)">⚔️ Tactique</div>
     </div>
 
     <!-- BODY -->
@@ -1005,6 +1079,7 @@
       <div class="ds-panel" id="dsPanel5"></div>
       <div class="ds-panel" id="dsPanel6"></div>
       <div class="ds-panel" id="dsPanel7"></div>
+      <div class="ds-panel" id="dsPanel8"></div>
     </div>
   </div>
 </div>
@@ -2012,6 +2087,78 @@ function confirmAddBet() {
   showToast(_betModalWon ? '💰' : '📉', _betModalWon ? `+${Math.round(mise*(odd-1))}€ ajouté` : `-${mise}€ enregistré`);
 }
 
+// ── ODDS SAFETY CATEGORY ──────────────────────────────────────────────────────
+function oddsCategory(o) {
+  if (!o || o <= 0) return null;
+  if (o <= 1.50) return { label:'Safe', cls:'os-safe', emoji:'🟢' };
+  if (o <= 2.00) return { label:'Modéré', cls:'os-mod', emoji:'🟡' };
+  if (o <= 3.00) return { label:'Haut', cls:'os-high', emoji:'🟠' };
+  return { label:'Risqué', cls:'os-risky', emoji:'🔴' };
+}
+
+// ── BTTS PROBABILITY (Both Teams To Score) ────────────────────────────────────
+function bttsProbability(m) {
+  // P(home scores) = 1 - P(home scores 0 goals) = 1 - poissonProb(0, hxG)
+  const hWins  = m.home.form.filter(f=>f==='W').length;
+  const aWins  = m.away.form.filter(f=>f==='W').length;
+  const hxG = Math.max(0.4, (m.prob.h / 100) * 2.5 + hWins * 0.12);
+  const axG = Math.max(0.3, (m.prob.a / 100) * 2.2 + aWins * 0.10);
+  const pHomeSc = 1 - poissonProb(0, hxG);
+  const pAwaySc = 1 - poissonProb(0, axG);
+  return Math.round(pHomeSc * pAwaySc * 100);
+}
+
+// ── MULTI OVER/UNDER PROBABILITIES (Poisson) ──────────────────────────────────
+function overUnderProbs(m) {
+  const hWins  = m.home.form.filter(f=>f==='W').length;
+  const aWins  = m.away.form.filter(f=>f==='W').length;
+  const hxG = Math.max(0.4, (m.prob.h / 100) * 2.5 + hWins * 0.12);
+  const axG = Math.max(0.3, (m.prob.a / 100) * 2.2 + aWins * 0.10);
+  const totalxG = hxG + axG;
+  // P(total goals > threshold) using Poisson with combined lambda
+  const pUnder = (k) => {
+    let p = 0;
+    for (let i = 0; i <= k; i++) {
+      let fact = 1; for (let j = 2; j <= i; j++) fact *= j;
+      p += (Math.pow(totalxG, i) * Math.exp(-totalxG)) / fact;
+    }
+    return p;
+  };
+  return [
+    { label:'Plus de 0.5', over: Math.round((1 - pUnder(0)) * 100), under: Math.round(pUnder(0) * 100), color:'#22c55e' },
+    { label:'Plus de 1.5', over: Math.round((1 - pUnder(1)) * 100), under: Math.round(pUnder(1) * 100), color:'#3b82f6' },
+    { label:'Plus de 2.5', over: Math.round((1 - pUnder(2)) * 100), under: Math.round(pUnder(2) * 100), color:'#f59e0b' },
+    { label:'Plus de 3.5', over: Math.round((1 - pUnder(3)) * 100), under: Math.round(pUnder(3) * 100), color:'#ef4444' },
+  ];
+}
+
+// ── TACTICAL FORMATION GENERATOR ──────────────────────────────────────────────
+function guessFormation(teamName, seed) {
+  const formations = ['4-3-3','4-4-2','4-2-3-1','3-5-2','3-4-3','5-3-2','4-5-1','4-1-4-1'];
+  return formations[seed % formations.length];
+}
+
+function tacticalStats(m) {
+  // Deterministic pseudo-random from match id
+  const s = (n) => { let h = 0; for (let c of (m.id + n)) h = (Math.imul(31, h) + c.charCodeAt(0)) | 0; return Math.abs(h); };
+  const hForm = m.home.form; const aForm = m.away.form;
+  const hW = hForm.filter(f=>f==='W').length; const aW = aForm.filter(f=>f==='W').length;
+  const pressing_h = Math.min(95, 45 + hW * 8 + (s(1) % 20));
+  const pressing_a = Math.min(95, 40 + aW * 8 + (s(2) % 20));
+  const transition_h = Math.min(95, 50 + (m.prob.h / 5) + (s(3) % 15));
+  const transition_a = Math.min(95, 45 + (m.prob.a / 5) + (s(4) % 15));
+  const physique_h = Math.min(98, 65 + hW * 4 + (s(5) % 18));
+  const physique_a = Math.min(98, 60 + aW * 4 + (s(6) % 18));
+  const momentum = Math.round(((m.prob.h - m.prob.a) / 2) + 50); // 0-100, 50=équilibré
+  const formation_h = guessFormation(m.home.name, s(7));
+  const formation_a = guessFormation(m.away.name, s(8));
+  const weather = ['☀️ Ensoleillé','🌤️ Nuageux','🌧️ Pluie légère','⛅ Partiellement nuageux'][ s(9) % 4 ];
+  const ref_exp = Math.round(50 + (s(10) % 50));
+  const distance_h = (8.5 + (s(11) % 30) / 10).toFixed(1);
+  const distance_a = (8.2 + (s(12) % 30) / 10).toFixed(1);
+  return { pressing_h, pressing_a, transition_h, transition_a, physique_h, physique_a, momentum, formation_h, formation_a, weather, ref_exp, distance_h, distance_a };
+}
+
 function matchCardHTML(m) {
   const isPast = selectedDate < TODAY || m.status === 'finished';
   const isLive = m.status === 'live';
@@ -2067,12 +2214,19 @@ function matchCardHTML(m) {
 
   const vbets = (!isPast && m.odds) ? calcValueBet(m) : [];
   const valueBadge = vbets.length ? `<span class="value-badge">💎 VALUE +${vbets[0].value}%</span>` : '';
+  // Odds safety badge
+  const bestOdd = m.bets && m.bets.length ? m.bets.reduce((best,b) => (!best || b.o < best.o) ? b : best, null) : null;
+  const safeCat  = (!isPast && bestOdd) ? oddsCategory(bestOdd.o) : null;
+  const safetyBadge = safeCat ? `<span class="odds-safety ${safeCat.cls}">${safeCat.emoji} ${safeCat.label}</span>` : '';
+  // BTTS quick stat
+  const bttsVal = (!isPast) ? bttsProbability(m) : null;
+  const bttsBadge = (!isPast && bttsVal >= 55) ? `<span style="font-size:0.6rem;background:rgba(34,197,94,0.1);color:#22c55e;border:1px solid rgba(34,197,94,0.2);border-radius:6px;padding:1px 6px;font-weight:700">⚽ BTTS ${bttsVal}%</span>` : '';
 
   return `<div class="match-card ${coupon.some(c=>c.mid===m.id)?'selected':''}" id="mc-${m.id}" onclick="openMatchSheet('${m.id}',event)">
     <div class="mc-header">
       <div class="mc-league">${m.lf} <strong>${m.league}</strong> · ${m.comp} ${valueBadge}</div>
       ${timeHTML}
-      <span class="risk-pill rp-${m.risk}">${riskLabel(m.risk)}</span>
+      <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">${safetyBadge}<span class="risk-pill rp-${m.risk}">${riskLabel(m.risk)}</span></div>
     </div>
     <div class="mc-body">
       <div class="mc-teams">
@@ -2091,6 +2245,7 @@ function matchCardHTML(m) {
         <div class="prob-vals"><span class="pv-h">${m.prob.h}%</span><span class="pv-d">${m.prob.d}%</span><span class="pv-a">${m.prob.a}%</span></div>
       </div>` : ''}
       ${bets}
+      ${(!isPast && (bttsVal >= 55 || bttsBadge)) ? `<div style="display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap">${bttsBadge}</div>` : ''}
       <div style="display:flex;align-items:center;justify-content:center;margin-top:8px;gap:6px;font-size:0.74rem;color:var(--muted)">
         <span>👆</span><span>Appuyez pour plus de détails</span>
       </div>
@@ -2457,7 +2612,15 @@ function nativeShare() {
 // AI PAGE — 3 modes : ia / safe / cote15
 // ============================================================
 let currentAIMode = 'ia';
+let currentConfFilter = 0;       // minimum confidence (0 = all)
 let selectedAIPicks = new Set(); // indices des picks cochés
+
+function setConfFilter(minConf, btn) {
+  currentConfFilter = minConf;
+  document.querySelectorAll('.conf-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAI();
+}
 
 function switchAIMode(mode, btn) {
   currentAIMode = mode;
@@ -2665,7 +2828,19 @@ function getAIPicks(matches, mode) {
   directPicks.sort((a,b) => b.pick.confidence - a.pick.confidence);
   // Max 4 DC/Over + 1 direct (ex: Bayern Munich favori à 75%+)
   const merged = [...safePicks.slice(0, 4), ...directPicks.slice(0, 1)];
-  return merged.slice(0, 5);
+  const result = merged.slice(0, 5);
+  // Apply global confidence filter
+  if (currentConfFilter > 0) return result.filter(x => x.pick.confidence >= currentConfFilter);
+  return result;
+}
+
+// Apply confidence filter to all modes
+const _origGetAIPicks = getAIPicks;
+function getAIPicksFiltered(matches, mode) {
+  const picks = _origGetAIPicks(matches, mode);
+  if (currentConfFilter > 0 && mode !== 'ia') // ia already filters inside
+    return picks.filter(x => x.pick.confidence >= currentConfFilter);
+  return picks;
 }
 
 const AI_MODE_META = {
@@ -2725,11 +2900,32 @@ function renderAI(matches) {
   const elBtn = document.getElementById('aiBtnLoad');
   if (elBtn) elBtn.textContent = meta.loadLabel;
 
-  const picks = getAIPicks(matches, mode);
+  const picks = getAIPicksFiltered(matches, mode);
+
+  // ── Update live scanner stats ───────────────────────��──────
+  const allAvail = matches.filter(m => !isMatchOver(m) && m.bets && m.bets.length);
+  const totalScanned = allAvail.length;
+  const valueBetCount = allAvail.filter(m => hasValueBet(m)).length;
+  const allWithPick = allAvail.map(m => ({ m, pick: pickBestBet(m, 'ia') })).filter(x => x.pick);
+  const overallAvgConf = allWithPick.length
+    ? Math.round(allWithPick.reduce((s,x) => s + x.pick.confidence, 0) / allWithPick.length)
+    : 0;
+  const scanNames = allAvail.slice(0,3).map(m => `${m.home.name.slice(0,8)} vs ${m.away.name.slice(0,8)}`).join(' · ');
+  const scanEl = document.getElementById('aiScanText');
+  if (scanEl) scanEl.textContent = totalScanned > 0
+    ? `SCANNING… ${scanNames || 'matchs en cours d\'analyse'}`
+    : 'SYSTEM_ONLINE · En attente de matchs';
+  const elScanM = document.getElementById('scanMatchCount');
+  if (elScanM) elScanM.textContent = totalScanned;
+  const elScanV = document.getElementById('scanValueCount');
+  if (elScanV) elScanV.textContent = valueBetCount;
+  const elScanC = document.getElementById('scanConfAvg');
+  if (elScanC) elScanC.textContent = overallAvgConf ? overallAvgConf + '%' : '—';
+  // ──────────────────────────────────────────────────────────
 
   if (!picks.length) {
     document.getElementById('aiPickList').innerHTML =
-      `<div class="no-matches"><div class="ni">🤖</div><div class="nt">Pas de sélection disponible</div><div style="font-size:0.78rem;color:var(--muted);margin-top:4px">Essayez un autre mode ou une autre date</div></div>`;
+      `<div class="no-matches"><div class="ni">🤖</div><div class="nt">Pas de sélection disponible</div><div style="font-size:0.78rem;color:var(--muted);margin-top:4px">${currentConfFilter > 0 ? `Aucun pick ≥${currentConfFilter}% · baissez le filtre` : 'Essayez un autre mode ou une autre date'}</div></div>`;
     document.getElementById('aiOddTotal').textContent = '—';
     document.getElementById('aiConf').textContent = '—';
     document.getElementById('aiCount').textContent = '0';
@@ -2777,6 +2973,7 @@ function renderAI(matches) {
       <div class="ai-pick-bottom">
         <span class="ai-pick-odd">×${b.o.toFixed(2)}${m.isEstimated ? '<span style="font-size:0.65em;opacity:0.6" title="Cote estimée par IA"> ~</span>' : ''}</span>
         <span style="font-size:0.72rem;color:var(--muted)">${m.time ? '🕐 ' + m.time : ''}</span>
+        ${(() => { const sc = oddsCategory(b.o); return sc ? `<span class="odds-safety ${sc.cls}">${sc.emoji} ${sc.label}</span>` : ''; })()}
         <span class="ai-risk-pill rp-${m.risk}">${riskLabel(m.risk)}</span>
       </div>
       ${extra}
@@ -2887,6 +3084,7 @@ function openMatchSheet(mid, e) {
   buildSheetValue(m);
   buildSheetAnalysis(m);
   buildSheetPlayers(m);
+  buildSheetTactique(m);
 
   // Reset to first tab
   dsTab(0, document.querySelector('.ds-tab'));
@@ -3155,17 +3353,21 @@ function buildSheetBets(m) {
       { l:`X2 — Nul ou ${m.away.name}`,  sub:'Extérieur ne perd pas', o:((m.prob.d+m.prob.a)>65?1.35:(m.prob.d+m.prob.a)>50?1.55:1.80).toFixed(2), t:'🛡️', conf: m.prob.d+m.prob.a },
       { l:`12 — ${m.home.name} ou ${m.away.name}`, sub:'Pas de nul', o:(1.15).toFixed(2), t:'🛡️', conf: m.prob.h+m.prob.a },
     ]},
-    { cat:'📈 Nombre de buts', bets:[
-      { l:'Over 1.5 buts',  sub:'Au moins 2 buts dans le match', o:1.25, t:'📈', conf:82 },
-      { l:'Under 1.5 buts', sub:'0 ou 1 but dans le match',      o:3.80, t:'📉', conf:18 },
-      { l:'Over 2.5 buts',  sub:'Au moins 3 buts dans le match', o:(m.prob.h>60?1.55:m.prob.d>35?1.90:1.70).toFixed(2), t:'📈', conf: m.prob.h>60?62:45 },
-      { l:'Under 2.5 buts', sub:'Maximum 2 buts dans le match',  o:(m.prob.h>60?2.10:m.prob.d>35?1.85:2.00).toFixed(2), t:'📉', conf: m.prob.h>60?38:55 },
-      { l:'Over 3.5 buts',  sub:'Au moins 4 buts dans le match', o:(m.prob.h>65?2.20:2.80).toFixed(2), t:'📈', conf: m.prob.h>65?35:22 },
-    ]},
-    { cat:'🔄 Les deux équipes marquent (BTTS)', bets:[
-      { l:'BTTS — Oui', sub:'Les deux équipes marquent', o:(m.prob.h>70||m.prob.a<20?1.90:m.prob.d>30?1.70:1.80).toFixed(2), t:'🔄', conf: m.prob.h>70?42:58 },
-      { l:'BTTS — Non', sub:"L'une des équipes ne marque pas", o:(m.prob.h>70||m.prob.a<20?1.75:1.95).toFixed(2), t:'🔄', conf: m.prob.h>70?58:42 },
-    ]},
+    { cat:'📈 Nombre de buts (Poisson)', bets: (() => {
+      const ou = overUnderProbs(m);
+      return ou.flatMap(r => [
+        { l:`Over ${r.label.replace('Plus de ','')} buts`, sub:`Au moins ${r.label.replace('Plus de ','')} but${parseFloat(r.label)>1.5?'s':''} dans le match`, o:Math.max(1.03, (100/Math.max(1,r.over)*0.88)).toFixed(2), t:'📈', conf:r.over },
+        { l:`Under ${r.label.replace('Plus de ','')} buts`, sub:`Maximum ${r.label.replace('Plus de ','')} but${parseFloat(r.label)>1.5?'s':''} dans le match`, o:Math.max(1.05, (100/Math.max(1,r.under)*0.88)).toFixed(2), t:'📉', conf:r.under },
+      ]);
+    })() },
+    { cat:'🔄 Les deux équipes marquent (BTTS)', bets:(() => {
+      const btts = bttsProbability(m);
+      const nobtts = 100 - btts;
+      return [
+        { l:'BTTS — Oui', sub:'Les deux équipes marquent', o:Math.max(1.03,(100/Math.max(1,btts)*0.88)).toFixed(2), t:'🔄', conf:btts },
+        { l:'BTTS — Non', sub:"L'une des équipes ne marque pas", o:Math.max(1.05,(100/Math.max(1,nobtts)*0.88)).toFixed(2), t:'🔄', conf:nobtts },
+      ];
+    })() },
     { cat:'🎯 Score exact', bets:[
       { l:'1-0', sub:'Victoire 1-0 pour les locaux', o:5.50, t:'🎯', conf:12 },
       { l:'2-0', sub:'Victoire 2-0 pour les locaux', o:6.50, t:'🎯', conf:10 },
@@ -3405,6 +3607,112 @@ function buildSheetPlayers(m) {
     <div style="background:var(--bg3);border-radius:10px;padding:12px;font-size:0.8rem;color:var(--muted)">
       ${m.home.name} : <strong style="color:var(--red)">${rand(0,2,20)} absent(s)</strong> · ${rand(1,3,21)} incertain(s)<br/>
       ${m.away.name} : <strong style="color:var(--red)">${rand(0,3,22)} absent(s)</strong> · ${rand(0,2,23)} incertain(s)
+    </div>`;
+}
+
+// ── TACTICAL ANALYSIS TAB ────────────────────────────────────────────────────
+function buildSheetTactique(m) {
+  const el = document.getElementById('dsPanel8');
+  if (!el) return;
+  const t = tacticalStats(m);
+  const isPast = m.status === 'finished';
+
+  const tacBar = (label, vh, va, colorH='#4f6ef7', colorA='#ef4444') => {
+    const total = vh + va || 1;
+    const wH = Math.round(vh / total * 100);
+    const wA = 100 - wH;
+    return `<div class="tac-bar-row">
+      <div class="tac-bar-label">${label}</div>
+      <div class="tac-bar-outer">
+        <div class="tac-bar-h" style="width:${wH}%;background:${colorH}"></div>
+        <div class="tac-bar-a" style="width:${wA}%;background:${colorA}"></div>
+      </div>
+      <div class="tac-bar-val">${vh} / ${va}</div>
+    </div>`;
+  };
+
+  // Multi Over/Under probabilities panel
+  const ouProbs = overUnderProbs(m);
+  const ouRows = ouProbs.map(r => `
+    <div class="ou-card">
+      <div class="ou-prob">
+        <div class="ou-label">${r.label}</div>
+        <div class="ou-bar-wrap"><div class="ou-bar-fill" style="width:${r.over}%;background:${r.color}"></div></div>
+      </div>
+      <div class="ou-pct" style="color:${r.color}">${r.over}%</div>
+    </div>`).join('');
+
+  // BTTS
+  const btts = bttsProbability(m);
+  const bttsColor = btts >= 60 ? 'var(--green)' : btts >= 45 ? 'var(--yellow)' : 'var(--red)';
+
+  el.innerHTML = `
+    <!-- FORMATION -->
+    <div class="tac-section">
+      <div class="tac-title">⚔️ Formations estimées</div>
+      <div class="formation-grid">
+        <div class="formation-team">
+          <div class="formation-name">${t.formation_h}</div>
+          <div class="formation-team-name">${m.home.name}</div>
+        </div>
+        <div class="formation-vs">VS</div>
+        <div class="formation-team">
+          <div class="formation-name">${t.formation_a}</div>
+          <div class="formation-team-name">${m.away.name}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOMENTUM -->
+    <div class="tac-section">
+      <div class="tac-title">🌡️ Momentum du match</div>
+      <div class="momentum-wrap">
+        <div style="display:flex;justify-content:space-between;font-size:0.72rem;font-weight:700;margin-bottom:4px">
+          <span style="color:#4f6ef7">${m.home.name}</span>
+          <span style="color:var(--muted)">Équilibré</span>
+          <span style="color:#ef4444">${m.away.name}</span>
+        </div>
+        <div class="momentum-track">
+          <div class="momentum-needle" style="left:${t.momentum}%"></div>
+        </div>
+        <div class="momentum-labels"><span>🔵 Domicile</span><span>⚖️ 50/50</span><span>Extérieur 🔴</span></div>
+      </div>
+    </div>
+
+    <!-- DUEL TACTIQUE -->
+    <div class="tac-section">
+      <div class="tac-title">📊 Duels tactiques</div>
+      ${tacBar('🔥 Pressing', t.pressing_h, t.pressing_a)}
+      ${tacBar('⚡ Transitions', t.transition_h, t.transition_a)}
+      ${tacBar('💪 Condition physique', t.physique_h, t.physique_a)}
+    </div>
+
+    <!-- OVER/UNDER POISSON -->
+    <div class="tac-section">
+      <div class="tac-title">📈 Over/Under — Modèle Poisson</div>
+      <div class="ou-grid">${ouRows}</div>
+    </div>
+
+    <!-- BTTS -->
+    <div class="tac-section">
+      <div class="tac-title">⚽ Les deux équipes marquent (BTTS)</div>
+      <div class="btts-card">
+        <div>
+          <div class="btts-label">BTTS — Les deux équipes marquent</div>
+          <div class="btts-sub">Probabilité calculée via modèle Poisson (xG)</div>
+        </div>
+        <div class="btts-pct" style="color:${bttsColor}">${btts}%</div>
+      </div>
+    </div>
+
+    <!-- FACTEURS EXTERNES -->
+    <div class="tac-section">
+      <div class="tac-title">🌍 Facteurs externes</div>
+      <div class="factor-row"><span class="factor-icon">🌤️</span><span class="factor-text">Météo estimée</span><span class="factor-val">${t.weather}</span></div>
+      <div class="factor-row"><span class="factor-icon">👟</span><span class="factor-text">Distance parcourue ${m.home.name}</span><span class="factor-val">${t.distance_h} km</span></div>
+      <div class="factor-row"><span class="factor-icon">👟</span><span class="factor-text">Distance parcourue ${m.away.name}</span><span class="factor-val">${t.distance_a} km</span></div>
+      <div class="factor-row"><span class="factor-icon">🏟️</span><span class="factor-text">Avantage terrain</span><span class="factor-val" style="color:var(--green)">+${Math.round(m.prob.h * 0.08)}% domicile</span></div>
+      <div class="factor-row"><span class="factor-icon">⚖️</span><span class="factor-text">Expérience arbitre</span><span class="factor-val">${t.ref_exp} matchs</span></div>
     </div>`;
 }
 
