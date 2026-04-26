@@ -254,6 +254,49 @@
     .ai-mode-btn.safe.active{background:linear-gradient(135deg,#15803d,#22c55e);box-shadow:0 3px 12px rgba(34,197,94,0.35)}
     .ai-mode-btn.c15.active{background:linear-gradient(135deg,#b45309,#f97316);box-shadow:0 3px 12px rgba(249,115,22,0.35)}
     .ai-mode-btn.dc.active{background:linear-gradient(135deg,#0e7490,#06b6d4);box-shadow:0 3px 12px rgba(6,182,212,0.35)}
+    .ai-mode-btn.value.active{background:linear-gradient(135deg,#92400e,#f59e0b);box-shadow:0 3px 12px rgba(245,158,11,0.35)}
+    /* ── VALUE BET badge ───────────────────────────────────── */
+    .value-badge{display:inline-flex;align-items:center;gap:4px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-size:0.62rem;font-weight:800;padding:2px 7px;border-radius:8px;text-transform:uppercase;letter-spacing:0.04em;animation:valuePulse 2s infinite}
+    @keyframes valuePulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0.4)}50%{box-shadow:0 0 0 6px rgba(245,158,11,0)}}
+    .value-indicator{font-size:0.68rem;font-weight:700;color:#f59e0b}
+
+    /* ── SCORE EXACT panel ─────────────────────────────────── */
+    .se-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
+    .se-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;position:relative;transition:transform 0.15s}
+    .se-card.top{border-color:rgba(245,158,11,0.5);background:rgba(245,158,11,0.06)}
+    .se-score{font-size:1.4rem;font-weight:900;color:var(--text)}
+    .se-prob{font-size:0.78rem;color:var(--accent);font-weight:700;margin-top:2px}
+    .se-label{font-size:0.62rem;color:var(--muted);margin-top:3px}
+    .se-rank{position:absolute;top:6px;right:8px;font-size:0.65rem;font-weight:800;color:var(--muted)}
+    .se-top-badge{position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:#f59e0b;color:#000;font-size:0.58rem;font-weight:800;padding:2px 6px;border-radius:6px;white-space:nowrap}
+    .se-goal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+    .se-goal-card{background:var(--bg3);border-radius:8px;padding:8px;text-align:center}
+    .se-goal-val{font-size:1rem;font-weight:800}
+    .se-goal-lbl{font-size:0.62rem;color:var(--muted);margin-top:2px}
+    .poisson-bar-wrap{margin-bottom:4px}
+    .poisson-label{display:flex;justify-content:space-between;font-size:0.68rem;color:var(--muted);margin-bottom:3px}
+    .poisson-bar{height:6px;border-radius:3px;background:rgba(79,110,247,0.2);overflow:hidden}
+    .poisson-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.5s ease}
+
+    /* ── KELLY / BANKROLL ──────────────────────────────────── */
+    .kelly-box{background:var(--bg3);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:14px;margin-bottom:12px}
+    .kelly-title{font-size:0.78rem;font-weight:700;color:#f59e0b;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    .kelly-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    .kelly-cell{background:var(--card);border-radius:8px;padding:10px;text-align:center}
+    .kelly-val{font-size:1.1rem;font-weight:900;color:var(--accent)}
+    .kelly-lbl{font-size:0.62rem;color:var(--muted);margin-top:2px}
+    .bankroll-wrap{margin:0 16px 12px}
+    .bankroll-input{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:8px}
+    .bankroll-input input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:1rem;font-weight:700}
+    .bankroll-history{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+    .bh-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg3);border-radius:10px;font-size:0.78rem}
+    .bh-won{color:var(--green)}
+    .bh-lost{color:var(--red)}
+    .bankroll-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+    .br-sum-card{background:var(--bg3);border-radius:10px;padding:10px;text-align:center}
+    .br-sum-val{font-size:1.1rem;font-weight:800}
+    .br-sum-lbl{font-size:0.62rem;color:var(--muted);margin-top:2px}
+
     /* coupon type badge */
     .coupon-type-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:10px;font-size:0.68rem;font-weight:700;margin-bottom:6px}
     .ctb-safe{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.25)}
@@ -679,6 +722,7 @@
       <button class="ai-mode-btn"        id="aibtn-safe"   onclick="switchAIMode('safe',this)">🛡️ Coupon Safe</button>
       <button class="ai-mode-btn"        id="aibtn-cote15" onclick="switchAIMode('cote15',this)">⚡ Cote 1.5</button>
       <button class="ai-mode-btn"        id="aibtn-dc"     onclick="switchAIMode('dc',this)">🔄 Vic. ou Nul</button>
+      <button class="ai-mode-btn"        id="aibtn-value"  onclick="switchAIMode('value',this)">💎 Value Bet</button>
     </div>
 
     <div class="sec-head" style="margin-top:4px">
@@ -766,6 +810,27 @@
         <button class="profile-action-btn" onclick="showToast('✏️','Modifier le profil bientôt disponible')">✏️ Modifier</button>
         <button class="profile-action-btn danger" onclick="doLogout()">🚪 Déconnexion</button>
       </div>
+      <!-- BANKROLL TRACKER -->
+      <div class="sec-head"><div class="sec-title">💰 Bankroll Tracker</div></div>
+      <div class="bankroll-wrap">
+        <div class="bankroll-summary" id="brSummary">
+          <div class="perf-card"><div class="perf-val" id="brBalance" style="color:var(--green)">—</div><div class="perf-lbl">Solde (€)</div></div>
+          <div class="perf-card"><div class="perf-val" id="brROI" style="color:var(--yellow)">—</div><div class="perf-lbl">ROI</div></div>
+          <div class="perf-card"><div class="perf-val" id="brBets" style="color:var(--accent)">—</div><div class="perf-lbl">Paris</div></div>
+        </div>
+        <div class="bankroll-input">
+          <span style="font-size:1.2rem">💶</span>
+          <input type="number" id="brInput" placeholder="Modifier la bankroll…" min="0"/>
+          <button style="background:var(--accent);color:#000;border:none;border-radius:8px;padding:6px 14px;font-weight:700;cursor:pointer" onclick="setBankroll()">OK</button>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <button class="profile-action-btn" onclick="openAddBetModal(1)" style="flex:1;font-size:0.78rem">✅ Pari gagné</button>
+          <button class="profile-action-btn danger" onclick="openAddBetModal(0)" style="flex:1;font-size:0.78rem">❌ Pari perdu</button>
+          <button class="profile-action-btn" onclick="resetBankroll()" style="flex:0 0 auto;font-size:0.78rem;color:var(--muted)">🔄</button>
+        </div>
+        <div class="bankroll-history" id="brHistory"></div>
+      </div>
+
       <div class="sec-head"><div class="sec-title">⚙️ Paramètres</div></div>
       <div class="settings-list">
         <div class="settings-item" onclick="showToast('🔔','Notifications configurées')"><div class="settings-icon">🔔</div><div><div class="settings-label">Notifications</div><div class="settings-sub">Matchs live, résultats</div></div><span class="settings-arrow">›</span></div>
@@ -807,6 +872,24 @@
     <div class="modal-title">📅 Choisir une date</div>
     <input type="date" class="modal-date-input" id="modalDateInput" onchange="applyModalDate(this.value)"/>
     <button class="modal-btn" onclick="closeDateModal()">Fermer</button>
+  </div>
+</div>
+
+<!-- BANKROLL ADD BET MODAL -->
+<div class="modal-overlay" id="betModal" onclick="closeBetModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="betModalTitle">✅ Enregistrer un pari gagné</div>
+    <div style="padding:0 16px 8px">
+      <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px">Libellé du pari</div>
+      <input type="text" id="betLabel" placeholder="Ex: PSG 1X, Over 1.5…" style="width:100%;box-sizing:border-box;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:0.95rem;margin-bottom:12px"/>
+      <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px">Mise (€)</div>
+      <input type="number" id="betMise" placeholder="100" min="1" style="width:100%;box-sizing:border-box;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:0.95rem;margin-bottom:12px"/>
+      <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px" id="betOddLabel">Cote (pour calculer le gain)</div>
+      <input type="number" id="betOdd" placeholder="1.85" min="1" step="0.01" style="width:100%;box-sizing:border-box;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:0.95rem;margin-bottom:16px"/>
+    </div>
+    <button class="modal-btn" id="betModalBtn" onclick="confirmAddBet()">Confirmer</button>
+    <button class="modal-btn" style="background:transparent;color:var(--muted);margin-top:4px" onclick="closeBetModal()">Annuler</button>
   </div>
 </div>
 
@@ -906,8 +989,10 @@
       <div class="ds-tab" onclick="dsTab(1,this)">🔄 H2H</div>
       <div class="ds-tab" onclick="dsTab(2,this)">📋 Forme</div>
       <div class="ds-tab" onclick="dsTab(3,this)">🎯 Paris</div>
-      <div class="ds-tab" onclick="dsTab(4,this)">🧠 Analyse IA</div>
-      <div class="ds-tab" onclick="dsTab(5,this)">⭐ Joueurs</div>
+      <div class="ds-tab" onclick="dsTab(4,this)">🎰 Score Exact</div>
+      <div class="ds-tab" onclick="dsTab(5,this)">💎 Value</div>
+      <div class="ds-tab" onclick="dsTab(6,this)">🧠 Analyse IA</div>
+      <div class="ds-tab" onclick="dsTab(7,this)">⭐ Joueurs</div>
     </div>
 
     <!-- BODY -->
@@ -918,6 +1003,8 @@
       <div class="ds-panel" id="dsPanel3"></div>
       <div class="ds-panel" id="dsPanel4"></div>
       <div class="ds-panel" id="dsPanel5"></div>
+      <div class="ds-panel" id="dsPanel6"></div>
+      <div class="ds-panel" id="dsPanel7"></div>
     </div>
   </div>
 </div>
@@ -1757,11 +1844,174 @@ function goTo(page) {
   document.getElementById('nav-'+page).classList.add('active');
   // Re-render AI page each time user navigates to it (ensures fresh data)
   if (page === 'ai') renderAI(DB[selectedDate] || []);
+  // Re-render bankroll tracker when visiting profile
+  if (page === 'profil') setTimeout(renderBankrollUI, 50);
 }
 
 // ============================================================
 // RENDER MATCH CARD
 // ============================================================
+// ── POISSON & SCORE EXACT ─────────────────────────────────────────────────────
+function poissonProb(k, lambda) {
+  let fact = 1;
+  for (let i = 2; i <= k; i++) fact *= i;
+  return (Math.pow(lambda, k) * Math.exp(-lambda)) / fact;
+}
+
+function predictedScores(m) {
+  // Expected goals from form + probabilities
+  const hWins = m.home.form.filter(f=>f==='W').length;
+  const aWins = m.away.form.filter(f=>f==='W').length;
+  const hDraws = m.home.form.filter(f=>f==='D').length;
+  const aDraws = m.away.form.filter(f=>f==='D').length;
+  const hxG = Math.max(0.4, (m.prob.h / 100) * 2.5 + hWins * 0.12 - hDraws * 0.05);
+  const axG = Math.max(0.3, (m.prob.a / 100) * 2.2 + aWins * 0.10 - aDraws * 0.05);
+
+  const scores = [];
+  for (let h = 0; h <= 5; h++) {
+    for (let a = 0; a <= 5; a++) {
+      const p = poissonProb(h, hxG) * poissonProb(a, axG);
+      scores.push({ score:`${h}-${a}`, prob: Math.round(p * 1000) / 10, hG:h, aG:a });
+    }
+  }
+  scores.sort((a,b) => b.prob - a.prob);
+  return { top: scores.slice(0, 6), hxG: hxG.toFixed(2), axG: axG.toFixed(2) };
+}
+
+// ── VALUE BET ─────────────────────────────────────────────────────────────────
+function calcValueBet(m) {
+  // Value = (estimated_prob × odd) - 1 ; si > 0.05 c'est un value bet
+  const results = [];
+  const o = m.odds || {};
+  const checks = [
+    { label:`1 — ${m.home.name}`, odd: o['1'], prob: m.prob.h / 100 },
+    { label:'Nul',                odd: o['X'], prob: m.prob.d / 100 },
+    { label:`2 — ${m.away.name}`, odd: o['2'], prob: m.prob.a / 100 },
+  ];
+  for (const c of checks) {
+    if (!c.odd || c.odd <= 0) continue;
+    const value = c.prob * c.odd - 1;
+    if (value > 0.03) results.push({ ...c, value: Math.round(value * 100) });
+  }
+  return results; // [{label, odd, prob, value}]
+}
+
+function hasValueBet(m) { return calcValueBet(m).length > 0; }
+
+// ── KELLY CRITERION ────────────────────────────────────────────────────────────
+function kellyStake(prob, odd, bankroll, fraction = 0.25) {
+  // Kelly : f = (p*(o-1) - (1-p)) / (o-1)
+  const f = (prob * (odd - 1) - (1 - prob)) / (odd - 1);
+  const fullKelly = Math.max(0, f);
+  const fracKelly = fullKelly * fraction; // Fraction Kelly (25%)
+  return {
+    full: Math.round(bankroll * fullKelly),
+    frac: Math.round(bankroll * fracKelly),
+    pct:  Math.round(fracKelly * 100 * 10) / 10,
+  };
+}
+
+// ── BANKROLL TRACKER ──────────────────────────────────────────────────────────
+let bankroll = parseFloat(localStorage.getItem('arets_bankroll') || '10000');
+let bankrollHistory = JSON.parse(localStorage.getItem('arets_bankroll_history') || '[]');
+
+function saveBankroll() {
+  localStorage.setItem('arets_bankroll', String(bankroll));
+  localStorage.setItem('arets_bankroll_history', JSON.stringify(bankrollHistory.slice(-30)));
+}
+
+function addBankrollEntry(label, mise, won) {
+  const gain = won ? mise * won - mise : -mise;
+  bankroll += gain;
+  bankrollHistory.push({ date: new Date().toLocaleDateString('fr-FR'), label, mise, won, gain, bankroll });
+  saveBankroll();
+}
+
+// ── BANKROLL UI ───────────────────────────────────────────────────────────────
+function renderBankrollUI() {
+  const balEl = document.getElementById('brBalance');
+  const roiEl = document.getElementById('brROI');
+  const betsEl = document.getElementById('brBets');
+  const histEl = document.getElementById('brHistory');
+  if (!balEl) return;
+
+  balEl.textContent = bankroll.toLocaleString('fr-FR') + ' €';
+
+  // Compute ROI from history
+  const totalMise = bankrollHistory.reduce((s,e) => s + (e.mise || 0), 0);
+  const totalGain = bankrollHistory.reduce((s,e) => s + (e.gain || 0), 0);
+  const roi = totalMise > 0 ? ((totalGain / totalMise) * 100).toFixed(1) : '—';
+  roiEl.textContent = (totalMise > 0 ? (totalGain >= 0 ? '+' : '') + roi + '%' : '—');
+  roiEl.style.color = totalGain >= 0 ? 'var(--green)' : 'var(--red)';
+
+  betsEl.textContent = bankrollHistory.length;
+
+  // History rows
+  const rows = [...bankrollHistory].reverse().slice(0, 10);
+  histEl.innerHTML = rows.length === 0
+    ? `<div style="text-align:center;color:var(--muted);font-size:0.8rem;padding:16px">Aucun pari enregistré</div>`
+    : rows.map(e => `
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg3);border-radius:10px">
+        <span style="font-size:1.1rem">${e.gain >= 0 ? '✅' : '❌'}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:0.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.label || 'Pari'}</div>
+          <div style="font-size:0.72rem;color:var(--muted)">${e.date} · Mise: ${e.mise}€</div>
+        </div>
+        <div style="font-size:0.85rem;font-weight:700;color:${e.gain>=0?'var(--green)':'var(--red)'}">${e.gain>=0?'+':''}${e.gain}€</div>
+      </div>`).join('');
+}
+
+function setBankroll() {
+  const v = parseFloat(document.getElementById('brInput').value);
+  if (!isNaN(v) && v >= 0) {
+    bankroll = v;
+    saveBankroll();
+    renderBankrollUI();
+    document.getElementById('brInput').value = '';
+    showToast('💰', `Bankroll définie à ${v.toLocaleString('fr-FR')} €`);
+  }
+}
+
+function resetBankroll() {
+  if (!confirm('Réinitialiser la bankroll et l\'historique ?')) return;
+  bankroll = 10000;
+  bankrollHistory = [];
+  saveBankroll();
+  renderBankrollUI();
+  showToast('🔄', 'Bankroll réinitialisée à 10 000 €');
+}
+
+let _betModalWon = 1;
+function openAddBetModal(won) {
+  _betModalWon = won;
+  document.getElementById('betModalTitle').textContent = won ? '✅ Enregistrer un pari gagné' : '❌ Enregistrer un pari perdu';
+  document.getElementById('betModalBtn').textContent = won ? '✅ Confirmer le gain' : '❌ Confirmer la perte';
+  document.getElementById('betModalBtn').style.background = won ? 'var(--green)' : 'var(--red)';
+  document.getElementById('betOddLabel').style.display = won ? 'block' : 'none';
+  document.getElementById('betOdd').style.display = won ? 'block' : 'none';
+  document.getElementById('betLabel').value = '';
+  document.getElementById('betMise').value = '';
+  document.getElementById('betOdd').value = '';
+  document.getElementById('betModal').classList.add('open');
+}
+
+function closeBetModal(e) {
+  if (e && e.target !== document.getElementById('betModal')) return;
+  document.getElementById('betModal').classList.remove('open');
+}
+
+function confirmAddBet() {
+  const label = document.getElementById('betLabel').value.trim() || 'Pari';
+  const mise = parseFloat(document.getElementById('betMise').value);
+  const odd = parseFloat(document.getElementById('betOdd').value) || 0;
+  if (isNaN(mise) || mise <= 0) { showToast('⚠️','Entrez une mise valide'); return; }
+  if (_betModalWon && odd < 1) { showToast('⚠️','Entrez une cote valide'); return; }
+  addBankrollEntry(label, mise, _betModalWon ? odd : 0);
+  renderBankrollUI();
+  document.getElementById('betModal').classList.remove('open');
+  showToast(_betModalWon ? '💰' : '📉', _betModalWon ? `+${Math.round(mise*(odd-1))}€ ajouté` : `-${mise}€ enregistré`);
+}
+
 function matchCardHTML(m) {
   const isPast = selectedDate < TODAY || m.status === 'finished';
   const isLive = m.status === 'live';
@@ -1815,9 +2065,12 @@ function matchCardHTML(m) {
     </div>`;
   }).join('');
 
+  const vbets = (!isPast && m.odds) ? calcValueBet(m) : [];
+  const valueBadge = vbets.length ? `<span class="value-badge">💎 VALUE +${vbets[0].value}%</span>` : '';
+
   return `<div class="match-card ${coupon.some(c=>c.mid===m.id)?'selected':''}" id="mc-${m.id}" onclick="openMatchSheet('${m.id}',event)">
     <div class="mc-header">
-      <div class="mc-league">${m.lf} <strong>${m.league}</strong> · ${m.comp}</div>
+      <div class="mc-league">${m.lf} <strong>${m.league}</strong> · ${m.comp} ${valueBadge}</div>
       ${timeHTML}
       <span class="risk-pill rp-${m.risk}">${riskLabel(m.risk)}</span>
     </div>
@@ -2208,11 +2461,12 @@ let selectedAIPicks = new Set(); // indices des picks cochés
 
 function switchAIMode(mode, btn) {
   currentAIMode = mode;
-  document.querySelectorAll('.ai-mode-btn').forEach(b => b.classList.remove('active','safe','c15'));
+  document.querySelectorAll('.ai-mode-btn').forEach(b => b.classList.remove('active','safe','c15','dc','value'));
   btn.classList.add('active');
   if (mode === 'safe')   btn.classList.add('safe');
   if (mode === 'cote15') btn.classList.add('c15');
   if (mode === 'dc')     btn.classList.add('dc');
+  if (mode === 'value')  btn.classList.add('value');
   renderAI();
 }
 
@@ -2311,6 +2565,18 @@ function pickBestBet(m, mode) {
     return best;
   }
 
+  // ── mode 'value' : uniquement value bets (EV positif ≥ 3%) ───────────────
+  if (mode === 'value') {
+    const vbets = calcValueBet(m);
+    if (!vbets.length) return null;
+    // Pick best value bet (highest value%)
+    const best = vbets.sort((a,b) => b.value - a.value)[0];
+    const betObj = m.bets.find(b => b.o && Math.abs(b.o - best.odd) < 0.01);
+    const synth = betObj || { l: best.label, o: best.odd, t:'1X2' };
+    const conf = Math.min(Math.round(best.prob * 100 * 0.90), 88);
+    return { bet: synth, betIdx: betObj ? m.bets.indexOf(betObj) : -1, confidence: conf, valuePct: best.value };
+  }
+
   // ── mode 'ia' : analyse complète → viser 90% de réussite ──────────────────
   const pH = m.prob.h, pA = m.prob.a, pD = m.prob.d;
 
@@ -2384,6 +2650,13 @@ function getAIPicks(matches, mode) {
       .sort((a,b) => b.pick.confidence - a.pick.confidence)
       .slice(0, 5);
   }
+  if (mode === 'value') {
+    // Value Bets — trier par valuePct desc, max 6
+    return withPick
+      .filter(x => x.pick.valuePct > 0)
+      .sort((a,b) => (b.pick.valuePct||0) - (a.pick.valuePct||0))
+      .slice(0, 6);
+  }
   // ia : viser 90% — confiance minimale 68, DC et Over en priorité
   const highConf = withPick.filter(x => x.pick.confidence >= 68);
   const safePicks = highConf.filter(x => x.pick.bet.t === 'DC' || x.pick.bet.t === 'OVER');
@@ -2423,6 +2696,13 @@ const AI_MODE_META = {
     sectionTitle: '🔄 Double Chance',
     badge: '<span class="coupon-type-badge ctb-dc">🔄 Vic. ou Nul</span>',
     loadLabel: '🔄 Charger le Coupon Double Chance dans mon coupon',
+  },
+  value: {
+    title: '💎 Value Bets',
+    sub: 'Paris avec valeur espérée positive (EV > 3%) — les bookmakers sous-cotent ces matchs.',
+    sectionTitle: '💎 Value Bets — Espérance positive',
+    badge: '<span class="coupon-type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border-color:rgba(245,158,11,0.3)">💎 Value Bet</span>',
+    loadLabel: '💎 Charger les Value Bets dans mon coupon',
   },
 };
 
@@ -2603,6 +2883,8 @@ function openMatchSheet(mid, e) {
   buildSheetH2H(m);
   buildSheetForm(m);
   buildSheetBets(m);
+  buildSheetScoreExact(m);
+  buildSheetValue(m);
   buildSheetAnalysis(m);
   buildSheetPlayers(m);
 
@@ -2929,6 +3211,110 @@ function buildSheetBets(m) {
     '<div style="text-align:center;padding:32px;color:var(--muted)">Aucun pari disponible</div>';
 }
 
+function buildSheetScoreExact(m) {
+  const el = document.getElementById('dsPanel4');
+  if (m.status === 'finished') { el.innerHTML = '<div style="text-align:center;padding:32px;color:var(--muted)">Match terminé</div>'; return; }
+
+  const { top, hxG, axG } = predictedScores(m);
+  const topScore = top[0];
+  const totalProb = top.reduce((s,x)=>s+x.prob, 0);
+
+  const cards = top.map((s, i) => `
+    <div class="se-card ${i===0?'top':''}">
+      ${i===0 ? '<div class="se-top-badge">⭐ FAVORI</div>' : ''}
+      <div class="se-rank">#${i+1}</div>
+      <div class="se-score">${s.score}</div>
+      <div class="se-prob">${s.prob}%</div>
+      <div class="se-label">${s.hG > s.aG ? '🏠 Victoire dom.' : s.hG < s.aG ? '✈️ Victoire ext.' : '🤝 Nul'}</div>
+    </div>`).join('');
+
+  // Distribution buts 0-3
+  const goalDist = [0,1,2,3].map(g => {
+    const pH = poissonProb(g, parseFloat(hxG));
+    const pA = poissonProb(g, parseFloat(axG));
+    return { g, pH: Math.round(pH*100), pA: Math.round(pA*100) };
+  });
+
+  const distRows = goalDist.map(d => `
+    <div class="poisson-bar-wrap">
+      <div class="poisson-label"><span>🏠 ${d.g} but${d.g>1?'s':''} (${d.pH}%)</span><span>✈️ ${d.g} but${d.g>1?'s':''} (${d.pA}%)</span></div>
+      <div class="poisson-bar"><div class="poisson-fill" style="width:${d.pH}%"></div></div>
+    </div>`).join('');
+
+  const bl = parseInt(bankroll);
+  const topProb = topScore.prob / 100;
+  const topOdd = 1 / Math.max(0.01, topProb) * 0.88;
+  const k = kellyStake(topProb, topOdd, bl, 0.25);
+
+  el.innerHTML = `
+    <div class="stat-section-title">🎰 Top 6 scores les plus probables</div>
+    <div class="se-grid">${cards}</div>
+    <div class="stat-section-title">📊 Distribution buts attendus (xG)</div>
+    <div class="se-goal-grid">
+      <div class="se-goal-card"><div class="se-goal-val" style="color:var(--accent)">${hxG}</div><div class="se-goal-lbl">🏠 xG dom.</div></div>
+      <div class="se-goal-card"><div class="se-goal-val" style="color:var(--orange)">${axG}</div><div class="se-goal-lbl">✈️ xG ext.</div></div>
+      <div class="se-goal-card"><div class="se-goal-val">${(parseFloat(hxG)+parseFloat(axG)).toFixed(2)}</div><div class="se-goal-lbl">Total xG</div></div>
+    </div>
+    ${distRows}
+    <div class="stat-section-title" style="margin-top:14px">📈 Top 6 couvrent ${totalProb.toFixed(1)}% des scénarios</div>
+    <div style="font-size:0.72rem;color:var(--muted);margin-bottom:14px">Basé sur la distribution de Poisson à partir des xG estimés selon la forme et les probabilités des équipes.</div>
+    <div class="kelly-box">
+      <div class="kelly-title">💰 Mise suggérée (score favori ${topScore.score})</div>
+      <div class="kelly-grid">
+        <div class="kelly-cell"><div class="kelly-val">${k.frac.toLocaleString('fr-FR')} FCFA</div><div class="kelly-lbl">¼ Kelly recommandé</div></div>
+        <div class="kelly-cell"><div class="kelly-val">${k.pct}%</div><div class="kelly-lbl">% de bankroll</div></div>
+      </div>
+    </div>`;
+}
+
+function buildSheetValue(m) {
+  const el = document.getElementById('dsPanel5');
+  if (m.status === 'finished') { el.innerHTML = '<div style="text-align:center;padding:32px;color:var(--muted)">Match terminé</div>'; return; }
+
+  const vbets = calcValueBet(m);
+  const bl = parseInt(bankroll);
+
+  const vRows = vbets.length ? vbets.map(v => {
+    const k = kellyStake(v.prob, v.odd, bl, 0.25);
+    return `
+    <div class="kelly-box" style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:0.88rem;font-weight:700">${v.label}</span>
+        <span class="value-badge">💎 +${v.value}% edge</span>
+      </div>
+      <div class="kelly-grid">
+        <div class="kelly-cell"><div class="kelly-val">×${v.odd}</div><div class="kelly-lbl">Cote bookmaker</div></div>
+        <div class="kelly-cell"><div class="kelly-val">${Math.round(v.prob*100)}%</div><div class="kelly-lbl">Prob. IA</div></div>
+        <div class="kelly-cell"><div class="kelly-val">${k.frac.toLocaleString('fr-FR')} FCFA</div><div class="kelly-lbl">¼ Kelly mise</div></div>
+        <div class="kelly-cell"><div class="kelly-val">${k.pct}%</div><div class="kelly-lbl">% bankroll</div></div>
+      </div>
+    </div>`;
+  }).join('') : `<div style="text-align:center;padding:32px;color:var(--muted)">
+    <div style="font-size:2rem;margin-bottom:8px">🔍</div>
+    <div>Aucun value bet détecté sur ce match</div>
+    <div style="font-size:0.72rem;margin-top:8px">Les cotes proposées reflètent la probabilité réelle sans marge suffisante.</div>
+  </div>`;
+
+  const dc1xProb = (m.prob.h + m.prob.d) / 100;
+  const dc1xOdd = m.odds?.['1'] && m.odds?.['X'] ? parseFloat((1/(1/m.odds['1']+1/m.odds['X'])).toFixed(2)) : null;
+  const dcKelly = dc1xOdd ? kellyStake(dc1xProb, dc1xOdd, bl, 0.25) : null;
+
+  el.innerHTML = `
+    <div class="stat-section-title">💎 Value Bets détectés — ${m.home.name} vs ${m.away.name}</div>
+    <div style="font-size:0.72rem;color:var(--muted);margin-bottom:14px">Un value bet existe quand notre probabilité estimée × cote bookmaker > 1. Plus l'edge est élevé, meilleure est la valeur.</div>
+    ${vRows}
+    ${dcKelly ? `
+    <div class="stat-section-title" style="margin-top:4px">🛡️ Double Chance recommandée</div>
+    <div class="kelly-box">
+      <div style="font-size:0.85rem;font-weight:700;margin-bottom:8px">DC 1X · ${m.home.name} ou Nul — ×${dc1xOdd}</div>
+      <div class="kelly-grid">
+        <div class="kelly-cell"><div class="kelly-val">${Math.round(dc1xProb*100)}%</div><div class="kelly-lbl">Probabilité combinée</div></div>
+        <div class="kelly-cell"><div class="kelly-val">${dcKelly.frac.toLocaleString('fr-FR')} FCFA</div><div class="kelly-lbl">Mise ¼ Kelly</div></div>
+      </div>
+    </div>` : ''}
+    <div style="font-size:0.68rem;color:var(--muted);text-align:center;margin-top:12px">Bankroll actuelle : <strong>${bl.toLocaleString('fr-FR')} FCFA</strong> · <a href="#" onclick="goTo('profile');return false" style="color:var(--accent)">Modifier dans le profil</a></div>`;
+}
+
 function buildSheetAnalysis(m) {
   const seed = m.id.charCodeAt(3) || 8;
   const rand = (min,max,s=0) => min + Math.floor(((seed*37+s*19)%100)/100*(max-min+1));
@@ -2947,7 +3333,7 @@ function buildSheetAnalysis(m) {
     { icon:'💊', txt:`Forme physique estimée : ${m.home.name} (${rand(75,95,3)}%) · ${m.away.name} (${rand(70,90,4)}%)` },
   ];
 
-  document.getElementById('dsPanel4').innerHTML = `
+  document.getElementById('dsPanel6').innerHTML = `
     ${!isPast ? `<div class="prediction-card">
       <div class="pred-title">🤖 PRONOSTIC IA</div>
       <div class="pred-text">${bestOutcome}</div>
@@ -3010,7 +3396,7 @@ function buildSheetPlayers(m) {
     <span class="player-rating ${ratingClass(p.rating)}">${p.rating}</span>
   </div>`;
 
-  document.getElementById('dsPanel5').innerHTML = `
+  document.getElementById('dsPanel7').innerHTML = `
     <div class="stat-section-title">🏠 Joueurs clés — ${m.home.name}</div>
     ${homePlayers.map(makePlayer).join('')}
     <div class="stat-section-title" style="margin-top:16px">✈️ Joueurs clés — ${m.away.name}</div>
