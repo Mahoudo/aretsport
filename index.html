@@ -206,6 +206,22 @@
     /* Score (for past matches) */
     .mc-score{font-size:1.3rem;font-weight:900;color:var(--text);letter-spacing:2px}
 
+    /* ── LIVE SCOREBOARD CARD ─────────────────────────────────── */
+    .mc-live-board{background:linear-gradient(175deg,#0e1f36 0%,#0c2b1a 52%,#0e1f36 100%);border-radius:0 0 16px 16px;padding:16px 10px 14px;position:relative;overflow:hidden}
+    .mc-live-board::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 85%,rgba(22,163,74,.18) 0%,transparent 68%);pointer-events:none}
+    .mc-lb-row{display:flex;align-items:center;justify-content:space-between;gap:4px;position:relative;z-index:1}
+    .mc-lb-team{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;min-width:0}
+    .mc-lb-logo{width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:26px;flex-shrink:0}
+    .mc-lb-logo img{width:44px;height:44px;object-fit:contain}
+    .mc-lb-name{font-size:0.78rem;font-weight:800;text-align:center;color:#fff;line-height:1.25;word-break:break-word}
+    .mc-lb-sub{font-size:0.6rem;color:rgba(255,255,255,.4)}
+    .mc-lb-center{display:flex;flex-direction:column;align-items:center;gap:1px;flex-shrink:0}
+    .mc-lb-score{font-size:2.1rem;font-weight:900;color:#fff;letter-spacing:4px;font-variant-numeric:tabular-nums;line-height:1}
+    .mc-lb-timer-lbl{font-size:0.58rem;color:rgba(255,255,255,.38);margin-top:6px;letter-spacing:.03em}
+    .mc-lb-timer{display:flex;align-items:center;gap:5px;margin-top:3px}
+    .mc-lb-block{background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.12);border-radius:7px;padding:5px 10px;font-size:1.35rem;font-weight:700;font-variant-numeric:tabular-nums;color:#fff;min-width:2.5ch;text-align:center;line-height:1.1}
+    .mc-lb-colon{font-size:1.35rem;font-weight:700;color:var(--red);animation:livepulse 1.2s ease-in-out infinite;line-height:1}
+    .mc-lb-period{font-size:0.62rem;color:rgba(255,255,255,.5);margin-top:5px;letter-spacing:.02em}
     /* PROB BAR */
     .prob-wrap{margin-bottom:12px}
     .prob-labels{display:flex;justify-content:space-between;font-size:0.68rem;color:var(--muted);margin-bottom:4px}
@@ -3101,13 +3117,58 @@ function matchCardHTML(m) {
   } else if (isPast && m.score) timeHTML = `<span class="mc-time" style="font-weight:800;color:var(--text)">${m.score}</span>`;
   else timeHTML = `<span class="mc-time">🕐 ${m.time}</span>`;
 
+  // ── LIVE : scoreboard card ────────────────────────────────────
+  if (isLive) {
+    const [g1,g2] = m.score ? m.score.split('-') : ['0','0'];
+    const isHT   = m.half === 'HT' || m.half === 'MI-TEMPS';
+    const is2nd  = m.half === 'MT 2' || m.half === 'MT2' || (m._minuteAtFetch != null && m._minuteAtFetch >= 46);
+    const periodLabel = isHT ? 'MI-TEMPS' : (is2nd ? '2ème mi-temps' : '1ère mi-temps');
+    const initMin = isHT ? 45 : (getLiveMinute(m) ?? (m.minute ?? 0));
+    const initSec = isHT ? 0  : getLiveSecond(m);
+    const minStr  = String(initMin).padStart(2,'0');
+    const secStr  = String(initSec).padStart(2,'0');
+    const homeLogo = m.home.logo
+      ? `<img src="${m.home.logo}" alt="${m.home.name}" onerror="this.style.display='none'">`
+      : m.home.emoji;
+    const awayLogo = m.away.logo
+      ? `<img src="${m.away.logo}" alt="${m.away.name}" onerror="this.style.display='none'">`
+      : m.away.emoji;
+    return `<div class="match-card ${coupon.some(c=>c.mid===m.id)?'selected':''}" id="mc-${m.id}" onclick="openMatchSheet('${m.id}',event)">
+      <div class="mc-header">
+        <div class="mc-league">${m.lf} <strong>${m.league}</strong> · ${m.comp} ${valueBadge}</div>
+        ${timeHTML}
+        <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">${safetyBadge}<span class="risk-pill rp-${m.risk}">${riskLabel(m.risk)}</span></div>
+      </div>
+      <div class="mc-live-board">
+        <div class="mc-lb-row">
+          <div class="mc-lb-team">
+            <div class="mc-lb-logo">${homeLogo}</div>
+            <div class="mc-lb-name">${m.home.name}</div>
+            <div class="mc-lb-sub">🏠 Domicile</div>
+          </div>
+          <div class="mc-lb-center">
+            <div class="mc-lb-score" data-live-score="${m.id}">${g1||'0'} : ${g2||'0'}</div>
+            <div class="mc-lb-timer-lbl">temps écoulé :</div>
+            <div class="mc-lb-timer">
+              <div class="mc-lb-block" data-live-min="${m.id}">${minStr}</div>
+              <div class="mc-lb-colon">:</div>
+              <div class="mc-lb-block" data-live-sec="${m.id}">${isHT ? '--' : secStr}</div>
+            </div>
+            <div class="mc-lb-period" data-live-period="${m.id}">${periodLabel}</div>
+          </div>
+          <div class="mc-lb-team">
+            <div class="mc-lb-logo">${awayLogo}</div>
+            <div class="mc-lb-name">${m.away.name}</div>
+            <div class="mc-lb-sub">✈️ Extérieur</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+  // ── NON-LIVE : layout classique ───────────────────────────────
   let centerContent = '';
   if (isPast && m.score) {
     centerContent = `<div class="mc-vs-text">FIN</div><div class="mc-score">${m.score}</div>`;
-  } else if (isLive) {
-    const [g1,g2] = m.score ? m.score.split('-') : ['?','?'];
-    const initMin = m.half === 'HT' || m.half === 'MI-TEMPS' ? 'MI-TEMPS' : (m.minute != null ? m.minute + "'" : '🔴');
-    centerContent = `<div class="mc-vs-text" style="color:var(--red);font-weight:700" data-chrono-ctr="${m.id}">${initMin}</div><div class="mc-score">${g1||'?'}-${g2||'?'}</div>`;
   } else {
     centerContent = `<div class="mc-vs-text">VS</div><div style="font-size:1.1rem">⚔️</div>`;
   }
@@ -5441,6 +5502,23 @@ function startChrono() {
       // ── Page IA (picks cards)
       document.querySelectorAll(`[data-chrono-aipick="${m.id}"]`).forEach(el => {
         el.innerHTML = `<span class="ld"></span>${label}`;
+      });
+      // ── Live scoreboard cards (home + matchs)
+      const lMin = getLiveMinute(m);
+      const lSec = getLiveSecond(m);
+      const isHTnow = m.half === 'HT' || m.half === 'MI-TEMPS';
+      const is2ndnow = m.half === 'MT 2' || m.half === 'MT2' || (m._minuteAtFetch != null && m._minuteAtFetch >= 46);
+      document.querySelectorAll(`[data-live-min="${m.id}"]`).forEach(el => {
+        el.textContent = isHTnow ? '45' : (lMin != null ? String(lMin).padStart(2,'0') : '--');
+      });
+      document.querySelectorAll(`[data-live-sec="${m.id}"]`).forEach(el => {
+        el.textContent = isHTnow ? '--' : String(lSec).padStart(2,'0');
+      });
+      document.querySelectorAll(`[data-live-score="${m.id}"]`).forEach(el => {
+        if (fresh && fresh.score) { const [s1,s2] = fresh.score.split('-'); el.textContent = `${s1||'0'} : ${s2||'0'}`; }
+      });
+      document.querySelectorAll(`[data-live-period="${m.id}"]`).forEach(el => {
+        el.textContent = isHTnow ? 'MI-TEMPS' : (is2ndnow ? '2ème mi-temps' : '1ère mi-temps');
       });
     });
   }, 1000);
