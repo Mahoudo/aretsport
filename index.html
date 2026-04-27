@@ -1180,7 +1180,6 @@
     <div class="wf-tabs-row">
       <button class="wf-tab-btn active" onclick="wfTab('resultats',this)">📊 Résultats</button>
       <button class="wf-tab-btn" onclick="wfTab('activite',this)">🔴 Activité</button>
-      <button class="wf-tab-btn" onclick="wfTab('avis',this)">⭐ Avis</button>
     </div>
 
     <!-- TAB: RÉSULTATS -->
@@ -1209,13 +1208,6 @@
       </div>
     </div>
 
-    <!-- TAB: AVIS -->
-    <div id="wfTabAvis" style="display:none">
-      <div class="avis-section" id="avisSectionAI">
-        <div class="avis-title">⭐ Avis utilisateurs <span style="color:#f59e0b">★★★★★</span></div>
-        <div id="avisListAI"></div>
-      </div>
-    </div>
 
   </div>
 
@@ -1603,7 +1595,6 @@
       <div class="ds-tab active" onclick="dsTab(0,this)">📊 Stats</div>
       <div class="ds-tab" onclick="dsTab(1,this)">🔄 H2H</div>
       <div class="ds-tab" onclick="dsTab(2,this)">📋 Forme</div>
-      <div class="ds-tab" onclick="dsTab(3,this)">🎯 Paris</div>
       <div class="ds-tab" onclick="dsTab(4,this)">🎰 Score Exact</div>
       <div class="ds-tab" onclick="dsTab(5,this)">💎 Value</div>
       <div class="ds-tab" onclick="dsTab(6,this)">🧠 Analyse IA</div>
@@ -2891,38 +2882,12 @@ function renderMoisStats(avgConf, matches) {
   coteEl.textContent = coteMoy;
 }
 
-// ── WINFLIX AVIS UTILISATEURS ─────────────────────────────────────────────────
-const AVIS_DATA = [
-  { initials:'JM', color:'rgba(255,59,59,.2)', textColor:'#ff3b3b', name:'Jean-Marc D.', ago:'Il y a 3 jours', stars:5, text:'Depuis que je suis Aretsport, mon ROI a explosé. Les analyses sont précises. Je recommande !', gain:'+118 000 FCFA ce mois' },
-  { initials:'TR', color:'rgba(107,163,255,.15)', textColor:'#6ba3ff', name:'Thomas R.', ago:'Il y a 5 jours', stars:5, text:'Interface claire, résultats transparents. Pas de promesses folles, juste du sérieux.', gain:'✓ Vérifié' },
-  { initials:'NB', color:'rgba(0,200,117,.12)', textColor:'#00c875', name:'Nicolas B.', ago:'Il y a 1 semaine', stars:4, text:'Très bon taux de réussite sur la Champions League. Le Chat IA est vraiment utile.', gain:'✓ Vérifié' },
-  { initials:'AL', color:'rgba(245,158,11,.15)', textColor:'#f59e0b', name:'Alex L.', ago:'Il y a 2 semaines', stars:5, text:'J\'ai essayé beaucoup de tipsters avant Aretsport. La différence ? Ici tout est transparent.', gain:'+62 000 FCFA ce mois' },
-  { initials:'KP', color:'rgba(167,139,250,.15)', textColor:'#a78bfa', name:'Kevin P.', ago:'Il y a 2 semaines', stars:5, text:'Le suivi est impeccable. Je reçois les analyses à temps, les picks sont bien expliqués.', gain:'✓ Vérifié' },
-];
-
-function renderAvisUtilisateurs() {
-  const el = document.getElementById('avisListAI');
-  if (!el) return;
-  el.innerHTML = AVIS_DATA.slice(0,3).map(a => `
-    <div class="avis-mini">
-      <div class="avis-top">
-        <div class="avis-av" style="background:${a.color};color:${a.textColor}">${a.initials}</div>
-        <div>
-          <div class="avis-name">${a.name}</div>
-          <div class="avis-date">${a.ago}</div>
-        </div>
-      </div>
-      <div class="avis-stars">${'★'.repeat(a.stars)}${'☆'.repeat(5-a.stars)}</div>
-      <div class="avis-text">${a.text}</div>
-      <div class="avis-gain">${a.gain}</div>
-    </div>`).join('');
-}
 
 // ── WINFLIX TABS ──────────────────────────────────────────────────────────────
 function wfTab(tab, btn) {
   document.querySelectorAll('.wf-tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  ['Resultats','Activite','Avis'].forEach(t => {
+  ['Resultats','Activite'].forEach(t => {
     const el = document.getElementById('wfTab' + t);
     if (el) el.style.display = (t.toLowerCase() === tab) ? 'block' : 'none';
   });
@@ -3162,19 +3127,6 @@ function matchCardHTML(m) {
     </div>`;
   }
 
-  const canBet = !isPast && m.status !== 'finished';
-  const bets = m.bets.map((b,i) => {
-    const added = coupon.some(c=>c.mid===m.id&&c.bi===i);
-    return `<div class="bet-row">
-      <div class="br-left"><span>${b.t}</span><span>${b.l}</span></div>
-      <div class="br-right">
-        <span class="br-odd">×${b.o.toFixed(2)}</span>
-        ${canBet ? `<button class="br-add ${added?'added':''}" id="bb-${m.id}-${i}"
-          onclick="toggleBet('${m.id}',${i},event)">${added?'✓':'＋'}</button>`
-          : `<span style="font-size:0.7rem;color:var(--muted)">${isPast?'Terminé':'Live'}</span>`}
-      </div>
-    </div>`;
-  }).join('');
 
   const vbets = (!isPast && m.odds) ? calcValueBet(m) : [];
   const valueBadge = vbets.length ? `<span class="value-badge">💎 VALUE +${vbets[0].value}%</span>` : '';
@@ -3226,7 +3178,6 @@ function matchCardHTML(m) {
           </div>
         </div>`;
       })()}
-      ${bets}
       ${(!isPast && (bttsVal >= 55 || bttsBadge)) ? `<div style="display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap">${bttsBadge}</div>` : ''}
       <div style="display:flex;align-items:center;justify-content:center;margin-top:8px;gap:6px;font-size:0.74rem;color:var(--muted)">
         <span>👆</span><span>Appuyez pour plus de détails</span>
@@ -3952,8 +3903,6 @@ function renderAI(matches) {
   renderBankerSection(allMatches);
   // ── Winflix Résultats du mois ───────────────────────────────
   renderMoisStats(overallAvgConf, allMatches);
-  // ── Winflix Avis utilisateurs ───────────────────────────────
-  renderAvisUtilisateurs();
   // ── Winflix Derniers gagnants ────────────────────────────────
   renderDerniersGagnants();
   // ── Winflix Activité ─────────────────────────────────────────
@@ -4130,7 +4079,6 @@ function openMatchSheet(mid, e) {
   buildSheetVisifoot(m); // Forces&Faiblesses + Comparaison + Scénarios
   buildSheetH2H(m);
   buildSheetForm(m);
-  buildSheetBets(m);
   buildSheetScoreExact(m);
   buildSheetValue(m);
   buildSheetAnalysis(m);
@@ -4422,85 +4370,6 @@ function buildSheetForm(m) {
       <div class="ds-mini-card away"><div class="ds-mini-val">${rand(4,16,2)} pts</div><div class="ds-mini-lbl">Sur 5 matchs</div></div>
     </div>
     ${makeForm(m.away, false)}`;
-}
-
-function buildSheetBets(m) {
-  const isPast = m.status === 'finished';
-  const canBet = !isPast;
-
-  const EXTENDED_BETS = [
-    { cat:'🏆 Résultat du match', bets:[
-      { l:`Victoire ${m.home.name}`, sub:'1 — Équipe domicile gagne', o:(100/Math.max(1,m.prob.h)*0.9).toFixed(2), t:'⚽', conf: m.prob.h },
-      { l:'Match nul',              sub:'X — Égalité à la fin du temps réglementaire', o:(100/Math.max(1,m.prob.d)*0.9).toFixed(2), t:'🤝', conf: m.prob.d },
-      { l:`Victoire ${m.away.name}`,sub:'2 — Équipe extérieure gagne', o:(100/Math.max(1,m.prob.a)*0.9).toFixed(2), t:'⚽', conf: m.prob.a },
-    ]},
-    { cat:'🛡️ Double chance', bets:[
-      { l:`1X — ${m.home.name} ou Nul`,  sub:'Domicile ne perd pas', o:((m.prob.h+m.prob.d)>75?1.25:(m.prob.h+m.prob.d)>60?1.40:1.60).toFixed(2), t:'🛡️', conf: m.prob.h+m.prob.d },
-      { l:`X2 — Nul ou ${m.away.name}`,  sub:'Extérieur ne perd pas', o:((m.prob.d+m.prob.a)>65?1.35:(m.prob.d+m.prob.a)>50?1.55:1.80).toFixed(2), t:'🛡️', conf: m.prob.d+m.prob.a },
-      { l:`12 — ${m.home.name} ou ${m.away.name}`, sub:'Pas de nul', o:(1.15).toFixed(2), t:'🛡️', conf: m.prob.h+m.prob.a },
-    ]},
-    { cat:'📈 Nombre de buts (Poisson)', bets: (() => {
-      const ou = overUnderProbs(m);
-      return ou.flatMap(r => [
-        { l:`Over ${r.label.replace('Plus de ','')} buts`, sub:`Au moins ${r.label.replace('Plus de ','')} but${parseFloat(r.label)>1.5?'s':''} dans le match`, o:Math.max(1.03, (100/Math.max(1,r.over)*0.88)).toFixed(2), t:'📈', conf:r.over },
-        { l:`Under ${r.label.replace('Plus de ','')} buts`, sub:`Maximum ${r.label.replace('Plus de ','')} but${parseFloat(r.label)>1.5?'s':''} dans le match`, o:Math.max(1.05, (100/Math.max(1,r.under)*0.88)).toFixed(2), t:'📉', conf:r.under },
-      ]);
-    })() },
-    { cat:'🔄 Les deux équipes marquent (BTTS)', bets:(() => {
-      const btts = bttsProbability(m);
-      const nobtts = 100 - btts;
-      return [
-        { l:'BTTS — Oui', sub:'Les deux équipes marquent', o:Math.max(1.03,(100/Math.max(1,btts)*0.88)).toFixed(2), t:'🔄', conf:btts },
-        { l:'BTTS — Non', sub:"L'une des équipes ne marque pas", o:Math.max(1.05,(100/Math.max(1,nobtts)*0.88)).toFixed(2), t:'🔄', conf:nobtts },
-      ];
-    })() },
-    { cat:'🎯 Score exact', bets:[
-      { l:'1-0', sub:'Victoire 1-0 pour les locaux', o:5.50, t:'🎯', conf:12 },
-      { l:'2-0', sub:'Victoire 2-0 pour les locaux', o:6.50, t:'🎯', conf:10 },
-      { l:'2-1', sub:'Victoire 2-1 pour les locaux', o:7.00, t:'🎯', conf:9  },
-      { l:'1-1', sub:'Match nul 1-1', o:5.80, t:'🎯', conf:13 },
-      { l:'0-0', sub:'Match nul sans but', o:8.50, t:'🎯', conf:6  },
-      { l:'0-1', sub:'Victoire 0-1 pour les visiteurs', o:7.50, t:'🎯', conf:8  },
-    ]},
-    { cat:'⏱️ Mi-temps', bets:[
-      { l:`${m.home.name} mène à la mi-temps`, sub:'Résultat après 45 min', o:(100/Math.max(1,m.prob.h)*1.1).toFixed(2), t:'⏱️', conf: Math.round(m.prob.h*0.7) },
-      { l:'Nul à la mi-temps',                 sub:'Résultat après 45 min', o:1.90, t:'⏱️', conf: Math.round(m.prob.d*1.2) },
-      { l:`${m.away.name} mène à la mi-temps`, sub:'Résultat après 45 min', o:(100/Math.max(1,m.prob.a)*1.1).toFixed(2), t:'⏱️', conf: Math.round(m.prob.a*0.7) },
-    ]},
-    { cat:'🔗 Paris combinés (Poisson)', bets: (() => {
-      const cb = compoundBets(m);
-      return cb.map(c => ({ l:c.label, sub:c.detail, o:Math.max(1.10,(100/Math.max(1,c.prob)*0.85)).toFixed(2), t:'🔗', conf:c.prob }));
-    })() },
-  ];
-
-  const html = EXTENDED_BETS.map(cat => {
-    const rows = cat.bets.map((b, bi) => {
-      const globalBi = `ext_${bi}_${cat.cat.replace(/\s/g,'')}`;
-      const added = coupon.some(c => c.mid === m.id && c.extKey === globalBi);
-      const confClass = b.conf > 60 ? 'cp-high' : b.conf > 40 ? 'cp-medium' : 'cp-low';
-      const confLabel = b.conf > 60 ? '🔥 Haute confiance' : b.conf > 40 ? '⚡ Confiance moyenne' : '⚠️ Risque élevé';
-      return `<div class="bet-detail-row">
-        <div class="bdr-left">
-          <div class="bdr-name">${b.t} ${b.l}</div>
-          <div class="bdr-sub">${b.sub}</div>
-          ${!isPast ? `<span class="confidence-pill ${confClass}">${confLabel} · ${Math.round(b.conf)}%</span>` : ''}
-        </div>
-        <div class="bdr-right">
-          <div class="bdr-odd">×${parseFloat(b.o).toFixed(2)}</div>
-          ${canBet
-            ? `<button class="bdr-add ${added?'added':''}" onclick="toggleExtBet('${m.id}','${globalBi}',${parseFloat(b.o)},event,'${b.t} ${b.l}')">
-                ${added?'✓ Ajouté':'＋'}
-               </button>`
-            : `<span style="font-size:0.68rem;color:var(--muted)">Terminé</span>`
-          }
-        </div>
-      </div>`;
-    }).join('');
-    return `<div class="bet-category">${cat.cat}</div>${rows}`;
-  }).join('');
-
-  document.getElementById('dsPanel3').innerHTML = html ||
-    '<div style="text-align:center;padding:32px;color:var(--muted)">Aucun pari disponible</div>';
 }
 
 function buildSheetScoreExact(m) {
@@ -5451,7 +5320,6 @@ function toggleExtBet(mid, extKey, odd, e, label) {
   }
   updateBadge();
   renderCoupon();
-  buildSheetBets(m); // refresh bet buttons in sheet
   updateBtns();
 }
 
