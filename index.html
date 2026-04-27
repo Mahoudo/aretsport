@@ -2095,6 +2095,18 @@ async function fetchBetclicMatches(silent) {
       });
       let loaded = 0;
       Object.entries(byDate).forEach(([date, matches]) => {
+        // Preserve _fetchedAt for live matches whose minute hasn't changed
+        // → avoids the chrono resetting to :00 on every 30s API refresh
+        const oldById = {};
+        (DB[date] || []).forEach(x => { oldById[x.id] = x; });
+        matches.forEach(nm => {
+          const old = oldById[nm.id];
+          if (old && old.status === 'live' && nm.status === 'live' &&
+              old._fetchedAt && old._minuteAtFetch === nm._minuteAtFetch) {
+            nm._fetchedAt     = old._fetchedAt;
+            nm._minuteAtFetch = old._minuteAtFetch;
+          }
+        });
         DB[date] = matches;
         loaded += matches.length;
       });
@@ -5410,7 +5422,10 @@ function getLiveMinute(m) {
 
 function getLiveSecond(m) {
   if (!m._fetchedAt) return 0;
-  return Math.floor((Date.now() - m._fetchedAt) / 1000) % 60;
+  // Total elapsed seconds since fetch
+  const totalSec = Math.floor((Date.now() - m._fetchedAt) / 1000);
+  // Seconds within the current minute (synced with getLiveMinute)
+  return totalSec % 60;
 }
 
 // getLiveLabel : retourne le label chrono pour un match live
@@ -5503,15 +5518,29 @@ function startChrono() {
         el.innerHTML = `<span class="ld"></span>${label}`;
       });
       // ── Live scoreboard cards (home + matchs)
-      const lMin = getLiveMinute(m);
-      const lSec = getLiveSecond(m);
+      const lMin    = getLiveMinute(m);
+      const lSec    = getLiveSecond(m);
       const isHTnow = m.half === 'HT' || m.half === 'MI-TEMPS';
       const is2ndnow = m.half === 'MT 2' || m.half === 'MT2' || (m._minuteAtFetch != null && m._minuteAtFetch >= 46);
+      // Detect stoppage time (minute capped at 45 or 90)
+      const isStop1 = !isHTnow && !is2ndnow && lMin === 45 && m._minuteAtFetch != null && m._minuteAtFetch >= 44 && m._fetchedAt;
+      const isStop2 = is2ndnow && lMin === 90 && m._minuteAtFetch != null && m._minuteAtFetch >= 86 && m._fetchedAt;
       document.querySelectorAll(`[data-live-min="${m.id}"]`).forEach(el => {
-        el.textContent = isHTnow ? '45' : (lMin != null ? String(lMin).padStart(2,'0') : '--');
+        if (isHTnow)  { el.textContent = '45'; return; }
+        if (lMin == null) { el.textContent = '--'; return; }
+        if (isStop1 || isStop2) {
+          const cap      = isStop1 ? 45 : 90;
+          const elapsed  = Math.floor((Date.now() - m._fetchedAt) / 60000);
+          const stopBase = m._stoppageAtFetch || 0;
+          const extra    = Math.max(0, elapsed - Math.max(0, cap - m._minuteAtFetch));
+          const stop     = stopBase + extra;
+          el.textContent = stop > 0 ? `${cap}+${stop}` : String(cap);
+        } else {
+          el.textContent = String(lMin).padStart(2, '0');
+        }
       });
       document.querySelectorAll(`[data-live-sec="${m.id}"]`).forEach(el => {
-        el.textContent = isHTnow ? '--' : String(lSec).padStart(2,'0');
+        el.textContent = (isHTnow || isStop1 || isStop2) ? '--' : String(lSec).padStart(2, '0');
       });
       document.querySelectorAll(`[data-live-score="${m.id}"]`).forEach(el => {
         if (fresh && fresh.score) { const [s1,s2] = fresh.score.split('-'); el.textContent = `${s1||'0'} : ${s2||'0'}`; }
