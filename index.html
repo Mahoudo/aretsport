@@ -915,6 +915,80 @@
     .player-rating{padding:2px 8px;border-radius:6px;font-size:0.72rem;font-weight:700}
     .pr-good{background:rgba(34,197,94,0.15);color:var(--green)}
     .pr-avg{background:rgba(234,179,8,0.15);color:var(--yellow)}
+
+    /* 6-item nav adjustment */
+    nav { display: flex; }
+    nav .nav-item .nav-label { font-size: 0.6rem; }
+
+    /* NEWS STRIP */
+    .news-section { padding: 0 16px 4px; }
+    .news-sec-head { display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 0 8px; }
+    .news-refresh { cursor: pointer; font-size: 1rem; color: var(--accent); }
+    .news-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+    .news-scroll::-webkit-scrollbar { display: none; }
+    .news-card { flex-shrink: 0; width: 185px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px; cursor: pointer; transition: transform 0.15s; }
+    .news-card:active { transform: scale(0.97); }
+    .news-card-pill { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.6rem; font-weight: 700; margin-bottom: 6px; }
+    .news-card-pill.hot { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .news-card-pill.tip { background: rgba(79,110,247,0.15); color: var(--accent); }
+    .news-card-pill.alert { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .news-card-pill.live { background: rgba(239,68,68,0.2); color: #ef4444; animation: pulse 1.5s infinite; }
+    .news-card-pill.form { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .news-card-pill.banker { background: rgba(245,158,11,0.2); color: #f59e0b; }
+    .news-card-title { font-size: 0.8rem; font-weight: 700; color: var(--text); line-height: 1.35; margin-bottom: 4px; }
+    .news-card-meta { font-size: 0.65rem; color: var(--muted); }
+    /* AI news compact */
+    .ai-news-section { margin: 10px 16px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .ai-news-title { padding: 10px 14px 6px; font-size: 0.78rem; font-weight: 700; border-bottom: 1px solid var(--border); }
+    .ai-news-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--border); cursor: pointer; }
+    .ai-news-item:last-child { border-bottom: none; }
+    .ai-news-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .ai-news-body { flex: 1; }
+    .ai-news-body strong { font-size: 0.78rem; display: block; margin-bottom: 2px; }
+    .ai-news-body span { font-size: 0.68rem; color: var(--muted); }
+
+    /* CHAT PAGE */
+    .chat-page { display: flex; flex-direction: column; height: calc(100dvh - 180px); }
+    .chat-header-box { padding: 14px 16px 10px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+    .chat-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+    .chat-header-info strong { font-size: 0.95rem; font-weight: 800; display: block; }
+    .chat-header-info span { font-size: 0.68rem; color: #22c55e; }
+    .chat-messages-wrap { flex: 1; overflow-y: auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 14px; }
+    .chat-msg-row { display: flex; flex-direction: column; }
+    .chat-msg-row.user { align-items: flex-end; }
+    .chat-msg-row.bot { align-items: flex-start; }
+    .chat-bot-label { font-size: 0.6rem; color: var(--muted); margin-bottom: 3px; padding-left: 2px; }
+    .chat-bubble { max-width: 88%; padding: 10px 14px; border-radius: 18px; font-size: 0.84rem; line-height: 1.5; }
+    .chat-bubble.user { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border-bottom-right-radius: 4px; }
+    .chat-bubble.bot { background: var(--card); border: 1px solid var(--border); border-bottom-left-radius: 4px; color: var(--text); }
+    .chat-bubble.typing { padding: 12px 18px; }
+    .typing-dots { display: flex; gap: 4px; align-items: center; }
+    .typing-dots span { width: 7px; height: 7px; background: var(--muted); border-radius: 50%; animation: typingBounce 1.2s infinite; }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+    .chat-quick-wrap { display: flex; gap: 6px; flex-wrap: nowrap; overflow-x: auto; padding: 8px 16px 4px; scrollbar-width: none; }
+    .chat-quick-wrap::-webkit-scrollbar { display: none; }
+    .chat-quick-btn { flex-shrink: 0; padding: 7px 13px; background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; font-size: 0.72rem; font-weight: 600; color: var(--text); cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+    .chat-quick-btn:active { background: var(--accent); color: white; border-color: var(--accent); }
+    .chat-input-bar { display: flex; gap: 8px; padding: 10px 16px 12px; border-top: 1px solid var(--border); background: var(--bg); }
+    .chat-input { flex: 1; background: var(--bg3); border: 1px solid var(--border); border-radius: 22px; padding: 10px 16px; font-size: 0.84rem; color: var(--text); outline: none; font-family: inherit; }
+    .chat-input:focus { border-color: var(--accent); }
+    .chat-send { width: 42px; height: 42px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; border-radius: 50%; cursor: pointer; font-size: 1.1rem; flex-shrink: 0; box-shadow: 0 3px 10px rgba(79,110,247,0.4); }
+    .bot-analysis-card { background: var(--bg2); border-radius: 12px; padding: 12px; margin-top: 8px; border: 1px solid var(--border); }
+    .bac-league { font-size: 0.65rem; color: var(--muted); margin-bottom: 4px; }
+    .bac-teams { font-size: 0.9rem; font-weight: 800; margin-bottom: 10px; }
+    .bac-probs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .bac-prob { text-align: center; background: var(--bg3); border-radius: 8px; padding: 6px 4px; }
+    .bac-prob-val { font-size: 0.9rem; font-weight: 800; color: var(--accent); }
+    .bac-prob-lbl { font-size: 0.58rem; color: var(--muted); }
+    .bac-rec { background: rgba(79,110,247,0.12); border: 1px solid rgba(79,110,247,0.25); border-radius: 8px; padding: 8px 10px; font-size: 0.78rem; }
+    .bac-rec strong { color: var(--accent); }
+    .bac-form { display: flex; gap: 3px; margin-top: 8px; flex-wrap: wrap; }
+    .bac-form-dot { width: 20px; height: 20px; border-radius: 50%; font-size: 0.6rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .bac-form-dot.W { background: rgba(34,197,94,0.2); color: #22c55e; }
+    .bac-form-dot.D { background: rgba(234,179,8,0.2); color: #eab308; }
+    .bac-form-dot.L { background: rgba(239,68,68,0.2); color: #ef4444; }
   </style>
 </head>
 <body>
@@ -984,6 +1058,16 @@
       <div class="stat-card"><div class="stat-icon-wrap si-green">✅</div><div><div class="stat-val">68%</div><div class="stat-lbl">Précision IA</div></div></div>
       <div class="stat-card"><div class="stat-icon-wrap si-gold">⭐</div><div><div class="stat-val" id="stOdd">—</div><div class="stat-lbl">Cote max</div></div></div>
       <div class="stat-card"><div class="stat-icon-wrap si-purple">🤖</div><div><div class="stat-val">v2.4</div><div class="stat-lbl">Modèle</div></div></div>
+    </div>
+    <!-- NEWS STRIP -->
+    <div class="news-section" id="newsSection">
+      <div class="news-sec-head">
+        <span>📰 Actu & Analyses du jour</span>
+        <span class="news-refresh" onclick="renderNewsSection()">↻</span>
+      </div>
+      <div class="news-scroll" id="newsScroll">
+        <div style="color:var(--muted);font-size:0.78rem;padding:8px">Chargement des actualités…</div>
+      </div>
     </div>
     <div class="sec-head">
       <div class="sec-title"><div class="live-dot"></div><span id="homeSecTitle">Sélection du jour</span></div>
@@ -1083,6 +1167,13 @@
     </div>
     <div id="aiPickList"></div>
     <button class="btn-load-ai" id="aiBtnLoad" onclick="loadAIMode()">➕ Charger dans mon coupon</button>
+
+    <!-- AI NEWS SECTION -->
+    <div class="ai-news-section" id="aiNewsSection" style="display:none">
+      <div class="ai-news-title">📰 Actualités & Alertes du jour</div>
+      <div id="aiNewsList"></div>
+    </div>
+
     <div class="disclaimer-box">⚠️ Les pronostics IA sont des estimations statistiques. Aucun gain garanti. Jouez de façon responsable.</div>
 
     <!-- WINFLIX TABS: Résultats | Activité | Avis -->
@@ -1295,6 +1386,32 @@
 
   </div>
 
+  <!-- CHAT IA -->
+  <div class="page" id="page-chat">
+    <div class="chat-page">
+      <div class="chat-header-box">
+        <div class="chat-avatar">🤖</div>
+        <div class="chat-header-info">
+          <strong>AretSport IA</strong>
+          <span>● En ligne — Prêt à analyser</span>
+        </div>
+      </div>
+      <div class="chat-messages-wrap" id="chatMessages"></div>
+      <div class="chat-quick-wrap" id="chatQuickBtns">
+        <button class="chat-quick-btn" onclick="chatQuick('⭐ Meilleur pick du jour')">⭐ Meilleur pick</button>
+        <button class="chat-quick-btn" onclick="chatQuick('🛡️ Paris le plus sûr')">🛡️ Paris sûr</button>
+        <button class="chat-quick-btn" onclick="chatQuick('💎 Value bet')">💎 Value bet</button>
+        <button class="chat-quick-btn" onclick="chatQuick('🏆 Banker du jour')">🏆 Banker</button>
+        <button class="chat-quick-btn" onclick="chatQuick('🔴 Matchs en direct')">🔴 Live</button>
+        <button class="chat-quick-btn" onclick="chatQuick('📊 Combien de matchs aujourd\'hui ?')">📊 Stats</button>
+      </div>
+      <div class="chat-input-bar">
+        <input class="chat-input" id="chatInput" type="text" placeholder="Posez votre question…" onkeydown="if(event.key==='Enter')sendChat()"/>
+        <button class="chat-send" onclick="sendChat()">➤</button>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /pages -->
 
 <!-- BOTTOM NAV -->
@@ -1311,6 +1428,9 @@
   </div>
   <div class="nav-item" id="nav-ai" onclick="goTo('ai')">
     <div class="nav-indicator"></div><span class="nav-icon">🤖</span><span class="nav-label">IA</span>
+  </div>
+  <div class="nav-item" id="nav-chat" onclick="goTo('chat')">
+    <div class="nav-indicator"></div><span class="nav-icon">💬</span><span class="nav-label">Chat IA</span>
   </div>
   <div class="nav-item" id="nav-profil" onclick="goTo('profil')">
     <div class="nav-indicator"></div><span class="nav-icon">👤</span><span class="nav-label">Profil</span>
@@ -2444,6 +2564,10 @@ function updateAllViews() {
   // AI page
   renderAI(matches);
 
+  // News sections
+  renderNewsSection();
+  renderAINewsSection();
+
   setTimeout(animateBars, 100);
 }
 
@@ -2463,6 +2587,8 @@ function goTo(page) {
   if (page === 'ai') renderAI(DB[selectedDate] || []);
   // Re-render bankroll tracker when visiting profile
   if (page === 'profil') setTimeout(renderBankrollUI, 50);
+  // Init chat on first visit
+  if (page === 'chat') { initChat(); }
 }
 
 // ============================================================
@@ -5218,7 +5344,7 @@ function generateAIResponse(question, m) {
 }
 
 let chatMatchId = null;
-let chatHistory = [];
+// Note: chatHistory déclaré dans la section Chat IA page
 
 function buildSheetChat(m) {
   const el = document.getElementById('dsPanel9');
@@ -5231,20 +5357,20 @@ function buildSheetChat(m) {
       <div class="chat-qs" id="chatQuickQs">
         ${CHAT_QUESTIONS.map(q => `<div class="chat-q-chip" onclick="sendChatQ(this)">${q}</div>`).join('')}
       </div>
-      <div class="chat-messages" id="chatMessages">
+      <div class="chat-messages" id="matchChatMessages">
         <div class="chat-msg ai">👋 Bonjour ! Je suis l'IA de <strong>Aretsport</strong>.<br>Sélectionne une analyse ou pose une question libre sur le match <strong>${m.home.name} vs ${m.away.name}</strong>.</div>
       </div>
       <div class="chat-input-wrap">
-        <input class="chat-input" id="chatInput" type="text" placeholder="Posez une question sur le match à l'IA..." onkeydown="if(event.key==='Enter')sendChat()">
-        <button class="chat-send-btn" onclick="sendChat()">➤</button>
+        <input class="chat-input" id="matchChatInput" type="text" placeholder="Posez une question sur le match à l'IA..." onkeydown="if(event.key==='Enter')sendMatchChat()">
+        <button class="chat-send-btn" onclick="sendMatchChat()">➤</button>
       </div>
     </div>`;
 }
 
 function sendChatQ(chip) {
   const q = chip.textContent;
-  document.getElementById('chatInput').value = q;
-  sendChat();
+  document.getElementById('matchChatInput').value = q;
+  sendMatchChat();
 }
 
 function chatQuickActionsHTML() {
@@ -5262,17 +5388,17 @@ function sendChatKey(key) {
     classement:'🏆 Classement général', pronostic:'🔮 Pronostic du match',
     btts:'⚡ Pronostic BTTS', score:'🎯 Score exact'
   };
-  document.getElementById('chatInput').value = map[key] || key;
-  sendChat();
+  document.getElementById('matchChatInput').value = map[key] || key;
+  sendMatchChat();
 }
 
-function sendChat() {
-  const input = document.getElementById('chatInput');
+function sendMatchChat() {
+  const input = document.getElementById('matchChatInput');
   const q = (input.value || '').trim();
   if (!q) return;
   input.value = '';
 
-  const msgsEl = document.getElementById('chatMessages');
+  const msgsEl = document.getElementById('matchChatMessages');
   if (!msgsEl) return;
 
   // Strip emoji prefix for display
@@ -5590,6 +5716,331 @@ function doLogout() {
 document.addEventListener('DOMContentLoaded', () => {
   renderAuthPage();
 });
+
+// ============================================================
+// NEWS GENERATION
+// ============================================================
+
+function generateNews(matches) {
+  const items = [];
+  if (!matches || !matches.length) return items;
+
+  // Live matches first
+  const live = matches.filter(m => m.status === 'live');
+  live.forEach(m => {
+    const sc = m.score || '0-0';
+    const min = m.minute ? m.minute + "'" : '';
+    items.push({ type: 'live', icon: '🔴', pill: 'LIVE', pillClass: 'live',
+      title: `${m.home.name} ${sc} ${m.away.name}`,
+      meta: `${m.league} · ${min} en cours`, match: m });
+  });
+
+  // Favorites (prob > 68%)
+  matches.filter(m => m.status !== 'finished').forEach(m => {
+    if (m.prob.h > 68) {
+      items.push({ type: 'hot', icon: '🔥', pill: 'FAVORI', pillClass: 'hot',
+        title: `${m.home.name} grand favori (${m.prob.h}%)`,
+        meta: `vs ${m.away.name} · ${m.time || ''}`, match: m });
+    } else if (m.prob.a > 68) {
+      items.push({ type: 'hot', icon: '🔥', pill: 'FAVORI', pillClass: 'hot',
+        title: `${m.away.name} favori (${m.prob.a}%)`,
+        meta: `vs ${m.home.name} · ${m.time || ''}`, match: m });
+    }
+  });
+
+  // Value bets
+  matches.filter(m => m.status !== 'finished' && hasValueBet && hasValueBet(m)).slice(0, 3).forEach(m => {
+    items.push({ type: 'tip', icon: '💎', pill: 'VALUE BET', pillClass: 'tip',
+      title: `Value Bet : ${m.home.name} vs ${m.away.name}`,
+      meta: `${m.league} · Espérance positive`, match: m });
+  });
+
+  // Teams on form (3+ wins)
+  matches.filter(m => m.status !== 'finished').forEach(m => {
+    const hWins = (m.home.form || []).slice(-3).filter(f => f === 'W').length;
+    const aWins = (m.away.form || []).slice(-3).filter(f => f === 'W').length;
+    if (hWins >= 3) {
+      items.push({ type: 'form', icon: '📈', pill: 'EN FORME', pillClass: 'form',
+        title: `${m.home.name} : 3 victoires de suite`,
+        meta: `${m.league} · Série en cours`, match: m });
+    } else if (aWins >= 3) {
+      items.push({ type: 'form', icon: '📈', pill: 'EN FORME', pillClass: 'form',
+        title: `${m.away.name} : 3 victoires de suite`,
+        meta: `${m.league}`, match: m });
+    }
+  });
+
+  // Bankers
+  const bankers = getBankers ? getBankers(matches) : [];
+  bankers.slice(0, 2).forEach(({ m, pick }) => {
+    items.push({ type: 'banker', icon: '⭐', pill: 'BANKER', pillClass: 'banker',
+      title: `${pick.bet.l} · ${m.home.name} vs ${m.away.name}`,
+      meta: `Confiance ${pick.confidence}% · ×${pick.bet.o.toFixed(2)}`, match: m });
+  });
+
+  // High risk alert
+  matches.filter(m => m.status !== 'finished').forEach(m => {
+    if (m.prob.h < 35 && m.prob.a < 35) {
+      items.push({ type: 'alert', icon: '⚠️', pill: 'ALERTE', pillClass: 'alert',
+        title: `Match très ouvert : ${m.home.name} vs ${m.away.name}`,
+        meta: `Aucun favori clair · Risque élevé`, match: m });
+    }
+  });
+
+  // Shuffle a bit, remove duplicates by match id, keep max 12
+  const seen = new Set();
+  return items.filter(item => {
+    if (!item.match || seen.has(item.match.id + item.type)) return false;
+    seen.add(item.match.id + item.type);
+    return true;
+  }).slice(0, 12);
+}
+
+function renderNewsSection() {
+  const matches = DB[selectedDate] || [];
+  const items = generateNews(matches);
+  const scroll = document.getElementById('newsScroll');
+  if (!scroll) return;
+  if (!items.length) {
+    scroll.innerHTML = `<div style="color:var(--muted);font-size:0.78rem;padding:8px 0">Aucune actualité pour cette date</div>`;
+    return;
+  }
+  scroll.innerHTML = items.map(item => {
+    const onclick = item.match ? `openMatchSheet('${item.match.id}')` : '';
+    return `<div class="news-card" onclick="${onclick}">
+      <div><span class="news-card-pill ${item.pillClass}">${item.icon} ${item.pill}</span></div>
+      <div class="news-card-title">${item.title}</div>
+      <div class="news-card-meta">${item.meta}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderAINewsSection() {
+  const matches = DB[selectedDate] || [];
+  const items = generateNews(matches).slice(0, 5);
+  const el = document.getElementById('aiNewsSection');
+  const list = document.getElementById('aiNewsList');
+  if (!el || !list) return;
+  if (!items.length) { el.style.display = 'none'; return; }
+  el.style.display = '';
+  list.innerHTML = items.map(item => {
+    const onclick = item.match ? `openMatchSheet('${item.match.id}')` : '';
+    return `<div class="ai-news-item" onclick="${onclick}">
+      <div class="ai-news-icon">${item.icon}</div>
+      <div class="ai-news-body">
+        <strong>${item.title}</strong>
+        <span>${item.meta}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+// CHAT IA PAGE (assistant conversationnel global)
+// ============================================================
+
+let chatHistory = [];
+let chatInitialized = false;
+
+function initChat() {
+  if (chatInitialized) return;
+  chatInitialized = true;
+  chatHistory = [];
+  addBotMessage('Bonjour ! Je suis votre assistant IA AretSport 🤖\n\nJe peux analyser n\'importe quel match du jour, vous donner les meilleures sélections ou vous expliquer une cote.\n\nQue voulez-vous savoir ?');
+}
+
+function addBotMessage(html, isHtml = false) {
+  const wrap = document.getElementById('chatMessages');
+  if (!wrap) return;
+  const div = document.createElement('div');
+  div.className = 'chat-msg-row bot';
+  div.innerHTML = `<div class="chat-bot-label">AretSport IA 🤖</div>
+    <div class="chat-bubble bot">${isHtml ? html : html.replace(/\n/g,'<br>')}</div>`;
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function addUserMessage(text) {
+  const wrap = document.getElementById('chatMessages');
+  if (!wrap) return;
+  const div = document.createElement('div');
+  div.className = 'chat-msg-row user';
+  div.innerHTML = `<div class="chat-bubble user">${text}</div>`;
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function showTyping() {
+  const wrap = document.getElementById('chatMessages');
+  if (!wrap) return null;
+  const div = document.createElement('div');
+  div.className = 'chat-msg-row bot';
+  div.id = 'chatTyping';
+  div.innerHTML = `<div class="chat-bot-label">AretSport IA 🤖</div>
+    <div class="chat-bubble bot typing"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+  return div;
+}
+
+function removeTyping() {
+  const el = document.getElementById('chatTyping');
+  if (el) el.remove();
+}
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  addUserMessage(text);
+  showTyping();
+  const delay = 600 + Math.random() * 600;
+  setTimeout(() => {
+    removeTyping();
+    const response = aiChatResponse(text);
+    if (response.isHtml) addBotMessage(response.text, true);
+    else addBotMessage(response.text);
+  }, delay);
+}
+
+function chatQuick(text) {
+  document.getElementById('chatInput').value = '';
+  addUserMessage(text);
+  showTyping();
+  setTimeout(() => {
+    removeTyping();
+    const response = aiChatResponse(text);
+    if (response.isHtml) addBotMessage(response.text, true);
+    else addBotMessage(response.text);
+  }, 800);
+}
+
+function aiChatResponse(msg) {
+  const m = msg.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const matches = DB[selectedDate] || [];
+  const dateLabel = typeof formatDateShort === 'function' ? formatDateShort(selectedDate) : selectedDate;
+
+  // Greeting
+  if (/^(bonjour|salut|hello|hi|bonsoir|yo|cc)/.test(m)) {
+    const live = matches.filter(x => x.status === 'live').length;
+    const upcoming = matches.filter(x => x.status === 'upcoming').length;
+    return { text: `Bonjour ! 👋<br><br>📅 ${dateLabel} : <strong>${matches.length} matchs</strong> analysés<br>🔴 En direct : ${live}<br>⏰ À venir : ${upcoming}<br><br>Que puis-je analyser pour vous ?`, isHtml: true };
+  }
+
+  // Stats / count
+  if (/combien|nombre|total|matchs.*(aujourd|jour)|stats/.test(m)) {
+    const live = matches.filter(x => x.status === 'live').length;
+    const done = matches.filter(x => x.status === 'finished').length;
+    const upcoming = matches.filter(x => x.status === 'upcoming').length;
+    const picks = typeof getAIPicks === 'function' ? getAIPicks(matches, 'ia') : [];
+    return { text: `📊 <strong>Statistiques du jour (${dateLabel})</strong><br><br>⚽ Total : ${matches.length} matchs<br>🔴 En direct : ${live}<br>⏰ À venir : ${upcoming}<br>✅ Terminés : ${done}<br>🤖 Sélections IA : ${picks.length}`, isHtml: true };
+  }
+
+  // Live matches
+  if (/live|direct|encours|en cours/.test(m)) {
+    const live = matches.filter(x => x.status === 'live');
+    if (!live.length) return { text: 'Aucun match en direct pour le moment. 😴\n\nRevenez plus tard !', isHtml: false };
+    const txt = live.map(x => `🔴 <strong>${x.home.name} ${x.score||'0-0'} ${x.away.name}</strong> (${x.minute ? x.minute+"'" : 'LIVE'}) · ${x.league}`).join('<br>');
+    return { text: `🔴 <strong>Matchs en direct :</strong><br><br>${txt}`, isHtml: true };
+  }
+
+  // Safe bets
+  if (/sur|safe|risque|securise|confiance|prudent/.test(m)) {
+    const picks = typeof getAIPicks === 'function' ? getAIPicks(matches, 'safe') : [];
+    if (!picks.length) return { text: 'Aucun paris sûr disponible pour cette date. 😔\nEssayez demain !', isHtml: false };
+    const txt = picks.slice(0,3).map(({m: mx, pick}) =>
+      `🛡️ <strong>${mx.home.name} vs ${mx.away.name}</strong><br>${pick.bet.t} · ${pick.bet.l} · <strong>×${pick.bet.o.toFixed(2)}</strong> · Confiance ${pick.confidence}%`
+    ).join('<br><br>');
+    return { text: `🛡️ <strong>Paris les plus sûrs :</strong><br><br>${txt}`, isHtml: true };
+  }
+
+  // Value bets
+  if (/value|valeur|esp.rance|ev\+|ev |cote elev/.test(m)) {
+    const picks = typeof getAIPicks === 'function' ? getAIPicks(matches, 'value') : [];
+    if (!picks.length) return { text: 'Aucun value bet détecté aujourd\'hui.\nLe marché semble bien équilibré.', isHtml: false };
+    const txt = picks.slice(0,3).map(({m: mx, pick}) =>
+      `💎 <strong>${mx.home.name} vs ${mx.away.name}</strong><br>${pick.bet.l} · ×${pick.bet.o.toFixed(2)} · EV+ détecté`
+    ).join('<br><br>');
+    return { text: `💎 <strong>Value Bets du jour :</strong><br><br>${txt}`, isHtml: true };
+  }
+
+  // Banker
+  if (/banker|banquier|sure|certain|garanti|inrat/.test(m)) {
+    const bankers = typeof getBankers === 'function' ? getBankers(matches) : [];
+    if (!bankers.length) return { text: 'Pas de banker identifié pour cette date.\nLe seuil de confiance est ≥ 82%.', isHtml: false };
+    const txt = bankers.slice(0,3).map(({m: mx, pick}) =>
+      `⭐ <strong>${mx.home.name} vs ${mx.away.name}</strong><br>${pick.bet.l} · ×${pick.bet.o.toFixed(2)} · ${pick.confidence}% de confiance`
+    ).join('<br><br>');
+    return { text: `🏆 <strong>Bankers du jour :</strong><br><br>${txt}`, isHtml: true };
+  }
+
+  // Best pick / meilleur
+  if (/meilleur|best|recommande|conseil|top pick|selection|ia standard/.test(m)) {
+    const picks = typeof getAIPicks === 'function' ? getAIPicks(matches, 'ia') : [];
+    if (!picks.length) return { text: 'Pas de sélection IA disponible pour cette date.', isHtml: false };
+    const top = picks[0];
+    const cardHtml = buildBotAnalysisCard(top.m, top.pick);
+    return { text: `⭐ <strong>Meilleur pick IA :</strong><br><br>${cardHtml}`, isHtml: true };
+  }
+
+  // Help
+  if (/aide|help|comment|quoi|que peux|capable|fonction/.test(m)) {
+    return { text: `Je peux vous aider à :<br><br>⭐ <strong>Meilleur pick</strong> — top sélection IA<br>🛡️ <strong>Paris sûr</strong> — risque minimum<br>💎 <strong>Value bet</strong> — espérance positive<br>🏆 <strong>Banker</strong> — confiance ≥ 82%<br>🔴 <strong>Live</strong> — matchs en cours<br>📊 <strong>Analyse un match</strong> — dites un nom d'équipe<br><br>Exemple : "Analyse PSG" ou "Match Real Madrid"`, isHtml: true };
+  }
+
+  // Team name lookup — search in today's matches
+  const found = matches.find(mx => {
+    const hname = mx.home.name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+    const aname = mx.away.name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+    return m.includes(hname.slice(0,5)) || m.includes(aname.slice(0,5)) ||
+           hname.split(' ').some(w => w.length > 3 && m.includes(w)) ||
+           aname.split(' ').some(w => w.length > 3 && m.includes(w));
+  });
+
+  if (found) {
+    const pick = typeof pickBestBet === 'function' ? pickBestBet(found, 'ia') : null;
+    const cardHtml = buildBotAnalysisCard(found, pick);
+    return { text: `📊 <strong>Analyse : ${found.home.name} vs ${found.away.name}</strong><br><br>${cardHtml}`, isHtml: true };
+  }
+
+  // List today's matches if asked
+  if (/liste|tous les matchs|quels matchs|quels sont/.test(m)) {
+    if (!matches.length) return { text: 'Aucun match pour cette date.', isHtml: false };
+    const lines = matches.slice(0,8).map(mx => `⚽ ${mx.lf||''} <strong>${mx.home.name}</strong> vs <strong>${mx.away.name}</strong> · ${mx.time||''}`).join('<br>');
+    const more = matches.length > 8 ? `<br><em>...et ${matches.length-8} autres matchs</em>` : '';
+    return { text: `📋 <strong>Matchs du ${dateLabel} :</strong><br><br>${lines}${more}`, isHtml: true };
+  }
+
+  // Default
+  const picks = typeof getAIPicks === 'function' ? getAIPicks(matches, 'ia') : [];
+  if (picks.length) {
+    const top = picks[0];
+    return { text: `Je n'ai pas bien compris votre question. 😅<br><br>Voici le <strong>meilleur pick du moment</strong> :<br><br>⚽ <strong>${top.m.home.name} vs ${top.m.away.name}</strong><br>🎯 ${top.pick.bet.l} · ×${top.pick.bet.o.toFixed(2)} · ${top.pick.confidence}% de confiance<br><br>Dites-moi un nom d'équipe pour une analyse complète !`, isHtml: true };
+  }
+  return { text: 'Je n\'ai pas compris votre question. Essayez :\n• "Meilleur pick"\n• "Paris sûr"\n• "Banker du jour"\n• Le nom d\'une équipe', isHtml: false };
+}
+
+function buildBotAnalysisCard(m, pick) {
+  const hf = (m.home.form||[]).map(f=>`<span class="bac-form-dot ${f}">${f}</span>`).join('');
+  const af = (m.away.form||[]).map(f=>`<span class="bac-form-dot ${f}">${f}</span>`).join('');
+  const recBlock = pick ? `<div class="bac-rec">🎯 <strong>Pari recommandé :</strong> ${pick.bet.l} · ×${pick.bet.o.toFixed(2)} · ${pick.confidence}% de confiance</div>` : '';
+  return `<div class="bot-analysis-card">
+    <div class="bac-league">${m.lf||''} ${m.league} · ${m.time||''}</div>
+    <div class="bac-teams">${m.home.name} vs ${m.away.name}</div>
+    <div class="bac-probs">
+      <div class="bac-prob"><div class="bac-prob-val" style="color:#22c55e">${m.prob.h}%</div><div class="bac-prob-lbl">Domicile</div></div>
+      <div class="bac-prob"><div class="bac-prob-val" style="color:#eab308">${m.prob.d}%</div><div class="bac-prob-lbl">Nul</div></div>
+      <div class="bac-prob"><div class="bac-prob-val" style="color:#f97316">${m.prob.a}%</div><div class="bac-prob-lbl">Extérieur</div></div>
+    </div>
+    ${recBlock}
+    <div style="margin-top:8px;font-size:0.65rem;color:var(--muted)">Forme ${m.home.name}</div>
+    <div class="bac-form">${hf}</div>
+    <div style="margin-top:6px;font-size:0.65rem;color:var(--muted)">Forme ${m.away.name}</div>
+    <div class="bac-form">${af}</div>
+  </div>`;
+}
 </script>
 </body>
 </html>
