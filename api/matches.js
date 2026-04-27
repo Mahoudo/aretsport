@@ -1,7 +1,7 @@
 const https = require('https');
 const http = require('http');
 
-function fetchUrl(url, headers = {}, timeout = 12000) {
+function fetchUrl(url, headers = {}, timeout = 15000) {
   return new Promise((resolve, reject) => {
     const mod = url.startsWith('https') ? https : http;
     const req = mod.get(url, { headers }, (res) => {
@@ -16,47 +16,53 @@ function fetchUrl(url, headers = {}, timeout = 12000) {
 
 function today() { return new Date().toISOString().slice(0, 10); }
 function tomorrow() { const d = new Date(); d.setDate(d.getDate() + 1); return d.toISOString().slice(0, 10); }
-function toDateStr(d) { return d.toISOString().slice(0, 10); }
 
-// ─── ESPN API (100% gratuit, pas de clé) ─────────────────────────────────────
+// ─── ESPN API ─────────────────────────────────────────────────────────────────
 const ESPN_LEAGUES = [
-  'eng.1',   // Premier League
-  'esp.1',   // La Liga
-  'ger.1',   // Bundesliga
-  'fra.1',   // Ligue 1
-  'ita.1',   // Serie A
-  'por.1',   // Liga Portugal
-  'ned.1',   // Eredivisie
-  'tur.1',   // Süper Lig
-  'bel.1',   // Jupiler Pro League
-  'sco.1',   // Scottish Premiership
-  'usa.1',   // MLS
-  'bra.1',   // Brasileirao
-  'arg.1',   // Argentine Primera
-  'mex.1',   // Liga MX
-  'afr.nations',  // CAF
-  'conmebol.copa_libertadores',
-  'conmebol.copa_sudamericana',
-  'uefa.champions_league',
-  'uefa.europa',
-  'uefa.europa.conf_league',
+  // Europe Top 5
+  'eng.1', 'esp.1', 'ger.1', 'fra.1', 'ita.1',
+  // Europe 2e division
+  'eng.2', 'esp.2', 'ger.2', 'fra.2', 'ita.2',
+  // Europe autres
+  'por.1', 'ned.1', 'bel.1', 'tur.1', 'sco.1',
+  'aut.1', 'che.1', 'grc.1', 'swe.1', 'nor.1',
+  'dnk.1', 'pol.1', 'cze.1', 'svk.1', 'hrv.1',
+  'rom.1', 'hun.1', 'srb.1', 'ukr.1', 'isr.1',
+  'cyp.1', 'svn.1', 'bih.1', 'alb.1', 'mkd.1',
+  // Coupes Europe
+  'uefa.champions_league', 'uefa.europa', 'uefa.europa.conf_league',
+  // Amériques
+  'usa.1', 'bra.1', 'arg.1', 'mex.1', 'col.1',
+  'chi.1', 'uru.1', 'ecu.1', 'per.1', 'par.1',
+  'bol.1', 'ven.1',
+  'conmebol.copa_libertadores', 'conmebol.copa_sudamericana',
+  // Afrique & Moyen-Orient
+  'afr.nations', 'sau.1', 'are.1', 'egy.1', 'mar.1',
+  'zaf.1', 'tun.1', 'nga.1',
+  // Asie-Pacifique
+  'jpn.1', 'jpn.2', 'kor.1', 'chn.1', 'aus.1', 'ind.1',
+  // Qualifs
+  'fifa.worldq.afc', 'fifa.worldq.caf',
+  'fifa.worldq.conmebol', 'fifa.worldq.concacaf', 'fifa.worldq.uefa',
+  // CONCACAF
+  'concacaf.champions', 'concacaf.league',
 ];
 
 const ESPN_STATUS_MAP = {
-  'STATUS_SCHEDULED':    'upcoming',
-  'STATUS_IN_PROGRESS':  'live',
-  'STATUS_FIRST_HALF':   'live',
-  'STATUS_SECOND_HALF':  'live',
-  'STATUS_HALFTIME':     'live',
-  'STATUS_EXTRA_TIME':   'live',
-  'STATUS_PENALTIES':    'live',
-  'STATUS_FINAL':        'finished',
-  'STATUS_FULL_TIME':    'finished',
-  'STATUS_FULL_PEN':     'finished',
-  'STATUS_ABANDONED':    'canceled',
-  'STATUS_POSTPONED':    'postponed',
-  'STATUS_CANCELED':     'canceled',
-  'STATUS_SUSPENDED':    'postponed',
+  'STATUS_SCHEDULED':   'upcoming',
+  'STATUS_IN_PROGRESS': 'live',
+  'STATUS_FIRST_HALF':  'live',
+  'STATUS_SECOND_HALF': 'live',
+  'STATUS_HALFTIME':    'live',
+  'STATUS_EXTRA_TIME':  'live',
+  'STATUS_PENALTIES':   'live',
+  'STATUS_FINAL':       'finished',
+  'STATUS_FULL_TIME':   'finished',
+  'STATUS_FULL_PEN':    'finished',
+  'STATUS_ABANDONED':   'canceled',
+  'STATUS_POSTPONED':   'postponed',
+  'STATUS_CANCELED':    'canceled',
+  'STATUS_SUSPENDED':   'postponed',
 };
 
 async function fetchESPNLeague(league, dateStr) {
@@ -66,13 +72,11 @@ async function fetchESPNLeague(league, dateStr) {
     const { status, body } = await fetchUrl(url, {
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36',
       'Accept': 'application/json',
-    });
+    }, 10000);
     if (status !== 200) return [];
     const data = JSON.parse(body);
-    const events = data.events || [];
     const results = [];
-
-    for (const ev of events) {
+    for (const ev of (data.events || [])) {
       try {
         const comp = ev.competitions?.[0];
         if (!comp) continue;
@@ -80,67 +84,39 @@ async function fetchESPNLeague(league, dateStr) {
         const home = competitors.find(c => c.homeAway === 'home');
         const away = competitors.find(c => c.homeAway === 'away');
         if (!home || !away) continue;
-
-        const homeName = home.team?.displayName || home.team?.name || '';
-        const awayName = away.team?.displayName || away.team?.name || '';
-        if (!homeName || !awayName) continue;
-        const homeLogo = home.team?.logo || null;
-        const awayLogo = away.team?.logo || null;
-
-        const leagueName = ev.season?.slug
-          ? `${data.leagues?.[0]?.name || league}`
-          : (data.leagues?.[0]?.name || league);
-
+        const leagueName = data.leagues?.[0]?.name || league;
         const statusType = comp.status?.type?.name || 'STATUS_SCHEDULED';
         const matchStatus = ESPN_STATUS_MAP[statusType] || 'upcoming';
-
-        const dateObj = new Date(ev.date);
-        const matchDate = toDateStr(dateObj);
-        const hh = String(dateObj.getUTCHours()).padStart(2, '0');
-        const mm = String(dateObj.getUTCMinutes()).padStart(2, '0');
-        const timeStr = `${hh}:${mm}`;
-
+        const dateStr2 = ev.date ? ev.date.slice(0, 10) : today();
+        const timeObj = new Date(ev.date || Date.now());
+        const timeStr = timeObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Abidjan' });
         let score = null, minute = null, stoppage = null;
         if (matchStatus === 'live' || matchStatus === 'finished') {
           const hs = home.score, as_ = away.score;
           if (hs != null && as_ != null) score = { home: String(hs), away: String(as_) };
           if (matchStatus === 'live') {
             const clock = comp.status?.displayClock || '';
-            // "45'+2'" → base=45, stop=2 | "67'" → base=67 | "HT" → 45
             if (clock === 'HT') { minute = 45; }
             else {
-              const parts = clock.match(/(\d+)(?:'\+(\d+)'?)?/);
-              if (parts) {
-                minute = parseInt(parts[1]);
-                if (parts[2]) stoppage = parseInt(parts[2]);
-              }
+              const parts = clock.match(/^(\d+)(?:\:(\d+))?$/);
+              if (parts) { minute = parseInt(parts[1]); }
             }
           }
         }
-
-        // Odds from ESPN if available
-        let odds1 = null, oddsX = null, odds2 = null;
-        const oddsData = comp.odds?.[0];
-        if (oddsData) {
-          odds1 = oddsData.homeTeamOdds?.moneyLine ? null : null; // ESPN provides spread odds, not 1X2
-        }
-
         results.push({
           id: `espn_${ev.id}`,
           source: 'espn',
           league: leagueName,
-          home: homeName,
-          away: awayName,
-          homeLogo,
-          awayLogo,
+          home: home.team?.displayName || home.team?.name || '',
+          away: away.team?.displayName || away.team?.name || '',
+          homeLogo: home.team?.logo || null,
+          awayLogo: away.team?.logo || null,
           time: timeStr,
-          date: matchDate,
-          minute,
-          stoppage,
-          score,
+          date: dateStr2,
+          minute, stoppage, score,
           status: matchStatus,
-          odds: { '1': odds1, X: oddsX, '2': odds2 },
-          url: ev.links?.[0]?.href || `https://www.espn.com/soccer/match/_/gameId/${ev.id}`,
+          odds: { '1': null, X: null, '2': null },
+          url: null,
         });
       } catch { continue; }
     }
@@ -149,15 +125,13 @@ async function fetchESPNLeague(league, dateStr) {
 }
 
 async function fetchESPN(dateStr) {
-  const results = await Promise.allSettled(ESPN_LEAGUES.map(l => fetchESPNLeague(l, dateStr)));
-  const seen = new Set();
+  // Fetch all leagues in parallel, by batches of 15 to avoid overwhelming
+  const BATCH = 15;
   const all = [];
-  for (const r of results) {
-    if (r.status === 'fulfilled') {
-      for (const m of r.value) {
-        if (!seen.has(m.id)) { seen.add(m.id); all.push(m); }
-      }
-    }
+  for (let i = 0; i < ESPN_LEAGUES.length; i += BATCH) {
+    const batch = ESPN_LEAGUES.slice(i, i + BATCH);
+    const results = await Promise.allSettled(batch.map(l => fetchESPNLeague(l, dateStr)));
+    for (const r of results) if (r.status === 'fulfilled') all.push(...r.value);
   }
   return all;
 }
@@ -174,6 +148,11 @@ const BETCLIC_PAGES = [
   '/football-sfootball/football-champions-league-c2',
   '/football-sfootball/allemagne-bundesliga-c5',
 ];
+const BETCLIC_HEADERS = {
+  'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1',
+  'Accept-Language': 'fr-FR,fr;q=0.9',
+  'Accept': 'text/html,application/xhtml+xml,*/*',
+};
 
 function parseOdd(t) {
   if (!t) return null;
@@ -198,10 +177,26 @@ function parseBetclicHtml(html) {
       if (!home || !away) continue;
       const timeM = cardHtml.match(/(\d{1,2}:\d{2})/);
       const timeStr = timeM ? timeM[1] : '';
-      let score = null;
+      let score = null, minute = null, stoppage = null, half = null;
       if (isLive) {
-        const sM = cardHtml.match(/data-qa="scoreboard-score"[^>]*>([\s\S]*?)<\/div>/);
-        if (sM) { const nums = sM[1].match(/\d+/g); if (nums?.length >= 2) score = { home: nums[0], away: nums[1] }; }
+        // Score — cibler scoreboard_score-1 et scoreboard_score-2 directement
+        const sH = cardHtml.match(/scoreboard_score-1[^>]*>(\d+)/);
+        const sA = cardHtml.match(/scoreboard_score-2[^>]*>(\d+)/);
+        if (sH && sA) {
+          score = { home: sH[1], away: sA[1] };
+        } else {
+          const sM = cardHtml.match(/data-qa="scoreboard-score"[^>]*>([\s\S]*?)<\/span>\s*<\/span>/);
+          if (sM) { const nums = sM[1].match(/\d+/g); if (nums?.length >= 2) score = { home: nums[0], away: nums[1] }; }
+        }
+        // Minute depuis scoreboards-timer : "36' • MT 1" ou "45+2' • MT 1"
+        const timerM = cardHtml.match(/scoreboards-timer[^>]*>[\s\S]*?(\d{1,3})(?:\+(\d+))?'\s*(?:•\s*(MT\s*\d|[A-Z\-]+))?/);
+        if (timerM) {
+          minute = parseInt(timerM[1]);
+          if (timerM[2]) stoppage = parseInt(timerM[2]);
+          half = timerM[3] ? timerM[3].trim() : null;
+        } else if (/scoreboards-timer[^>]*>[\s\S]*?(HT|MI.TEMPS|HALFTIME)/i.test(cardHtml)) {
+          minute = 45; half = 'HT';
+        }
       }
       const oddMs = [...cardHtml.matchAll(/class="[^"]*is-odd[^"]*"[\s\S]*?(\d+[.,]\d+)/g)];
       const odds = { '1': null, X: null, '2': null };
@@ -210,7 +205,7 @@ function parseBetclicHtml(html) {
       if (oddMs[2]) odds['2'] = parseOdd(oddMs[2][1]);
       const leagueMs = [...cardHtml.matchAll(/<[^>]*breadcrumb_itemLabel[^>]*>([\s\S]*?)<\/span>/g)];
       const league = leagueMs.length ? leagueMs[leagueMs.length - 1][1].replace(/<[^>]+>/g, '').replace(/•/g, '').trim() : '';
-      results.push({ id: mid, source: 'betclic', league, home, away, time: timeStr, date: todayIso, minute: null, score, status: isLive ? 'live' : 'upcoming', odds, url: BETCLIC_BASE + href });
+      results.push({ id: mid, source: 'betclic', league, home, away, time: timeStr, date: todayIso, minute, stoppage, half, score, status: isLive ? 'live' : 'upcoming', odds, url: BETCLIC_BASE + href });
     } catch { continue; }
   }
   return results;
@@ -218,14 +213,9 @@ function parseBetclicHtml(html) {
 
 async function fetchBetclic() {
   const seen = new Set(), results = [];
-  const headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36',
-    'Accept-Language': 'fr-FR,fr;q=0.9',
-    'Accept': 'text/html,*/*',
-  };
   await Promise.allSettled(BETCLIC_PAGES.map(async p => {
     try {
-      const { status, body } = await fetchUrl(BETCLIC_BASE + p, headers, 10000);
+      const { status, body } = await fetchUrl(BETCLIC_BASE + p, BETCLIC_HEADERS, 12000);
       if (status === 200) for (const m of parseBetclicHtml(body)) if (!seen.has(m.id)) { seen.add(m.id); results.push(m); }
     } catch {}
   }));
@@ -235,19 +225,28 @@ async function fetchBetclic() {
 // ─── Name normalization ───────────────────────────────────────────────────────
 function normName(n) {
   let s = n.toLowerCase();
-  for (const x of ['fc','sc','ac','cf','rc','fk','bk','as','ss','cd','sd','ud']) s = s.replace(new RegExp(`\\b${x}\\b`, 'g'), '');
-  const map = { é:'e',è:'e',ê:'e',à:'a',â:'a',ô:'o',ù:'u',û:'u',î:'i',ç:'c' };
+  for (const x of ['fc','sc','ac','cf','rc','fk','sk','bk','as','ss','cd','sd','ud']) s = s.replace(new RegExp(`\\b${x}\\b`, 'g'), '');
+  const map = { é:'e',è:'e',ê:'e',ë:'e',à:'a',â:'a',ô:'o',ù:'u',û:'u',ü:'u',î:'i',ï:'i',ç:'c' };
   for (const [a, b] of Object.entries(map)) s = s.replace(new RegExp(a, 'g'), b);
   return s.replace(/[^a-z0-9]/g, '');
 }
 function matchKey(m) { return `${normName(m.home).slice(0,8)}|${normName(m.away).slice(0,8)}|${m.date}`; }
 
+// ─── Cache simple (30s) ───────────────────────────────────────────────────────
+let _cache = null, _cacheTs = 0;
+const CACHE_TTL = 30000;
+
 // ─── Main handler ─────────────────────────────────────────────────────────────
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60');
   if (req.method === 'OPTIONS') { res.status(204).end(); return; }
+
+  // Renvoyer le cache si récent
+  if (_cache && Date.now() - _cacheTs < CACHE_TTL) {
+    return res.status(200).json(_cache);
+  }
 
   try {
     const td = today(), tm = tomorrow();
@@ -264,9 +263,11 @@ module.exports = async function handler(req, res) {
         const k = matchKey(m);
         if (k in seenKeys) {
           const ex = all[seenKeys[k]];
-          if (!ex.odds['1'] && m.odds['1']) ex.odds = m.odds;
+          if (!ex.odds?.['1'] && m.odds?.['1']) ex.odds = m.odds;
           if (!ex.score && m.score) ex.score = m.score;
-          if (!ex.minute && m.minute) ex.minute = m.minute;
+          if (ex.minute == null && m.minute != null) ex.minute = m.minute;
+          if (ex.stoppage == null && m.stoppage != null) ex.stoppage = m.stoppage;
+          if (!ex.half && m.half) ex.half = m.half;
           if (m.status === 'live') ex.status = 'live';
           if (!ex.homeLogo && m.homeLogo) ex.homeLogo = m.homeLogo;
           if (!ex.awayLogo && m.awayLogo) ex.awayLogo = m.awayLogo;
@@ -279,22 +280,25 @@ module.exports = async function handler(req, res) {
         }
       }
     }
-    add(betclic);   // betclic en priorité (a les cotes)
-    add(espnAll);   // ESPN complète avec tous les matchs
+    add(betclic);
+    add(espnAll);
 
     const filtered = all
       .filter(m => [td, tm].includes(m.date) && ['live', 'upcoming'].includes(m.status))
       .sort((a, b) => {
         if (a.status !== b.status) return a.status === 'live' ? -1 : 1;
-        return (a.date + a.time).localeCompare(b.date + b.time);
+        return (a.date + (a.time || '')).localeCompare(b.date + (b.time || ''));
       });
 
-    res.status(200).json({
+    const payload = {
       ok: true,
       matches: filtered,
       count: filtered.length,
       sources: { betclic: betclic.length, espn: espnAll.length },
-    });
+    };
+    _cache = payload;
+    _cacheTs = Date.now();
+    res.status(200).json(payload);
   } catch (e) {
     res.status(500).json({ ok: false, error: e.message, matches: [] });
   }

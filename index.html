@@ -1053,8 +1053,8 @@
 
     <!-- ACCURACY STRIP -->
     <div class="accuracy-strip" id="accuracyStrip">
-      <div class="acc-stat"><div class="acc-val" id="accTotal">243 520</div><div class="acc-lbl">Matchs analysés</div></div>
-      <div class="acc-stat"><div class="acc-val" id="accWinRate" style="color:var(--accent)">—</div><div class="acc-lbl">Taux de réussite</div></div>
+      <div class="acc-stat"><div class="acc-val" id="accTotal">—</div><div class="acc-lbl">Matchs du jour</div></div>
+      <div class="acc-stat"><div class="acc-val" id="accWinRate" style="color:var(--accent)">—</div><div class="acc-lbl">Confiance moy. IA</div></div>
       <div class="acc-stat"><div class="acc-val" id="accBankers" style="color:#f59e0b">—</div><div class="acc-lbl">Bankers</div></div>
     </div>
 
@@ -1963,6 +1963,11 @@ async function fetchBetclicMatches(silent) {
         buildDateStrip();
         updateAllViews();
         applyFilter();
+        // Rafraîchir le modal si un match live est actuellement ouvert
+        if (currentSheetMatch && currentSheetMatch.status === 'live') {
+          const fresh = Object.values(DB).flat().find(x => x.id === currentSheetMatch.id);
+          if (fresh) { currentSheetMatch = fresh; buildSheetHero(fresh); }
+        }
         const liveCount = (byDate[TODAY] || []).filter(m => m.status === 'live').length;
         if (lbl) lbl.textContent = liveCount > 0 ? `${liveCount} LIVE` : 'LIVE';
         if (!silent) {
@@ -3312,17 +3317,24 @@ function renderCoupon() {
   const items=coupon.map((c,idx)=>{
     const m=c.matchData, b=m.bets[c.bi];
     const liveMin = m.half==='HT'||m.half==='MI-TEMPS' ? 'MI-TEMPS' : (m.minute!=null?m.minute+"'":'');
+    // Score live depuis DB (toujours à jour)
+    const freshM = Object.values(DB).flat().find(x => x.id === m.id);
+    const liveScore = (freshM||m).score || '0-0';
     const statusBadge = m.status==='live'
       ? `<span style="font-size:0.65rem;color:var(--red);font-weight:700" id="chrono-coupon-${m.id}">🔴 LIVE ${liveMin}</span>`
       : m.time ? `<span style="font-size:0.65rem;color:var(--muted)">🕐 ${m.time}</span>` : '';
+    const scoreBadge = m.status==='live'
+      ? `<span style="font-size:0.88rem;font-weight:900;color:var(--text)" id="coupon-score-${m.id}">${liveScore}</span>` : '';
+    const dateBadge = m.date && m.date !== TODAY
+      ? `<span style="font-size:0.62rem;color:var(--accent);margin-left:5px">${new Date(m.date+'T12:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}</span>` : '';
     return `<div class="coupon-item" id="ci-${idx}">
       <div class="ci-head">
-        <span class="ci-match">${m.lf} ${m.home.name} vs ${m.away.name}</span>
+        <span class="ci-match">${m.lf} ${m.home.name} vs ${m.away.name}${dateBadge}</span>
         <button class="ci-remove" onclick="removeCouponItem('${m.id}',${c.bi})">✕</button>
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-top:2px">
         <div class="ci-bet">${b.t} · ${b.l}</div>
-        ${statusBadge}
+        <div style="display:flex;align-items:center;gap:6px">${statusBadge}${scoreBadge}</div>
       </div>
       <div class="ci-odd">×${b.o.toFixed(2)}</div>
     </div>`;
@@ -3754,6 +3766,8 @@ function renderAI(matches) {
   if (elAccBankers) elAccBankers.textContent = bankersToday.length || '—';
   const elAccWin = document.getElementById('accWinRate');
   if (elAccWin) elAccWin.textContent = overallAvgConf ? overallAvgConf + '%' : '—';
+  const elAccTotal = document.getElementById('accTotal');
+  if (elAccTotal) elAccTotal.textContent = allMatches.length || '—';
   // Render banker section
   renderBankerSection(allMatches);
   // ── Winflix Résultats du mois ───────────────────────────────
@@ -3948,6 +3962,7 @@ function openMatchSheet(mid, e) {
 function closeMatchSheet() {
   document.getElementById('matchSheet').classList.remove('open');
   document.body.style.overflow = '';
+  currentSheetMatch = null;
 }
 
 function dsTab(idx, el) {
@@ -3967,7 +3982,8 @@ function buildSheetHero(m) {
     centerHTML = `<div class="ds-vs">FINAL</div><div class="ds-score-big">${m.score}</div>`;
   else if (isLive) {
     const htLabel = m.half==='HT'||m.half==='MI-TEMPS' ? 'MI-TEMPS' : (m.minute!=null ? m.minute+"'" : 'LIVE');
-    centerHTML = `<div class="ds-vs" style="color:var(--red)" id="chrono-hdr-${m.id}">🔴 ${htLabel}</div><div class="ds-score-big">${m.score||'0-0'}</div>`;
+    const scoreStr = m.score || '0-0';
+    centerHTML = `<div class="ds-vs" style="color:var(--red);font-size:0.85rem" id="chrono-sheet-${m.id}">🔴 ${htLabel}</div><div class="ds-score-big" id="sheet-score-${m.id}">${scoreStr}</div>`;
   }
   else
     centerHTML = `<div class="ds-vs">VS</div><div class="ds-time-badge">${m.time}</div>`;
@@ -5313,9 +5329,22 @@ function startChrono() {
       const ctr = document.getElementById(`chrono-ctr-${m.id}`);
       if (hdr) hdr.innerHTML = `🔴 ${label}`;
       if (ctr) ctr.innerHTML = label;
-      // Page coupon
+      // Fenêtre détail (modal) — chrono + score depuis DB
+      const sheet = document.getElementById(`chrono-sheet-${m.id}`);
+      if (sheet) sheet.innerHTML = `🔴 ${label}`;
+      const sheetScore = document.getElementById(`sheet-score-${m.id}`);
+      if (sheetScore) {
+        const fresh = Object.values(DB).flat().find(x => x.id === m.id);
+        if (fresh && fresh.score) sheetScore.textContent = fresh.score;
+      }
+      // Page coupon — chrono + score
       const coup = document.getElementById(`chrono-coupon-${m.id}`);
       if (coup) coup.innerHTML = `🔴 LIVE ${label}`;
+      const couponScore = document.getElementById(`coupon-score-${m.id}`);
+      if (couponScore) {
+        const fresh2 = Object.values(DB).flat().find(x => x.id === m.id);
+        if (fresh2 && fresh2.score) couponScore.textContent = fresh2.score;
+      }
       // Page IA activité (live badge)
       const ai = document.getElementById(`chrono-ai-${m.id}`);
       if (ai) ai.innerHTML = label;
