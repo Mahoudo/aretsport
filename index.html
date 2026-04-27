@@ -22,6 +22,44 @@
       --safe-top:env(safe-area-inset-top,0px);
       --safe-bot:env(safe-area-inset-bottom,0px);
     }
+    /* ══════════ THÈMES ══════════ */
+    [data-theme="noir-or"]{
+      --bg:#080808;--bg2:#101010;--bg3:#181818;
+      --card:#111111;--card2:#1c1c1c;--border:#2a2a2a;
+      --accent:#d97706;--accent2:#92400e;
+      --green:#22c55e;--yellow:#fbbf24;--red:#ef4444;--orange:#f97316;
+      --text:#f5f0e8;--muted:#78716c;
+    }
+    [data-theme="vert-terrain"]{
+      --bg:#050f09;--bg2:#08160d;--bg3:#0d2016;
+      --card:#0a1a10;--card2:#112618;--border:#1a4025;
+      --accent:#16a34a;--accent2:#15803d;
+      --green:#4ade80;--yellow:#eab308;--red:#ef4444;--orange:#f97316;
+      --text:#dcfce7;--muted:#4a7a5a;
+    }
+    [data-theme="ocean"]{
+      --bg:#020d1a;--bg2:#041522;--bg3:#071e30;
+      --card:#051628;--card2:#082035;--border:#0e3352;
+      --accent:#0ea5e9;--accent2:#0369a1;
+      --green:#22c55e;--yellow:#eab308;--red:#ef4444;--orange:#f97316;
+      --text:#e0f2fe;--muted:#4a7f9e;
+    }
+    [data-theme="rose-nuit"]{
+      --bg:#110309;--bg2:#180510;--bg3:#200a17;
+      --card:#1a0711;--card2:#240d1a;--border:#3d1428;
+      --accent:#ec4899;--accent2:#be185d;
+      --green:#22c55e;--yellow:#eab308;--red:#fb7185;--orange:#f97316;
+      --text:#fce7f3;--muted:#9d4e72;
+    }
+    /* ── Sélecteur de thème ── */
+    .theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 0}
+    .theme-card{border-radius:14px;padding:14px;cursor:pointer;border:2px solid transparent;transition:all .25s;position:relative;overflow:hidden}
+    .theme-card.active{border-color:var(--accent)}
+    .theme-card.active::after{content:'✓';position:absolute;top:8px;right:10px;font-size:14px;font-weight:800;color:var(--accent)}
+    .theme-card-preview{display:flex;gap:4px;margin-bottom:8px;height:28px;border-radius:8px;overflow:hidden}
+    .tcp-bar{flex:1}
+    .theme-card-name{font-size:0.8rem;font-weight:700;margin-bottom:2px}
+    .theme-card-sub{font-size:0.68rem;opacity:.7}
     html,body{height:100%;overflow:hidden;overscroll-behavior:none}
     body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column}
     ::-webkit-scrollbar{display:none}
@@ -554,6 +592,41 @@
     .mois-val.blue{color:var(--accent)}
     .mois-lbl{font-size:0.55rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
 
+    /* ── WINFLIX TABS (Résultats|Activité|Avis) ──────────────── */
+    .wf-tabs-row{display:flex;gap:0;margin:16px 16px 0;background:var(--bg2);border-radius:12px;padding:3px;border:1px solid var(--border)}
+    .wf-tab-btn{flex:1;padding:7px 4px;background:none;border:none;color:var(--muted);font-size:0.72rem;font-weight:600;cursor:pointer;border-radius:9px;transition:all .2s}
+    .wf-tab-btn.active{background:var(--accent);color:#fff}
+    /* ── WINFLIX DERNIERS GAGNANTS ────────────────────────────── */
+    .dg-wrap{padding:12px 16px 6px}
+    .dg-title{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:8px}
+    .dg-item{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+    .dg-item:last-child{border-bottom:none}
+    .dg-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;flex-shrink:0}
+    .dg-info{flex:1;min-width:0}
+    .dg-name{font-size:0.8rem;font-weight:600;color:var(--text)}
+    .dg-detail{font-size:0.7rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .dg-right{text-align:right;flex-shrink:0}
+    .dg-gain{font-size:0.82rem;font-weight:700;color:#22c55e}
+    .dg-time{font-size:0.65rem;color:var(--muted)}
+    /* ── WINFLIX ACTIVITÉ ─────────────────────────────────────── */
+    .acti-wrap{padding:12px 16px}
+    .acti-item{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+    .acti-item:last-child{border-bottom:none}
+    .acti-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0}
+    .acti-icon.win{background:rgba(34,197,94,0.12)}
+    .acti-icon.lose{background:rgba(239,68,68,0.08)}
+    .acti-icon.pending{background:rgba(79,110,247,0.1)}
+    .acti-body{flex:1;min-width:0}
+    .acti-match{font-size:0.8rem;font-weight:600;color:var(--text)}
+    .acti-pick{font-size:0.71rem;color:var(--muted)}
+    .acti-badge{font-size:0.65rem;font-weight:700;padding:2px 7px;border-radius:20px;display:inline-block;margin-top:3px}
+    .acti-badge.win{background:rgba(34,197,94,0.12);color:#22c55e}
+    .acti-badge.lose{background:rgba(239,68,68,0.08);color:#ef4444}
+    .acti-badge.pending{background:rgba(79,110,247,0.1);color:var(--accent)}
+    .acti-gain{font-size:0.8rem;font-weight:700;flex-shrink:0;padding-top:2px}
+    .acti-gain.win{color:#22c55e}
+    .acti-gain.lose{color:#ef4444}
+    .acti-gain.pending{color:var(--accent)}
     /* ── WINFLIX AVIS UTILISATEURS ────────────────────────────── */
     .avis-section{margin:0 16px 16px}
     .avis-title{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px}
@@ -670,10 +743,27 @@
     .toggle-thumb{position:absolute;width:20px;height:20px;border-radius:50%;background:white;top:3px;left:3px;transition:transform 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.3)}
     .toggle input:checked~.toggle-thumb{transform:translateX(20px)}
     .notif-perm-btn{width:100%;margin-bottom:12px;padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;font-weight:700;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
-    .notif-perm-status{text-align:center;font-size:0.75rem;margin-bottom:14px;padding:6px 12px;border-radius:8px}
+    .notif-perm-status{text-align:center;font-size:0.75rem;margin-bottom:10px;padding:8px 12px;border-radius:10px;font-weight:600}
     .notif-perm-status.granted{background:rgba(34,197,94,0.12);color:var(--green)}
     .notif-perm-status.denied{background:rgba(239,68,68,0.12);color:var(--red)}
     .notif-perm-status.default{background:rgba(234,179,8,0.12);color:var(--yellow)}
+    .notif-how-box{background:var(--bg2);border-radius:12px;padding:12px 14px;margin-bottom:12px;border:1px solid rgba(239,68,68,0.2)}
+    .notif-how-title{font-size:0.75rem;font-weight:700;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+    .notif-how-step{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
+    .notif-how-num{width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:0.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+    .notif-how-text{font-size:0.75rem;color:var(--text);line-height:1.4}
+    .notif-how-text b{color:var(--accent)}
+    .notif-tabs-row{display:flex;gap:0;background:var(--bg2);border-radius:10px;padding:3px;margin-bottom:12px;border:1px solid var(--border)}
+    .notif-tab-btn{flex:1;padding:6px 4px;background:none;border:none;color:var(--muted);font-size:0.72rem;font-weight:600;cursor:pointer;border-radius:7px;transition:all .2s}
+    .notif-tab-btn.active{background:var(--accent);color:#fff}
+    .notif-hist-empty{text-align:center;padding:24px 0;color:var(--muted);font-size:0.8rem}
+    .notif-hist-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+    .notif-hist-item:last-child{border-bottom:none}
+    .notif-hist-ico{font-size:20px;flex-shrink:0;margin-top:1px}
+    .notif-hist-body{flex:1;min-width:0}
+    .notif-hist-title{font-size:0.82rem;font-weight:600;color:var(--text)}
+    .notif-hist-msg{font-size:0.72rem;color:var(--muted);margin-top:2px}
+    .notif-hist-time{font-size:0.65rem;color:var(--muted);white-space:nowrap;flex-shrink:0}
 
     /* MODAL date picker */
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;display:flex;align-items:flex-end;backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity 0.3s}
@@ -995,22 +1085,45 @@
     <button class="btn-load-ai" id="aiBtnLoad" onclick="loadAIMode()">➕ Charger dans mon coupon</button>
     <div class="disclaimer-box">⚠️ Les pronostics IA sont des estimations statistiques. Aucun gain garanti. Jouez de façon responsable.</div>
 
-    <!-- RÉSULTATS DU MOIS (Winflix style) -->
-    <div style="margin:14px 16px 0">
-      <div class="mois-strip">
-        <div class="mois-title">📅 Résultats IA — Ce mois</div>
-        <div class="mois-grid">
-          <div class="mois-card"><div class="mois-val green" id="moisReussite">—</div><div class="mois-lbl">Réussite</div></div>
-          <div class="mois-card"><div class="mois-val red" id="moisGains">—</div><div class="mois-lbl">Gains simulés</div></div>
-          <div class="mois-card"><div class="mois-val blue" id="moisCoteMoy">—</div><div class="mois-lbl">Cote moy.</div></div>
+    <!-- WINFLIX TABS: Résultats | Activité | Avis -->
+    <div class="wf-tabs-row">
+      <button class="wf-tab-btn active" onclick="wfTab('resultats',this)">📊 Résultats</button>
+      <button class="wf-tab-btn" onclick="wfTab('activite',this)">🔴 Activité</button>
+      <button class="wf-tab-btn" onclick="wfTab('avis',this)">⭐ Avis</button>
+    </div>
+
+    <!-- TAB: RÉSULTATS -->
+    <div id="wfTabResultats">
+      <div style="margin:14px 16px 0">
+        <div class="mois-strip">
+          <div class="mois-title">📅 Résultats IA — Ce mois</div>
+          <div class="mois-grid">
+            <div class="mois-card"><div class="mois-val green" id="moisReussite">—</div><div class="mois-lbl">Réussite</div></div>
+            <div class="mois-card"><div class="mois-val red" id="moisGains">—</div><div class="mois-lbl">Gains simulés</div></div>
+            <div class="mois-card"><div class="mois-val blue" id="moisCoteMoy">—</div><div class="mois-lbl">Cote moy.</div></div>
+          </div>
         </div>
+      </div>
+      <div class="dg-wrap">
+        <div class="dg-title">🏆 Derniers gagnants</div>
+        <div id="derniersGagnantsList"></div>
       </div>
     </div>
 
-    <!-- AVIS UTILISATEURS (Winflix style) -->
-    <div class="avis-section" id="avisSectionAI">
-      <div class="avis-title">⭐ Avis utilisateurs <span style="color:#f59e0b">★★★★★</span></div>
-      <div id="avisListAI"></div>
+    <!-- TAB: ACTIVITÉ -->
+    <div id="wfTabActivite" style="display:none">
+      <div class="acti-wrap">
+        <div class="dg-title">🔴 Activité récente — Résultats IA</div>
+        <div id="activiteList"></div>
+      </div>
+    </div>
+
+    <!-- TAB: AVIS -->
+    <div id="wfTabAvis" style="display:none">
+      <div class="avis-section" id="avisSectionAI">
+        <div class="avis-title">⭐ Avis utilisateurs <span style="color:#f59e0b">★★★★★</span></div>
+        <div id="avisListAI"></div>
+      </div>
     </div>
 
   </div>
@@ -1096,7 +1209,7 @@
       <div class="sec-head"><div class="sec-title">💰 Bankroll Tracker</div></div>
       <div class="bankroll-wrap">
         <div class="bankroll-summary" id="brSummary">
-          <div class="perf-card"><div class="perf-val" id="brBalance" style="color:var(--green)">—</div><div class="perf-lbl">Solde (€)</div></div>
+          <div class="perf-card"><div class="perf-val" id="brBalance" style="color:var(--green)">—</div><div class="perf-lbl">Solde (FCFA)</div></div>
           <div class="perf-card"><div class="perf-val" id="brROI" style="color:var(--yellow)">—</div><div class="perf-lbl">ROI</div></div>
           <div class="perf-card"><div class="perf-val" id="brBets" style="color:var(--accent)">—</div><div class="perf-lbl">Paris</div></div>
         </div>
@@ -1115,13 +1228,70 @@
 
       <div class="sec-head"><div class="sec-title">⚙️ Paramètres</div></div>
       <div class="settings-list">
-        <div class="settings-item" onclick="showToast('🔔','Notifications configurées')"><div class="settings-icon">🔔</div><div><div class="settings-label">Notifications</div><div class="settings-sub">Matchs live, résultats</div></div><span class="settings-arrow">›</span></div>
-        <div class="settings-item" onclick="showToast('🌙','Thème sombre activé')"><div class="settings-icon">🌙</div><div><div class="settings-label">Thème</div><div class="settings-sub">Sombre</div></div><span class="settings-arrow">›</span></div>
+        <div class="settings-item" onclick="openNotifPanel()"><div class="settings-icon">🔔</div><div><div class="settings-label">Notifications</div><div class="settings-sub">Matchs live, résultats</div></div><span class="settings-arrow">›</span></div>
         <div class="settings-item" onclick="showToast('🌐','Langue: Français')"><div class="settings-icon">🌐</div><div><div class="settings-label">Langue</div><div class="settings-sub">Français</div></div><span class="settings-arrow">›</span></div>
         <div class="settings-item" onclick="showToast('🛡️','Jeu responsable')"><div class="settings-icon">🛡️</div><div><div class="settings-label">Jeu responsable</div><div class="settings-sub">Limites et plafonds</div></div><span class="settings-arrow">›</span></div>
         <div class="settings-item" onclick="showToast('ℹ️','Version 2.5.0')"><div class="settings-icon">ℹ️</div><div><div class="settings-label">À propos</div><div class="settings-sub">Version 2.5.0</div></div><span class="settings-arrow">›</span></div>
       </div>
+
     </div>
+
+  <!-- SÉLECTEUR DE THÈME — toujours visible -->
+  <div style="padding:16px 16px 8px">
+    <div class="sec-head"><div class="sec-title">🎨 Thème de l'application</div></div>
+    <div class="theme-grid" id="themeGrid">
+      <div class="theme-card" id="tc_default" onclick="applyTheme('default',this)" style="background:#161b30;color:#e2e8f0">
+        <div class="theme-card-preview">
+          <div class="tcp-bar" style="background:#0d0f1a"></div>
+          <div class="tcp-bar" style="background:#4f6ef7"></div>
+          <div class="tcp-bar" style="background:#7c3aed"></div>
+          <div class="tcp-bar" style="background:#22c55e"></div>
+        </div>
+        <div class="theme-card-name">🌙 Violet Nuit</div>
+        <div class="theme-card-sub">Thème par défaut</div>
+      </div>
+      <div class="theme-card" id="tc_noir-or" onclick="applyTheme('noir-or',this)" style="background:#111;color:#f5f0e8">
+        <div class="theme-card-preview">
+          <div class="tcp-bar" style="background:#080808"></div>
+          <div class="tcp-bar" style="background:#d97706"></div>
+          <div class="tcp-bar" style="background:#92400e"></div>
+          <div class="tcp-bar" style="background:#22c55e"></div>
+        </div>
+        <div class="theme-card-name">⚫ Noir & Or</div>
+        <div class="theme-card-sub">Premium luxe</div>
+      </div>
+      <div class="theme-card" id="tc_vert-terrain" onclick="applyTheme('vert-terrain',this)" style="background:#0a1a10;color:#dcfce7">
+        <div class="theme-card-preview">
+          <div class="tcp-bar" style="background:#050f09"></div>
+          <div class="tcp-bar" style="background:#16a34a"></div>
+          <div class="tcp-bar" style="background:#15803d"></div>
+          <div class="tcp-bar" style="background:#4ade80"></div>
+        </div>
+        <div class="theme-card-name">🟢 Vert Terrain</div>
+        <div class="theme-card-sub">Football spirit</div>
+      </div>
+      <div class="theme-card" id="tc_ocean" onclick="applyTheme('ocean',this)" style="background:#051628;color:#e0f2fe">
+        <div class="theme-card-preview">
+          <div class="tcp-bar" style="background:#020d1a"></div>
+          <div class="tcp-bar" style="background:#0ea5e9"></div>
+          <div class="tcp-bar" style="background:#0369a1"></div>
+          <div class="tcp-bar" style="background:#22c55e"></div>
+        </div>
+        <div class="theme-card-name">🌊 Bleu Océan</div>
+        <div class="theme-card-sub">Tech & données</div>
+      </div>
+      <div class="theme-card" id="tc_rose-nuit" onclick="applyTheme('rose-nuit',this)" style="background:#1a0711;color:#fce7f3">
+        <div class="theme-card-preview">
+          <div class="tcp-bar" style="background:#110309"></div>
+          <div class="tcp-bar" style="background:#ec4899"></div>
+          <div class="tcp-bar" style="background:#be185d"></div>
+          <div class="tcp-bar" style="background:#22c55e"></div>
+        </div>
+        <div class="theme-card-name">🌸 Rose Nuit</div>
+        <div class="theme-card-sub">Élégant & moderne</div>
+      </div>
+    </div>
+  </div>
 
   </div>
 
@@ -1165,7 +1335,7 @@
     <div style="padding:0 16px 8px">
       <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px">Libellé du pari</div>
       <input type="text" id="betLabel" placeholder="Ex: PSG 1X, Over 1.5…" style="width:100%;box-sizing:border-box;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:0.95rem;margin-bottom:12px"/>
-      <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px">Mise (€)</div>
+      <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px">Mise (FCFA)</div>
       <input type="number" id="betMise" placeholder="100" min="1" style="width:100%;box-sizing:border-box;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:0.95rem;margin-bottom:12px"/>
       <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px" id="betOddLabel">Cote (pour calculer le gain)</div>
       <input type="number" id="betOdd" placeholder="1.85" min="1" step="0.01" style="width:100%;box-sizing:border-box;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:0.95rem;margin-bottom:16px"/>
@@ -1194,61 +1364,104 @@
 
 <!-- NOTIFICATIONS PANEL -->
 <div class="modal-overlay" id="notifModal" onclick="closeNotifPanel(event)">
-  <div class="modal-sheet">
+  <div class="modal-sheet" style="max-height:90vh;overflow-y:auto">
     <div class="modal-handle"></div>
-    <div class="modal-title">🔔 Notifications du coupon</div>
+    <div class="modal-title">🔔 Notifications</div>
 
-    <!-- Permission status -->
-    <div id="notifPermStatus" class="notif-perm-status default">⏳ Permission non demandée</div>
-    <button class="notif-perm-btn" id="notifPermBtn" onclick="requestAndSaveNotifPerm()">
-      🔔 Activer les notifications navigateur
-    </button>
+    <!-- Tabs: Réglages | Historique -->
+    <div class="notif-tabs-row">
+      <button class="notif-tab-btn active" id="ntTab_settings" onclick="switchNotifTab('settings',this)">⚙️ Réglages</button>
+      <button class="notif-tab-btn" id="ntTab_history" onclick="switchNotifTab('history',this)">📬 Historique <span id="notifBadge" style="background:var(--red);color:#fff;border-radius:9px;padding:1px 6px;font-size:0.65rem;display:none;margin-left:3px">0</span></button>
+    </div>
 
-    <!-- Toggles -->
-    <div id="notifToggles">
-      <div class="notif-row">
-        <div class="notif-row-left">
-          <div class="notif-row-icon" style="background:rgba(34,197,94,0.15)">⚽</div>
-          <div><div class="notif-row-title">Coup d'envoi</div><div class="notif-row-sub">Quand un match du coupon commence</div></div>
+    <!-- TAB: RÉGLAGES -->
+    <div id="ntPane_settings">
+      <!-- Permission status -->
+      <div id="notifPermStatus" class="notif-perm-status default">⏳ Notifications non activées</div>
+      <button class="notif-perm-btn" id="notifPermBtn" onclick="requestAndSaveNotifPerm()">
+        🔔 Activer les notifications navigateur
+      </button>
+
+      <!-- Instructions débloquer (visible si denied) -->
+      <div id="notifHowBox" class="notif-how-box" style="display:none">
+        <div class="notif-how-title">📋 Comment débloquer les notifications</div>
+        <div id="notifHowChrome" style="display:none">
+          <div class="notif-how-step"><div class="notif-how-num">1</div><div class="notif-how-text">Appuyez sur les <b>3 points ⋮</b> en haut à droite</div></div>
+          <div class="notif-how-step"><div class="notif-how-num">2</div><div class="notif-how-text">Allez dans <b>Paramètres → Paramètres du site</b></div></div>
+          <div class="notif-how-step"><div class="notif-how-num">3</div><div class="notif-how-text">Appuyez sur <b>Notifications</b></div></div>
+          <div class="notif-how-step"><div class="notif-how-num">4</div><div class="notif-how-text">Trouvez <b>localhost</b> et mettez sur <b>Autoriser</b></div></div>
         </div>
-        <label class="toggle"><input type="checkbox" id="nt_kickoff" onchange="saveNotifSetting('kickoff',this.checked)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
+        <div id="notifHowSafari" style="display:none">
+          <div class="notif-how-step"><div class="notif-how-num">1</div><div class="notif-how-text">Appuyez sur <b>AA</b> dans la barre d'adresse</div></div>
+          <div class="notif-how-step"><div class="notif-how-num">2</div><div class="notif-how-text">Appuyez sur <b>Réglages du site web</b></div></div>
+          <div class="notif-how-step"><div class="notif-how-num">3</div><div class="notif-how-text">Mettez <b>Notifications</b> sur <b>Autoriser</b></div></div>
+        </div>
+        <div id="notifHowDefault" style="display:none">
+          <div class="notif-how-step"><div class="notif-how-num">1</div><div class="notif-how-text">Dans les <b>réglages du navigateur</b>, cherchez <b>Notifications</b></div></div>
+          <div class="notif-how-step"><div class="notif-how-num">2</div><div class="notif-how-text">Trouvez <b>localhost</b> et mettez sur <b>Autoriser</b></div></div>
+          <div class="notif-how-step"><div class="notif-how-num">3</div><div class="notif-how-text">Revenez sur l'app et <b>rechargez la page</b></div></div>
+        </div>
+        <div style="margin-top:6px;padding:6px 8px;background:rgba(79,110,247,0.1);border-radius:8px;font-size:0.72rem;color:var(--muted)">
+          💡 <b style="color:var(--text)">Alternative :</b> Les alertes in-app (onglet Historique) fonctionnent même sans permission.
+        </div>
       </div>
-      <div class="notif-row">
-        <div class="notif-row-left">
-          <div class="notif-row-icon" style="background:rgba(234,179,8,0.15)">🥅</div>
-          <div><div class="notif-row-title">But marqué</div><div class="notif-row-sub">Changement de score pendant le match</div></div>
+
+      <!-- Toggles -->
+      <div id="notifToggles">
+        <div class="notif-row">
+          <div class="notif-row-left">
+            <div class="notif-row-icon" style="background:rgba(34,197,94,0.15)">⚽</div>
+            <div><div class="notif-row-title">Coup d'envoi</div><div class="notif-row-sub">Quand un match du coupon commence</div></div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="nt_kickoff" onchange="saveNotifSetting('kickoff',this.checked)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
         </div>
-        <label class="toggle"><input type="checkbox" id="nt_goal" onchange="saveNotifSetting('goal',this.checked)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
-      </div>
-      <div class="notif-row">
-        <div class="notif-row-left">
-          <div class="notif-row-icon" style="background:rgba(79,110,247,0.15)">⏸</div>
-          <div><div class="notif-row-title">Mi-temps</div><div class="notif-row-sub">Notification à la mi-temps (≥45')</div></div>
+        <div class="notif-row">
+          <div class="notif-row-left">
+            <div class="notif-row-icon" style="background:rgba(234,179,8,0.15)">🥅</div>
+            <div><div class="notif-row-title">But marqué</div><div class="notif-row-sub">Changement de score pendant le match</div></div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="nt_goal" onchange="saveNotifSetting('goal',this.checked)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
         </div>
-        <label class="toggle"><input type="checkbox" id="nt_halftime" onchange="saveNotifSetting('halftime',this.checked)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
-      </div>
-      <div class="notif-row">
-        <div class="notif-row-left">
-          <div class="notif-row-icon" style="background:rgba(239,68,68,0.15)">🔔</div>
-          <div><div class="notif-row-title">Fin du match</div><div class="notif-row-sub">Résultat gagné/perdu pour chaque match</div></div>
+        <div class="notif-row">
+          <div class="notif-row-left">
+            <div class="notif-row-icon" style="background:rgba(79,110,247,0.15)">⏸</div>
+            <div><div class="notif-row-title">Mi-temps</div><div class="notif-row-sub">Notification à la mi-temps (≥45')</div></div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="nt_halftime" onchange="saveNotifSetting('halftime',this.checked)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
         </div>
-        <label class="toggle"><input type="checkbox" id="nt_fulltime" onchange="saveNotifSetting('fulltime',this.checked)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
-      </div>
-      <div class="notif-row">
-        <div class="notif-row-left">
-          <div class="notif-row-icon" style="background:rgba(124,58,237,0.15)">🎫</div>
-          <div><div class="notif-row-title">Résultat du coupon</div><div class="notif-row-sub">Quand tous les matchs sont terminés</div></div>
+        <div class="notif-row">
+          <div class="notif-row-left">
+            <div class="notif-row-icon" style="background:rgba(239,68,68,0.15)">🔔</div>
+            <div><div class="notif-row-title">Fin du match</div><div class="notif-row-sub">Résultat gagné/perdu pour chaque match</div></div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="nt_fulltime" onchange="saveNotifSetting('fulltime',this.checked)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
         </div>
-        <label class="toggle"><input type="checkbox" id="nt_couponResult" onchange="saveNotifSetting('couponResult',this.checked)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
-      </div>
-      <div class="notif-row">
-        <div class="notif-row-left">
-          <div class="notif-row-icon" style="background:rgba(249,115,22,0.15)">⏰</div>
-          <div><div class="notif-row-title">15 min avant le match</div><div class="notif-row-sub">Rappel avant le coup d'envoi</div></div>
+        <div class="notif-row">
+          <div class="notif-row-left">
+            <div class="notif-row-icon" style="background:rgba(124,58,237,0.15)">🎫</div>
+            <div><div class="notif-row-title">Résultat du coupon</div><div class="notif-row-sub">Quand tous les matchs sont terminés</div></div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="nt_couponResult" onchange="saveNotifSetting('couponResult',this.checked)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
         </div>
-        <label class="toggle"><input type="checkbox" id="nt_before15" onchange="saveNotifSetting('before15',this.checked)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
+        <div class="notif-row">
+          <div class="notif-row-left">
+            <div class="notif-row-icon" style="background:rgba(249,115,22,0.15)">⏰</div>
+            <div><div class="notif-row-title">15 min avant le match</div><div class="notif-row-sub">Rappel avant le coup d'envoi</div></div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="nt_before15" onchange="saveNotifSetting('before15',this.checked)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
+        </div>
       </div>
     </div>
+
+    <!-- TAB: HISTORIQUE -->
+    <div id="ntPane_history" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-size:0.72rem;color:var(--muted)">Alertes reçues dans l'app</div>
+        <button onclick="clearNotifHistory()" style="background:none;border:none;color:var(--muted);font-size:0.72rem;cursor:pointer;padding:4px 8px;border-radius:6px;border:1px solid var(--border)">🗑 Effacer</button>
+      </div>
+      <div id="notifHistoryList"></div>
+    </div>
+
     <button class="modal-btn" onclick="closeNotifPanel()">Fermer</button>
   </div>
 </div>
@@ -1696,11 +1909,12 @@ function betclicToApp(m, idx) {
     isEstimated,
     analysis: `[${srcLabel}] ${oddsStr}`,
     status: m.status,
-    score: m.score ? m.score.home + '-' + m.score.away : null,
+    score: m.score ? (typeof m.score === 'string' ? m.score : m.score.home + '-' + m.score.away) : null,
     minute: m.minute,
     stoppage: m.stoppage || null,
+    half: m.half || null,
     _fetchedAt: m.status === 'live' ? Date.now() : null,
-    _minuteAtFetch: m.status === 'live' ? (m.minute != null ? m.minute : 0) : null,
+    _minuteAtFetch: m.status === 'live' ? (m.minute != null ? m.minute : null) : null,
     _stoppageAtFetch: m.status === 'live' ? (m.stoppage || null) : null,
     sources: srcs,
     betclicUrl: m.url,
@@ -1795,19 +2009,35 @@ function updateNotifPermUI() {
   const perm = 'Notification' in window ? Notification.permission : 'unsupported';
   const el = document.getElementById('notifPermStatus');
   const btn = document.getElementById('notifPermBtn');
+  const howBox = document.getElementById('notifHowBox');
   if (!el) return;
   if (perm === 'granted') {
     el.className = 'notif-perm-status granted';
-    el.textContent = '✅ Notifications activées';
+    el.textContent = '✅ Notifications navigateur activées';
     if (btn) btn.style.display = 'none';
+    if (howBox) howBox.style.display = 'none';
   } else if (perm === 'denied') {
     el.className = 'notif-perm-status denied';
-    el.textContent = '🚫 Notifications bloquées — autorisez-les dans les réglages du navigateur';
+    el.textContent = '🚫 Notifications bloquées par le navigateur';
     if (btn) btn.style.display = 'none';
+    if (howBox) {
+      howBox.style.display = 'block';
+      // Detect browser
+      const ua = navigator.userAgent;
+      const isChrome = /Chrome|CriOS/.test(ua) && !/Edg|OPR/.test(ua);
+      const isSafari = /Safari/.test(ua) && !/Chrome|CriOS/.test(ua);
+      const ch = document.getElementById('notifHowChrome');
+      const sf = document.getElementById('notifHowSafari');
+      const df = document.getElementById('notifHowDefault');
+      if (ch) ch.style.display = isChrome ? 'block' : 'none';
+      if (sf) sf.style.display = isSafari ? 'block' : 'none';
+      if (df) df.style.display = (!isChrome && !isSafari) ? 'block' : 'none';
+    }
   } else {
     el.className = 'notif-perm-status default';
-    el.textContent = '⏳ Notifications non activées';
+    el.textContent = '⏳ Cliquez ci-dessous pour activer les notifications';
     if (btn) btn.style.display = 'flex';
+    if (howBox) howBox.style.display = 'none';
   }
 }
 
@@ -1829,10 +2059,76 @@ async function requestAndSaveNotifPerm() {
   else showToast('🚫', 'Notifications refusées');
 }
 
+// ---- Notification history (in-app) ----
+let notifHistory = [];
+let notifUnread = 0;
+
+function loadNotifHistory() {
+  try {
+    const s = localStorage.getItem('notifHistory');
+    if (s) notifHistory = JSON.parse(s);
+  } catch(e) { notifHistory = []; }
+}
+
+function saveNotifHistory() {
+  try {
+    localStorage.setItem('notifHistory', JSON.stringify(notifHistory.slice(0, 50)));
+  } catch(e) {}
+}
+
+function clearNotifHistory() {
+  notifHistory = [];
+  saveNotifHistory();
+  renderNotifHistory();
+}
+
+function renderNotifHistory() {
+  const el = document.getElementById('notifHistoryList');
+  if (!el) return;
+  if (!notifHistory.length) {
+    el.innerHTML = '<div class="notif-hist-empty">📭 Aucune alerte pour le moment.<br><span style="font-size:0.7rem">Les alertes apparaîtront ici automatiquement.</span></div>';
+    return;
+  }
+  el.innerHTML = notifHistory.slice().reverse().map(n => `
+    <div class="notif-hist-item">
+      <div class="notif-hist-ico">${n.emoji}</div>
+      <div class="notif-hist-body">
+        <div class="notif-hist-title">${n.title}</div>
+        <div class="notif-hist-msg">${n.body}</div>
+      </div>
+      <div class="notif-hist-time">${n.time}</div>
+    </div>`).join('');
+}
+
+function updateNotifBadge() {
+  const badge = document.getElementById('notifBadge');
+  const dot = document.getElementById('notifDot');
+  if (badge) {
+    if (notifUnread > 0) { badge.style.display = 'inline'; badge.textContent = notifUnread; }
+    else badge.style.display = 'none';
+  }
+  if (dot) dot.style.display = notifUnread > 0 ? 'block' : 'none';
+}
+
+function switchNotifTab(tab, btn) {
+  document.querySelectorAll('.notif-tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('ntPane_settings').style.display = tab === 'settings' ? 'block' : 'none';
+  document.getElementById('ntPane_history').style.display = tab === 'history' ? 'block' : 'none';
+  if (tab === 'history') renderNotifHistory();
+}
+
 function sendNotif(title, body, emoji) {
-  // Always show toast in-app
+  // Store in history
+  const now = new Date();
+  const time = now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+  notifHistory.push({ title, body, emoji, time });
+  saveNotifHistory();
+  notifUnread++;
+  updateNotifBadge();
+  // Toast in-app
   showToast(emoji, body);
-  // Also browser notification if granted
+  // Browser notification if granted
   if ('Notification' in window && Notification.permission === 'granted') {
     try {
       new Notification(title, {
@@ -1844,21 +2140,21 @@ function sendNotif(title, body, emoji) {
       });
     } catch(e) {}
   }
-  // Dot on bell
-  const dot = document.getElementById('notifDot');
-  if (dot) dot.style.display = 'block';
-  // Increment unread count
-  notifUnread++;
 }
 
-let notifUnread = 0;
-
 function openNotifPanel() {
-  notifUnread = 0;
-  const dot = document.getElementById('notifDot');
-  if (dot) dot.style.display = 'none';
   updateNotifPermUI();
   applyNotifToggles();
+  // Show history tab if there are unreads, else settings
+  if (notifUnread > 0) {
+    const hBtn = document.getElementById('ntTab_history');
+    if (hBtn) switchNotifTab('history', hBtn);
+  } else {
+    const sBtn = document.getElementById('ntTab_settings');
+    if (sBtn) switchNotifTab('settings', sBtn);
+  }
+  notifUnread = 0;
+  updateNotifBadge();
   document.getElementById('notifModal').classList.add('open');
 }
 
@@ -1984,9 +2280,12 @@ window.addEventListener('DOMContentLoaded', () => {
   selectDate(TODAY, false);
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 
-  // Load notification settings
+  // Load notification settings + history
   loadNotifSettings();
+  loadNotifHistory();
   updateNotifPermUI();
+  updateNotifBadge();
+  loadTheme();
 
   // Load real data, then auto-refresh every 30s
   fetchBetclicMatches(false);
@@ -2221,7 +2520,7 @@ function renderBankrollUI() {
   const histEl = document.getElementById('brHistory');
   if (!balEl) return;
 
-  balEl.textContent = bankroll.toLocaleString('fr-FR') + ' €';
+  balEl.textContent = bankroll.toLocaleString('fr-FR') + ' FCFA';
 
   // Compute ROI from history
   const totalMise = bankrollHistory.reduce((s,e) => s + (e.mise || 0), 0);
@@ -2241,9 +2540,9 @@ function renderBankrollUI() {
         <span style="font-size:1.1rem">${e.gain >= 0 ? '✅' : '❌'}</span>
         <div style="flex:1;min-width:0">
           <div style="font-size:0.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.label || 'Pari'}</div>
-          <div style="font-size:0.72rem;color:var(--muted)">${e.date} · Mise: ${e.mise}€</div>
+          <div style="font-size:0.72rem;color:var(--muted)">${e.date} · Mise: ${e.mise.toLocaleString('fr-FR')} FCFA</div>
         </div>
-        <div style="font-size:0.85rem;font-weight:700;color:${e.gain>=0?'var(--green)':'var(--red)'}">${e.gain>=0?'+':''}${e.gain}€</div>
+        <div style="font-size:0.85rem;font-weight:700;color:${e.gain>=0?'var(--green)':'var(--red)'}">${e.gain>=0?'+':''}${e.gain.toLocaleString('fr-FR')} FCFA</div>
       </div>`).join('');
 }
 
@@ -2254,7 +2553,7 @@ function setBankroll() {
     saveBankroll();
     renderBankrollUI();
     document.getElementById('brInput').value = '';
-    showToast('💰', `Bankroll définie à ${v.toLocaleString('fr-FR')} €`);
+    showToast('💰', `Bankroll définie à ${v.toLocaleString('fr-FR')} FCFA`);
   }
 }
 
@@ -2264,7 +2563,7 @@ function resetBankroll() {
   bankrollHistory = [];
   saveBankroll();
   renderBankrollUI();
-  showToast('🔄', 'Bankroll réinitialisée à 10 000 €');
+  showToast('🔄', 'Bankroll réinitialisée à 10 000 FCFA');
 }
 
 let _betModalWon = 1;
@@ -2424,9 +2723,9 @@ function renderMoisStats(avgConf, matches) {
   const coteMoy = allPicks.length
     ? (allPicks.reduce((s,p)=>s+p.bet.o,0)/allPicks.length).toFixed(2)
     : '1.62';
-  // Simulated gains based on 20 bets at avg 10€ stake
-  const gainsVal = Math.round((reuss/100 * 20 * parseFloat(coteMoy) * 10) - 200);
-  const gainsStr = gainsVal >= 0 ? `+${gainsVal}€` : `${gainsVal}€`;
+  // Simulated gains based on 20 bets at avg 5 000 FCFA stake
+  const gainsVal = Math.round((reuss/100 * 20 * parseFloat(coteMoy) * 5000) - 100000);
+  const gainsStr = gainsVal >= 0 ? `+${gainsVal.toLocaleString('fr-FR')} FCFA` : `${gainsVal.toLocaleString('fr-FR')} FCFA`;
 
   reusEl.textContent = reuss + '%';
   gainsEl.textContent = gainsStr;
@@ -2436,10 +2735,10 @@ function renderMoisStats(avgConf, matches) {
 
 // ── WINFLIX AVIS UTILISATEURS ─────────────────────────────────────────────────
 const AVIS_DATA = [
-  { initials:'JM', color:'rgba(255,59,59,.2)', textColor:'#ff3b3b', name:'Jean-Marc D.', ago:'Il y a 3 jours', stars:5, text:'Depuis que je suis Aretsport, mon ROI a explosé. Les analyses sont précises. Je recommande !', gain:'+180€ ce mois' },
+  { initials:'JM', color:'rgba(255,59,59,.2)', textColor:'#ff3b3b', name:'Jean-Marc D.', ago:'Il y a 3 jours', stars:5, text:'Depuis que je suis Aretsport, mon ROI a explosé. Les analyses sont précises. Je recommande !', gain:'+118 000 FCFA ce mois' },
   { initials:'TR', color:'rgba(107,163,255,.15)', textColor:'#6ba3ff', name:'Thomas R.', ago:'Il y a 5 jours', stars:5, text:'Interface claire, résultats transparents. Pas de promesses folles, juste du sérieux.', gain:'✓ Vérifié' },
   { initials:'NB', color:'rgba(0,200,117,.12)', textColor:'#00c875', name:'Nicolas B.', ago:'Il y a 1 semaine', stars:4, text:'Très bon taux de réussite sur la Champions League. Le Chat IA est vraiment utile.', gain:'✓ Vérifié' },
-  { initials:'AL', color:'rgba(245,158,11,.15)', textColor:'#f59e0b', name:'Alex L.', ago:'Il y a 2 semaines', stars:5, text:'J\'ai essayé beaucoup de tipsters avant Aretsport. La différence ? Ici tout est transparent.', gain:'+95€ ce mois' },
+  { initials:'AL', color:'rgba(245,158,11,.15)', textColor:'#f59e0b', name:'Alex L.', ago:'Il y a 2 semaines', stars:5, text:'J\'ai essayé beaucoup de tipsters avant Aretsport. La différence ? Ici tout est transparent.', gain:'+62 000 FCFA ce mois' },
   { initials:'KP', color:'rgba(167,139,250,.15)', textColor:'#a78bfa', name:'Kevin P.', ago:'Il y a 2 semaines', stars:5, text:'Le suivi est impeccable. Je reçois les analyses à temps, les picks sont bien expliqués.', gain:'✓ Vérifié' },
 ];
 
@@ -2458,6 +2757,88 @@ function renderAvisUtilisateurs() {
       <div class="avis-stars">${'★'.repeat(a.stars)}${'☆'.repeat(5-a.stars)}</div>
       <div class="avis-text">${a.text}</div>
       <div class="avis-gain">${a.gain}</div>
+    </div>`).join('');
+}
+
+// ── WINFLIX TABS ──────────────────────────────────────────────────────────────
+function wfTab(tab, btn) {
+  document.querySelectorAll('.wf-tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['Resultats','Activite','Avis'].forEach(t => {
+    const el = document.getElementById('wfTab' + t);
+    if (el) el.style.display = (t.toLowerCase() === tab) ? 'block' : 'none';
+  });
+}
+
+// ── WINFLIX DERNIERS GAGNANTS ─────────────────────────────────────────────────
+const DERNIERS_GAGNANTS = [
+  { initials:'JM', bg:'rgba(255,59,59,.15)',   color:'#ff3b3b', name:'Jean-Marc D.', detail:'Leeds ou Nul · ×1.09',   gain:'+30 000 FCFA',  time:'Il y a 2h' },
+  { initials:'KP', bg:'rgba(167,139,250,.15)', color:'#a78bfa', name:'Kevin P.',     detail:'Man City · ×1.35',        gain:'+53 000 FCFA',  time:'Il y a 4h' },
+  { initials:'FG', bg:'rgba(245,158,11,.12)',  color:'#f59e0b', name:'Florian G.',   detail:'BTTS Oui · ×1.71',        gain:'+22 000 FCFA',  time:'Il y a 6h' },
+  { initials:'RS', bg:'rgba(255,59,59,.12)',   color:'#ff3b3b', name:'Romain S.',    detail:'+1.5 buts · ×1.25',       gain:'+41 000 FCFA',  time:'Il y a 8h' },
+  { initials:'AL', bg:'rgba(34,197,94,.12)',   color:'#22c55e', name:'Alex L.',      detail:'DC 1X · ×1.18',           gain:'+62 000 FCFA',  time:'Hier' },
+  { initials:'DK', bg:'rgba(217,119,6,.12)',   color:'#d97706', name:'David K.',     detail:'Barcelone · ×1.42',       gain:'+47 000 FCFA',  time:'Hier' },
+];
+
+function renderDerniersGagnants() {
+  const el = document.getElementById('derniersGagnantsList');
+  if (!el) return;
+  el.innerHTML = DERNIERS_GAGNANTS.map(g => `
+    <div class="dg-item">
+      <div class="dg-av" style="background:${g.bg};color:${g.color}">${g.initials}</div>
+      <div class="dg-info">
+        <div class="dg-name">${g.name}</div>
+        <div class="dg-detail">${g.detail}</div>
+      </div>
+      <div class="dg-right">
+        <div class="dg-gain">${g.gain}</div>
+        <div class="dg-time">${g.time}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ── WINFLIX ACTIVITÉ ──────────────────────────────────────────────────────────
+const ACTIVITE_BASE = [
+  { result:'win',     emoji:'✅', match:'Leeds vs Burnley',          pick:'DC 1X (Leeds ou Nul) · ×1.09',  label:'GAGNÉ',    gain:'+30 000 FCFA' },
+  { result:'win',     emoji:'✅', match:'Sporting vs Tondela',       pick:'1 — Sporting · ×1.14',           label:'GAGNÉ',    gain:'+37 000 FCFA' },
+  { result:'lose',    emoji:'❌', match:'Arsenal vs Bournemouth',    pick:'+2.5 buts · ×1.71',              label:'PERDU',    gain:'-6 500 FCFA' },
+  { result:'win',     emoji:'✅', match:'Barcelona vs Girona',       pick:'1 — Barcelona · ×1.38',          label:'GAGNÉ',    gain:'+45 000 FCFA' },
+  { result:'win',     emoji:'✅', match:'Dortmund vs Mainz',         pick:'BTTS Oui · ×1.65',               label:'GAGNÉ',    gain:'+22 000 FCFA' },
+  { result:'lose',    emoji:'❌', match:'Real Madrid vs Villarreal', pick:'Score exact 2-0 · ×6.50',        label:'PERDU',    gain:'-6 500 FCFA' },
+  { result:'win',     emoji:'✅', match:'PSG vs Monaco',             pick:'1 — PSG · ×1.20',                label:'GAGNÉ',    gain:'+16 000 FCFA' },
+  { result:'win',     emoji:'✅', match:'Inter vs Juventus',         pick:'Moins 2.5 buts · ×1.80',         label:'GAGNÉ',    gain:'+47 000 FCFA' },
+];
+
+function renderActivite(matches) {
+  const el = document.getElementById('activiteList');
+  if (!el) return;
+  const items = [];
+  // Prepend live matches at the top
+  if (matches && matches.length) {
+    matches.filter(m => m.status === 'live').slice(0, 3).forEach(m => {
+      const hn = typeof m.home === 'string' ? m.home : (m.home?.name || m.home?.displayName || '?');
+      const an = typeof m.away === 'string' ? m.away : (m.away?.name || m.away?.displayName || '?');
+      const sc = m.score ? (typeof m.score === 'string' ? m.score : (m.score.home+'-'+m.score.away)) : '0-0';
+      const halfLabel = m.half === 'HT' || m.half === 'MI-TEMPS' ? ' · MI-TEMPS' : '';
+      const minLabel = m.minute != null ? ` <span id="chrono-ai-${m.id}">${m.minute}'</span>` : (halfLabel ? '' : '');
+      items.push({
+        result:'pending', emoji:'🔴',
+        match: `${hn} vs ${an}`,
+        pick: `🔴 LIVE · <b>${sc}</b>${halfLabel}${minLabel}`,
+        label:'EN COURS', gain:''
+      });
+    });
+  }
+  items.push(...ACTIVITE_BASE);
+  el.innerHTML = items.slice(0, 8).map(a => `
+    <div class="acti-item">
+      <div class="acti-icon ${a.result}">${a.emoji}</div>
+      <div class="acti-body">
+        <div class="acti-match">${a.match}</div>
+        <div class="acti-pick">${a.pick}</div>
+        <span class="acti-badge ${a.result}">${a.label}</span>
+      </div>
+      <div class="acti-gain ${a.result}">${a.gain}</div>
     </div>`).join('');
 }
 
@@ -2588,8 +2969,10 @@ function matchCardHTML(m) {
   const formA = m.away.form.map(f=>`<div class="fd ${f}">${f}</div>`).join('');
 
   let timeHTML = '';
-  if (isLive) timeHTML = `<span class="mc-time live" id="chrono-hdr-${m.id}">🔴 ${m.minute != null ? m.minute + "'" : 'LIVE'}</span>`;
-  else if (isPast && m.score) timeHTML = `<span class="mc-time" style="font-weight:800;color:var(--text)">${m.score}</span>`;
+  if (isLive) {
+    const initLabel = m.half === 'HT' || m.half === 'MI-TEMPS' ? 'MI-TEMPS' : (m.minute != null ? m.minute + "'" : 'LIVE');
+    timeHTML = `<span class="mc-time live" id="chrono-hdr-${m.id}">🔴 ${initLabel}</span>`;
+  } else if (isPast && m.score) timeHTML = `<span class="mc-time" style="font-weight:800;color:var(--text)">${m.score}</span>`;
   else timeHTML = `<span class="mc-time">🕐 ${m.time}</span>`;
 
   let centerContent = '';
@@ -2597,7 +2980,8 @@ function matchCardHTML(m) {
     centerContent = `<div class="mc-vs-text">FIN</div><div class="mc-score">${m.score}</div>`;
   } else if (isLive) {
     const [g1,g2] = m.score ? m.score.split('-') : ['?','?'];
-    centerContent = `<div class="mc-vs-text" style="color:var(--red);font-weight:700" id="chrono-ctr-${m.id}">${m.minute != null ? m.minute + "'" : '🔴'}</div><div class="mc-score">${g1||'?'}-${g2||'?'}</div>`;
+    const initMin = m.half === 'HT' || m.half === 'MI-TEMPS' ? 'MI-TEMPS' : (m.minute != null ? m.minute + "'" : '🔴');
+    centerContent = `<div class="mc-vs-text" style="color:var(--red);font-weight:700" id="chrono-ctr-${m.id}">${initMin}</div><div class="mc-score">${g1||'?'}-${g2||'?'}</div>`;
   } else {
     centerContent = `<div class="mc-vs-text">VS</div><div style="font-size:1.1rem">⚔️</div>`;
   }
@@ -2927,8 +3311,9 @@ function renderCoupon() {
   const conf=Math.max(20,82-coupon.length*9);
   const items=coupon.map((c,idx)=>{
     const m=c.matchData, b=m.bets[c.bi];
+    const liveMin = m.half==='HT'||m.half==='MI-TEMPS' ? 'MI-TEMPS' : (m.minute!=null?m.minute+"'":'');
     const statusBadge = m.status==='live'
-      ? `<span style="font-size:0.65rem;color:var(--red);font-weight:700">🔴 LIVE ${m.minute!=null?m.minute+"'":''}</span>`
+      ? `<span style="font-size:0.65rem;color:var(--red);font-weight:700" id="chrono-coupon-${m.id}">🔴 LIVE ${liveMin}</span>`
       : m.time ? `<span style="font-size:0.65rem;color:var(--muted)">🕐 ${m.time}</span>` : '';
     return `<div class="coupon-item" id="ci-${idx}">
       <div class="ci-head">
@@ -3375,6 +3760,10 @@ function renderAI(matches) {
   renderMoisStats(overallAvgConf, allMatches);
   // ── Winflix Avis utilisateurs ───────────────────────────────
   renderAvisUtilisateurs();
+  // ── Winflix Derniers gagnants ────────────────────────────────
+  renderDerniersGagnants();
+  // ── Winflix Activité ─────────────────────────────────────────
+  renderActivite(allMatches);
   // ──────────────────────────────────────────────────────────
 
   if (!picks.length) {
@@ -3576,8 +3965,10 @@ function buildSheetHero(m) {
   let centerHTML = '';
   if (isPast && m.score)
     centerHTML = `<div class="ds-vs">FINAL</div><div class="ds-score-big">${m.score}</div>`;
-  else if (isLive)
-    centerHTML = `<div class="ds-vs" style="color:var(--red)">🔴 LIVE</div><div class="ds-score-big">${m.score||'0-0'}</div>`;
+  else if (isLive) {
+    const htLabel = m.half==='HT'||m.half==='MI-TEMPS' ? 'MI-TEMPS' : (m.minute!=null ? m.minute+"'" : 'LIVE');
+    centerHTML = `<div class="ds-vs" style="color:var(--red)" id="chrono-hdr-${m.id}">🔴 ${htLabel}</div><div class="ds-score-big">${m.score||'0-0'}</div>`;
+  }
   else
     centerHTML = `<div class="ds-vs">VS</div><div class="ds-time-badge">${m.time}</div>`;
 
@@ -4862,12 +5253,17 @@ function toggleExtBet(mid, extKey, odd, e, label) {
 let chronoInterval = null;
 
 function getLiveMinute(m) {
-  if (!m._fetchedAt || m._minuteAtFetch == null) return m.minute != null ? m.minute : 0;
+  // Si mi-temps confirmée (HT), on reste à 45
+  if (m.half === 'HT' || m.half === 'MI-TEMPS') return 45;
+  // Si minute inconnue, retourner null
+  if (m._minuteAtFetch == null) return null;
+  if (!m._fetchedAt) return m._minuteAtFetch;
   const elapsedMs = Date.now() - m._fetchedAt;
   const elapsedMin = Math.floor(elapsedMs / 60000);
   const base = m._minuteAtFetch + elapsedMin;
-  // Cap à 45 pour la première mi-temps, 90 pour la seconde
-  if (m._minuteAtFetch < 45) return Math.min(45, base);
+  // Cap 45 pour 1re MT, 90 pour 2e MT (ou prolongations)
+  const isSecondHalf = m.half === 'MT 2' || m.half === 'MT2' || m._minuteAtFetch >= 46;
+  if (!isSecondHalf) return Math.min(45, base);
   return Math.min(90, base);
 }
 
@@ -4877,17 +5273,28 @@ function getLiveSecond(m) {
 }
 
 function getLiveLabel(m) {
+  // MI-TEMPS
+  if (m.half === 'HT' || m.half === 'MI-TEMPS') {
+    return `<span style="font-size:0.8em;color:var(--yellow)">MI-TEMPS</span>`;
+  }
   const min = getLiveMinute(m);
+  // Minute inconnue : juste LIVE pulsant
+  if (min == null) {
+    return `<span style="color:var(--red)">LIVE</span>`;
+  }
   const sec = getLiveSecond(m);
   const secStr = String(sec).padStart(2, '0');
-  // Arrêts de jeu : si on est à 45 ou 90 et qu'il y avait du stoppage
-  const isStop45 = min >= 45 && m._minuteAtFetch < 46 && m._stoppageAtFetch;
-  const isStop90 = min >= 90;
-  if (isStop45 || isStop90) {
-    const base = isStop90 ? 90 : 45;
-    const extra = Math.floor((Date.now() - m._fetchedAt) / 60000) - (m._minuteAtFetch - base < 0 ? 0 : m._minuteAtFetch - base);
-    const stop = Math.max(1, (m._stoppageAtFetch || 0) + Math.floor(extra));
-    return `${base}<span style="font-size:0.75em">+${stop}'</span><span style="font-size:0.6em;opacity:0.7">:${secStr}</span>`;
+  // Arrêts de jeu
+  if (min >= 45 && m._minuteAtFetch != null && m._minuteAtFetch >= 44) {
+    const elapsedMs = Date.now() - m._fetchedAt;
+    const elapsedMin = Math.floor(elapsedMs / 60000);
+    const base = m._minuteAtFetch >= 86 ? 90 : 45;
+    const stopBase = m._stoppageAtFetch || 0;
+    const extra = Math.max(0, elapsedMin - Math.max(0, m._minuteAtFetch - base));
+    if (min >= base) {
+      const stop = Math.max(1, stopBase + extra);
+      return `${base}<span style="font-size:0.75em">+${stop}'</span><span style="font-size:0.6em;opacity:0.7">:${secStr}</span>`;
+    }
   }
   return `${min}'<span style="font-size:0.65em;opacity:0.7">:${secStr}</span>`;
 }
@@ -4901,10 +5308,17 @@ function startChrono() {
 
     liveMatches.forEach(m => {
       const label = getLiveLabel(m);
+      // Page matchs — header (heure) + centre (minute)
       const hdr = document.getElementById(`chrono-hdr-${m.id}`);
       const ctr = document.getElementById(`chrono-ctr-${m.id}`);
       if (hdr) hdr.innerHTML = `🔴 ${label}`;
       if (ctr) ctr.innerHTML = label;
+      // Page coupon
+      const coup = document.getElementById(`chrono-coupon-${m.id}`);
+      if (coup) coup.innerHTML = `🔴 LIVE ${label}`;
+      // Page IA activité (live badge)
+      const ai = document.getElementById(`chrono-ai-${m.id}`);
+      if (ai) ai.innerHTML = label;
     });
   }, 1000);
 }
@@ -4915,6 +5329,33 @@ function doRefresh() {
   fetchBetclicMatches(false).finally(() => {
     if (btn) btn.classList.remove('spinning');
   });
+}
+
+// ── THÈMES ──────────────────────────────────────────────
+const THEME_NAMES = {
+  'default':      '🌙 Violet Nuit',
+  'noir-or':      '⚫ Noir & Or',
+  'vert-terrain': '🟢 Vert Terrain',
+  'ocean':        '🌊 Bleu Océan',
+  'rose-nuit':    '🌸 Rose Nuit',
+};
+
+function applyTheme(name, cardEl) {
+  const root = document.documentElement;
+  // Remove all theme data attrs
+  root.removeAttribute('data-theme');
+  if (name !== 'default') root.setAttribute('data-theme', name);
+  localStorage.setItem('appTheme', name);
+  // Update active card
+  document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
+  const target = cardEl || document.getElementById('tc_' + name);
+  if (target) target.classList.add('active');
+  showToast('🎨', `Thème ${THEME_NAMES[name] || name} appliqué`);
+}
+
+function loadTheme() {
+  const saved = localStorage.getItem('appTheme') || 'noir-or';
+  applyTheme(saved, null);
 }
 
 let toastTimer;

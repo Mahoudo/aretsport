@@ -185,9 +185,29 @@ function parseBetclicHtml(html) {
       const timeM = cardHtml.match(/(\d{1,2}:\d{2})/);
       const timeStr = timeM ? timeM[1] : '';
       let score = null;
+      let minute = null, stoppage = null, half = null;
       if (isLive) {
-        const sM = cardHtml.match(/data-qa="scoreboard-score"[^>]*>([\s\S]*?)<\/div>/);
-        if (sM) { const nums = sM[1].match(/\d+/g); if (nums?.length >= 2) score = { home: nums[0], away: nums[1] }; }
+        // Score: cibler scoreboard_score-1 et scoreboard_score-2 directement
+        const sH = cardHtml.match(/scoreboard_score-1[^>]*>(\d+)/);
+        const sA = cardHtml.match(/scoreboard_score-2[^>]*>(\d+)/);
+        if (sH && sA) {
+          score = { home: sH[1], away: sA[1] };
+        } else {
+          // Fallback: data-qa scoreboard-score (ferme sur </span>)
+          const sM = cardHtml.match(/data-qa="scoreboard-score"[^>]*>([\s\S]*?)<\/span>\s*<\/span>/);
+          if (sM) { const nums = sM[1].match(/\d+/g); if (nums?.length >= 2) score = { home: nums[0], away: nums[1] }; }
+        }
+        // Minute from scoreboards-timer: "36' • MT 1"  or  "45+2' • MT 1"  or  "HT"  or  "MI-TEMPS"
+        const timerM = cardHtml.match(/scoreboards-timer[^>]*>[\s\S]*?(\d{1,3})(?:\+(\d+))?'\s*(?:•\s*(MT\s*\d|[A-Z\-]+))?/);
+        if (timerM) {
+          minute = parseInt(timerM[1]);
+          if (timerM[2]) stoppage = parseInt(timerM[2]);
+          half = timerM[3] ? timerM[3].trim() : null;
+        } else if (/scoreboards-timer[^>]*>[\s\S]*?(HT|MI.TEMPS|HALFTIME)/i.test(cardHtml)) {
+          minute = 45; half = 'HT';
+        } else if (/scoreboards-timer[^>]*>[\s\S]*?(FIN|FINAL|ENDED)/i.test(cardHtml)) {
+          minute = 90;
+        }
       }
       const oddMs = [...cardHtml.matchAll(/class="[^"]*is-odd[^"]*"[\s\S]*?(\d+[.,]\d+)/g)];
       const odds = { '1': null, X: null, '2': null };
@@ -196,7 +216,7 @@ function parseBetclicHtml(html) {
       if (oddMs[2]) odds['2'] = parseOdd(oddMs[2][1]);
       const leagueMs = [...cardHtml.matchAll(/<[^>]*breadcrumb_itemLabel[^>]*>([\s\S]*?)<\/span>/g)];
       const league = leagueMs.length ? leagueMs[leagueMs.length - 1][1].replace(/<[^>]+>/g, '').replace(/•/g, '').trim() : '';
-      results.push({ id: mid, source: 'betclic', league, home, away, time: timeStr, date: todayIso, minute: null, stoppage: null, score, status: isLive ? 'live' : 'upcoming', odds, url: BETCLIC_BASE + href });
+      results.push({ id: mid, source: 'betclic', league, home, away, time: timeStr, date: todayIso, minute, stoppage, half, score, status: isLive ? 'live' : 'upcoming', odds, url: BETCLIC_BASE + href });
     } catch { continue; }
   }
   return results;
@@ -250,6 +270,7 @@ async function getMatches() {
         if (!ex.score && m.score) ex.score = m.score;
         if (ex.minute == null && m.minute != null) ex.minute = m.minute;
         if (ex.stoppage == null && m.stoppage != null) ex.stoppage = m.stoppage;
+        if (!ex.half && m.half) ex.half = m.half;
         if (m.status === 'live') ex.status = 'live';
         if (!ex.homeLogo && m.homeLogo) ex.homeLogo = m.homeLogo;
         if (!ex.awayLogo && m.awayLogo) ex.awayLogo = m.awayLogo;
