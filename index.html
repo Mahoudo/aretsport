@@ -3110,6 +3110,15 @@ function matchCardHTML(m) {
   const formH = m.home.form.map(f=>`<div class="fd ${f}">${f}</div>`).join('');
   const formA = m.away.form.map(f=>`<div class="fd ${f}">${f}</div>`).join('');
 
+  // ── Badges communs (nécessaires dans les deux branches) ──────
+  const vbets = (!isPast && m.odds) ? calcValueBet(m) : [];
+  const valueBadge = vbets.length ? `<span class="value-badge">💎 VALUE +${vbets[0].value}%</span>` : '';
+  const bestOdd = m.bets && m.bets.length ? m.bets.reduce((best,b) => (!best || b.o < best.o) ? b : best, null) : null;
+  const safeCat  = (!isPast && bestOdd) ? oddsCategory(bestOdd.o) : null;
+  const safetyBadge = safeCat ? `<span class="odds-safety ${safeCat.cls}">${safeCat.emoji} ${safeCat.label}</span>` : '';
+  const bttsVal = (!isPast) ? bttsProbability(m) : null;
+  const bttsBadge = (!isPast && bttsVal >= 55) ? `<span style="font-size:0.6rem;background:rgba(34,197,94,0.1);color:#22c55e;border:1px solid rgba(34,197,94,0.2);border-radius:6px;padding:1px 6px;font-weight:700">⚽ BTTS ${bttsVal}%</span>` : '';
+
   let timeHTML = '';
   if (isLive) {
     const initLabel = m.half === 'HT' || m.half === 'MI-TEMPS' ? 'MI-TEMPS' : (m.minute != null ? m.minute + "'" : 'LIVE');
@@ -3191,16 +3200,6 @@ function matchCardHTML(m) {
     </div>`;
   }
 
-
-  const vbets = (!isPast && m.odds) ? calcValueBet(m) : [];
-  const valueBadge = vbets.length ? `<span class="value-badge">💎 VALUE +${vbets[0].value}%</span>` : '';
-  // Odds safety badge
-  const bestOdd = m.bets && m.bets.length ? m.bets.reduce((best,b) => (!best || b.o < best.o) ? b : best, null) : null;
-  const safeCat  = (!isPast && bestOdd) ? oddsCategory(bestOdd.o) : null;
-  const safetyBadge = safeCat ? `<span class="odds-safety ${safeCat.cls}">${safeCat.emoji} ${safeCat.label}</span>` : '';
-  // BTTS quick stat
-  const bttsVal = (!isPast) ? bttsProbability(m) : null;
-  const bttsBadge = (!isPast && bttsVal >= 55) ? `<span style="font-size:0.6rem;background:rgba(34,197,94,0.1);color:#22c55e;border:1px solid rgba(34,197,94,0.2);border-radius:6px;padding:1px 6px;font-weight:700">⚽ BTTS ${bttsVal}%</span>` : '';
 
   return `<div class="match-card ${coupon.some(c=>c.mid===m.id)?'selected':''}" id="mc-${m.id}" onclick="openMatchSheet('${m.id}',event)">
     <div class="mc-header">
