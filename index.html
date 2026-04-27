@@ -2849,7 +2849,7 @@ function renderActivite(matches) {
       const an = typeof m.away === 'string' ? m.away : (m.away?.name || m.away?.displayName || '?');
       const sc = m.score ? (typeof m.score === 'string' ? m.score : (m.score.home+'-'+m.score.away)) : '0-0';
       const halfLabel = m.half === 'HT' || m.half === 'MI-TEMPS' ? ' · MI-TEMPS' : '';
-      const minLabel = m.minute != null ? ` <span id="chrono-ai-${m.id}">${m.minute}'</span>` : (halfLabel ? '' : '');
+      const minLabel = m.minute != null ? ` <span data-chrono-ai="${m.id}">${m.minute}'</span>` : (halfLabel ? '' : '');
       items.push({
         result:'pending', emoji:'🔴',
         match: `${hn} vs ${an}`,
@@ -3000,7 +3000,7 @@ function matchCardHTML(m) {
   let timeHTML = '';
   if (isLive) {
     const initLabel = m.half === 'HT' || m.half === 'MI-TEMPS' ? 'MI-TEMPS' : (m.minute != null ? m.minute + "'" : 'LIVE');
-    timeHTML = `<span class="mc-time live" id="chrono-hdr-${m.id}">🔴 ${initLabel}</span>`;
+    timeHTML = `<span class="mc-time live" data-chrono-hdr="${m.id}">🔴 ${initLabel}</span>`;
   } else if (isPast && m.score) timeHTML = `<span class="mc-time" style="font-weight:800;color:var(--text)">${m.score}</span>`;
   else timeHTML = `<span class="mc-time">🕐 ${m.time}</span>`;
 
@@ -3010,7 +3010,7 @@ function matchCardHTML(m) {
   } else if (isLive) {
     const [g1,g2] = m.score ? m.score.split('-') : ['?','?'];
     const initMin = m.half === 'HT' || m.half === 'MI-TEMPS' ? 'MI-TEMPS' : (m.minute != null ? m.minute + "'" : '🔴');
-    centerContent = `<div class="mc-vs-text" style="color:var(--red);font-weight:700" id="chrono-ctr-${m.id}">${initMin}</div><div class="mc-score">${g1||'?'}-${g2||'?'}</div>`;
+    centerContent = `<div class="mc-vs-text" style="color:var(--red);font-weight:700" data-chrono-ctr="${m.id}">${initMin}</div><div class="mc-score">${g1||'?'}-${g2||'?'}</div>`;
   } else {
     centerContent = `<div class="mc-vs-text">VS</div><div style="font-size:1.1rem">⚔️</div>`;
   }
@@ -3365,10 +3365,10 @@ function renderCoupon() {
     const freshM = Object.values(DB).flat().find(x => x.id === m.id);
     const liveScore = (freshM||m).score || '0-0';
     const statusBadge = m.status==='live'
-      ? `<span style="font-size:0.65rem;color:var(--red);font-weight:700" id="chrono-coupon-${m.id}">🔴 LIVE ${liveMin}</span>`
+      ? `<span style="font-size:0.65rem;color:var(--red);font-weight:700" data-chrono-coupon="${m.id}">🔴 LIVE ${liveMin}</span>`
       : m.time ? `<span style="font-size:0.65rem;color:var(--muted)">🕐 ${m.time}</span>` : '';
     const scoreBadge = m.status==='live'
-      ? `<span style="font-size:0.88rem;font-weight:900;color:var(--text)" id="coupon-score-${m.id}">${liveScore}</span>` : '';
+      ? `<span style="font-size:0.88rem;font-weight:900;color:var(--text)" data-coupon-score="${m.id}">${liveScore}</span>` : '';
     const dateBadge = m.date && m.date !== TODAY
       ? `<span style="font-size:0.62rem;color:var(--accent);margin-left:5px">${new Date(m.date+'T12:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}</span>` : '';
     return `<div class="coupon-item" id="ci-${idx}">
@@ -4042,7 +4042,7 @@ function buildSheetHero(m) {
   else if (isLive) {
     const htLabel = m.half==='HT'||m.half==='MI-TEMPS' ? 'MI-TEMPS' : (m.minute!=null ? m.minute+"'" : 'LIVE');
     const scoreStr = m.score || '0-0';
-    centerHTML = `<div class="ds-vs" style="color:var(--red);font-size:0.85rem" id="chrono-sheet-${m.id}">🔴 ${htLabel}</div><div class="ds-score-big" id="sheet-score-${m.id}">${scoreStr}</div>`;
+    centerHTML = `<div class="ds-vs" style="color:var(--red);font-size:0.85rem" data-chrono-sheet="${m.id}">🔴 ${htLabel}</div><div class="ds-score-big" data-sheet-score="${m.id}">${scoreStr}</div>`;
   }
   else
     centerHTML = `<div class="ds-vs">VS</div><div class="ds-time-badge">${m.time}</div>`;
@@ -5347,13 +5347,15 @@ function getLiveSecond(m) {
   return Math.floor((Date.now() - m._fetchedAt) / 1000) % 60;
 }
 
-function getLiveLabel(m) {
+// getLiveLabel : label lisible pour les headers (pas de secondes pour éviter "45+1':10")
+// withSec=true seulement pour le centre du modal
+function getLiveLabel(m, withSec = false) {
   // MI-TEMPS
   if (m.half === 'HT' || m.half === 'MI-TEMPS') {
     return `<span style="font-size:0.8em;color:var(--yellow)">MI-TEMPS</span>`;
   }
   const min = getLiveMinute(m);
-  // Minute inconnue : juste LIVE pulsant
+  // Minute inconnue : juste LIVE
   if (min == null) {
     return `<span style="color:var(--red)">LIVE</span>`;
   }
@@ -5368,10 +5370,12 @@ function getLiveLabel(m) {
     const extra = Math.max(0, elapsedMin - Math.max(0, m._minuteAtFetch - base));
     if (min >= base) {
       const stop = Math.max(1, stopBase + extra);
-      return `${base}<span style="font-size:0.75em">+${stop}'</span><span style="font-size:0.6em;opacity:0.7">:${secStr}</span>`;
+      const secPart = withSec ? `<span style="font-size:0.6em;opacity:0.6"> ${secStr}"</span>` : '';
+      return `${base}+${stop}'${secPart}`;
     }
   }
-  return `${min}'<span style="font-size:0.65em;opacity:0.7">:${secStr}</span>`;
+  const secPart = withSec ? `<span style="font-size:0.65em;opacity:0.6">:${secStr}</span>` : '';
+  return `${min}'${secPart}`;
 }
 
 function startChrono() {
@@ -5382,31 +5386,37 @@ function startChrono() {
     if (liveMatches.length === 0) return;
 
     liveMatches.forEach(m => {
-      const label = getLiveLabel(m);
-      // Page matchs — header (heure) + centre (minute)
-      const hdr = document.getElementById(`chrono-hdr-${m.id}`);
-      const ctr = document.getElementById(`chrono-ctr-${m.id}`);
-      if (hdr) hdr.innerHTML = `🔴 ${label}`;
-      if (ctr) ctr.innerHTML = label;
-      // Fenêtre détail (modal) — chrono + score depuis DB
-      const sheet = document.getElementById(`chrono-sheet-${m.id}`);
-      if (sheet) sheet.innerHTML = `🔴 ${label}`;
-      const sheetScore = document.getElementById(`sheet-score-${m.id}`);
-      if (sheetScore) {
-        const fresh = Object.values(DB).flat().find(x => x.id === m.id);
-        if (fresh && fresh.score) sheetScore.textContent = fresh.score;
-      }
-      // Page coupon — chrono + score
-      const coup = document.getElementById(`chrono-coupon-${m.id}`);
-      if (coup) coup.innerHTML = `🔴 LIVE ${label}`;
-      const couponScore = document.getElementById(`coupon-score-${m.id}`);
-      if (couponScore) {
-        const fresh2 = Object.values(DB).flat().find(x => x.id === m.id);
-        if (fresh2 && fresh2.score) couponScore.textContent = fresh2.score;
-      }
-      // Page IA activité (live badge)
-      const ai = document.getElementById(`chrono-ai-${m.id}`);
-      if (ai) ai.innerHTML = label;
+      const label    = getLiveLabel(m, false);   // sans secondes — pour headers
+      const labelSec = getLiveLabel(m, true);    // avec secondes — pour centre modal
+
+      // ── Headers (heure) : TOUTES les pages (home + matchs) via querySelectorAll
+      document.querySelectorAll(`[data-chrono-hdr="${m.id}"]`).forEach(el => {
+        el.innerHTML = `🔴 ${label}`;
+      });
+      // ── Centre carte (minute + score) : TOUTES les pages
+      document.querySelectorAll(`[data-chrono-ctr="${m.id}"]`).forEach(el => {
+        el.innerHTML = label;
+      });
+      // ── Fenêtre détail (modal)
+      document.querySelectorAll(`[data-chrono-sheet="${m.id}"]`).forEach(el => {
+        el.innerHTML = `🔴 ${labelSec}`;
+      });
+      // Score dans le modal — depuis DB (refresh API)
+      const fresh = allMatches.find(x => x.id === m.id);
+      document.querySelectorAll(`[data-sheet-score="${m.id}"]`).forEach(el => {
+        if (fresh && fresh.score) el.textContent = fresh.score;
+      });
+      // ── Page coupon
+      document.querySelectorAll(`[data-chrono-coupon="${m.id}"]`).forEach(el => {
+        el.innerHTML = `🔴 LIVE ${label}`;
+      });
+      document.querySelectorAll(`[data-coupon-score="${m.id}"]`).forEach(el => {
+        if (fresh && fresh.score) el.textContent = fresh.score;
+      });
+      // ── Page IA (badge activité)
+      document.querySelectorAll(`[data-chrono-ai="${m.id}"]`).forEach(el => {
+        el.innerHTML = label;
+      });
     });
   }, 1000);
 }
