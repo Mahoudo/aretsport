@@ -2224,8 +2224,9 @@ function checkCouponNotifs(rawMatches) {
 
     // 🥅 But marqué
     if (notifSettings.goal && raw.status === 'live' && raw.score && prev.score) {
-      const [ph, pa] = prev.score.split('-').map(Number);
-      const [nh, na] = raw.score.split('-').map(Number);
+      const ps = prev.score.split('-').map(Number), ns = raw.score.split('-').map(Number);
+      const [ph, pa] = [ps[0]||0, ps[1]||0];
+      const [nh, na] = [ns[0]||0, ns[1]||0];
       if (nh > ph) {
         sendNotif('🥅 But !', `${cd.home.name} ${raw.score} ${cd.away.name} (${raw.minute || ''}')`, '🥅');
       } else if (na > pa) {
@@ -2244,8 +2245,9 @@ function checkCouponNotifs(rawMatches) {
 
     // 🔔 Fin du match
     if (notifSettings.fulltime && prev.status === 'live' && raw.status === 'finished') {
-      const score = raw.score || '?-?';
-      const [sh, sa] = score.split('-').map(Number);
+      const score = raw.score || '0-0';
+      const ss = score.split('-').map(Number);
+      const [sh, sa] = [ss[0]||0, ss[1]||0];
       let won = false;
       if (bet) {
         if (bet.t === '1X2') {
@@ -3018,7 +3020,8 @@ function matchCardHTML(m) {
   // Result badge for past matches
   let resultBadge = '';
   if (isPast && m.score) {
-    const [g1,g2] = m.score.split('-').map(Number);
+    const scoreParts = m.score.split('-').map(Number);
+    const [g1,g2] = [scoreParts[0]||0, scoreParts[1]||0];
     const outcome = g1>g2 ? 'home' : g1<g2 ? 'away' : 'draw';
     const mainBet = m.bets[0];
     // Simple check: did home win match bet?
@@ -3356,10 +3359,11 @@ function renderCoupon() {
     }
   }
 
-  const totalOdd=coupon.reduce((a,c)=>a*c.matchData.bets[c.bi].o,1);
-  const conf=Math.max(20,82-coupon.length*9);
-  const items=coupon.map((c,idx)=>{
-    const m=c.matchData, b=m.bets[c.bi];
+  const totalOdd=displayCoupon.reduce((a,c)=>{ const bet=c.matchData.bets?.[c.bi]; return a*(bet?.o||1); },1);
+  const conf=Math.max(20,82-displayCoupon.length*9);
+  const items=displayCoupon.map((c,idx)=>{
+    const m=c.matchData, b=m.bets?.[c.bi];
+    if (!b) return '';
     const liveMin = m.half==='HT'||m.half==='MI-TEMPS' ? 'MI-TEMPS' : (m.minute!=null?m.minute+"'":'');
     // Score live depuis DB (toujours à jour)
     const freshM = Object.values(DB).flat().find(x => x.id === m.id);
@@ -3386,7 +3390,7 @@ function renderCoupon() {
 
   el.innerHTML=`${items}
     <div class="summary-card">
-      <div class="sum-row"><span class="sum-label">Paris</span><span class="sum-val">${coupon.length}</span></div>
+      <div class="sum-row"><span class="sum-label">Paris</span><span class="sum-val">${displayCoupon.length}</span></div>
       <div class="sum-row"><span class="sum-label">Cote totale</span><span class="sum-big">×${totalOdd.toFixed(2)}</span></div>
     </div>
     <div class="stake-card"><div class="stake-label">Votre mise</div>
@@ -3427,15 +3431,16 @@ function place() { showToast('🎉','Coupon enregistré ! Bonne chance !'); }
 function buildShareText() {
   if (!coupon.length) return '';
   const stake = parseFloat(document.getElementById('stakeIn')?.value || 1000);
-  const totalOdd = coupon.reduce((a,c) => a * c.matchData.bets[c.bi].o, 1);
+  const totalOdd = coupon.reduce((a,c) => { const bet=c.matchData.bets?.[c.bi]; return a*(bet?.o||1); }, 1);
   const gain = Math.round(stake * totalOdd);
   const date = new Date().toLocaleDateString('fr-FR', {weekday:'short', day:'numeric', month:'short'});
 
   const lines = coupon.map(c => {
-    const m = c.matchData, b = m.bets[c.bi];
+    const m = c.matchData, b = m.bets?.[c.bi];
+    if (!b) return '';
     const score = m.status === 'live' ? ` [🔴 ${m.score||'0-0'}]` : '';
     return `⚽ ${m.home.name} vs ${m.away.name}${score}\n   ${b.t} · ${b.l} · ×${b.o.toFixed(2)}`;
-  }).join('\n');
+  }).filter(Boolean).join('\n');
 
   return `🎫 Mon Coupon AretSport — ${date}
 ━━━━━━━━━━━━━━━━━━━━━━━
@@ -3853,7 +3858,8 @@ function renderAI(matches) {
     const confColor = conf >= 85 ? 'var(--green)' : conf >= 70 ? 'var(--yellow)' : 'var(--orange)';
     let extra = '';
     if (isPast && m.score) {
-      const [g1, g2] = m.score.split('-').map(Number);
+      const sp2 = m.score.split('-').map(Number);
+      const [g1, g2] = [sp2[0]||0, sp2[1]||0];
       const won = (b.l.startsWith('1') && g1 > g2) || (b.l === 'Nul' && g1 === g2) || (b.l.startsWith('2') && g2 > g1);
       extra = `<div style="margin-top:8px;font-size:0.72rem;font-weight:700;color:${won?'var(--green)':'var(--red)'}">
         ${won ? '✅' : '❌'} Résultat : ${m.score}</div>`;
@@ -5372,7 +5378,7 @@ function getLiveLabel(m, withSec = false) {
   if (!isSecondHalf && min === 45 && m._minuteAtFetch != null && m._minuteAtFetch >= 44 && m._fetchedAt) {
     const elapsedMin  = Math.floor((Date.now() - m._fetchedAt) / 60000);
     const stopBase    = m._stoppageAtFetch || 0;
-    const extra       = Math.max(0, elapsedMin - Math.max(0, m._minuteAtFetch - 45));
+    const extra       = Math.max(0, elapsedMin - Math.max(0, 45 - m._minuteAtFetch));
     const stop        = stopBase + extra;
     if (stop > 0) return `45+${stop}'${sp(' ' + secStr + '"')}`;
     return `45'${sp(':' + secStr)}`;
@@ -5383,7 +5389,7 @@ function getLiveLabel(m, withSec = false) {
   if (isSecondHalf && min === 90 && m._minuteAtFetch != null && m._minuteAtFetch >= 86 && m._fetchedAt) {
     const elapsedMin  = Math.floor((Date.now() - m._fetchedAt) / 60000);
     const stopBase    = m._stoppageAtFetch || 0;
-    const extra       = Math.max(0, elapsedMin - Math.max(0, m._minuteAtFetch - 90));
+    const extra       = Math.max(0, elapsedMin - Math.max(0, 90 - m._minuteAtFetch));
     const stop        = stopBase + extra;
     if (stop > 0) return `90+${stop}'${sp(' ' + secStr + '"')}`;
     return `90'${sp(':' + secStr)}`;

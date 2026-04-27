@@ -234,7 +234,7 @@ function normName(n) {
   for (const [a, b] of Object.entries(map)) s = s.replace(new RegExp(a, 'g'), b);
   return s.replace(/[^a-z0-9]/g, '');
 }
-function matchKey(m) { return `${normName(m.home).slice(0,8)}|${normName(m.away).slice(0,8)}|${m.date}`; }
+function matchKey(m) { return `${normName(m.home)}|${normName(m.away)}|${m.date}`; }
 
 // ─── Cache simple (30s) ───────────────────────────────────────────────────────
 let _cache = null, _cacheTs = 0;

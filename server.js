@@ -247,7 +247,7 @@ function normName(name) {
   for (const [a, b] of Object.entries(map)) n = n.replace(new RegExp(a, 'g'), b);
   return n.replace(/[^a-z0-9]/g, '');
 }
-function matchKey(m) { return `${normName(m.home).slice(0,8)}|${normName(m.away).slice(0,8)}|${m.date}`; }
+function matchKey(m) { return `${normName(m.home)}|${normName(m.away)}|${m.date}`; }
 
 // ─── Main aggregation ─────────────────────────────────────────────────────────
 async function getMatches() {
