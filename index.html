@@ -183,7 +183,10 @@
     .mc-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg3);border-bottom:1px solid var(--border);gap:6px}
     .mc-league{display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--muted)}
     .mc-time{font-size:0.72rem;color:var(--muted);white-space:nowrap}
-    .mc-time.live{color:var(--red);font-weight:700;animation:livePulse 1.5s infinite;font-variant-numeric:tabular-nums;letter-spacing:0.01em}
+    .mc-time.live{display:inline-flex;align-items:center;gap:5px;color:var(--red);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:0.01em;white-space:nowrap}
+    .live-chrono{display:inline-flex;align-items:center;gap:4px;color:var(--red);font-weight:700;font-size:0.72rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .live-chrono .ld{width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;animation:livepulse 1.2s ease-in-out infinite}
+    .mc-time.live .ld{width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;animation:livepulse 1.2s ease-in-out infinite}
     .risk-pill{padding:2px 8px;border-radius:10px;font-size:0.62rem;font-weight:700;text-transform:uppercase}
     .rp-low{background:rgba(34,197,94,0.15);color:var(--green)}
     .rp-medium{background:rgba(234,179,8,0.15);color:var(--yellow)}
@@ -3094,7 +3097,7 @@ function matchCardHTML(m) {
   let timeHTML = '';
   if (isLive) {
     const initLabel = m.half === 'HT' || m.half === 'MI-TEMPS' ? 'MI-TEMPS' : (m.minute != null ? m.minute + "'" : 'LIVE');
-    timeHTML = `<span class="mc-time live" data-chrono-hdr="${m.id}">🔴 ${initLabel}</span>`;
+    timeHTML = `<span class="mc-time live" data-chrono-hdr="${m.id}"><span class="ld"></span>${initLabel}</span>`;
   } else if (isPast && m.score) timeHTML = `<span class="mc-time" style="font-weight:800;color:var(--text)">${m.score}</span>`;
   else timeHTML = `<span class="mc-time">🕐 ${m.time}</span>`;
 
@@ -3447,7 +3450,7 @@ function renderCoupon() {
     const freshM = Object.values(DB).flat().find(x => x.id === m.id);
     const liveScore = (freshM||m).score || '0-0';
     const statusBadge = m.status==='live'
-      ? `<span style="font-size:0.65rem;color:var(--red);font-weight:700" data-chrono-coupon="${m.id}">🔴 LIVE ${liveMin}</span>`
+      ? `<span class="live-chrono" data-chrono-coupon="${m.id}"><span class="ld"></span>LIVE ${liveMin}</span>`
       : m.time ? `<span style="font-size:0.65rem;color:var(--muted)">🕐 ${m.time}</span>` : '';
     const scoreBadge = m.status==='live'
       ? `<span style="font-size:0.88rem;font-weight:900;color:var(--text)" data-coupon-score="${m.id}">${liveScore}</span>` : '';
@@ -3960,7 +3963,9 @@ function renderAI(matches) {
       <div style="margin:4px 0 2px">${visiConfBadge(conf)}</div>
       <div class="ai-pick-bottom">
         <span class="ai-pick-odd">×${b.o.toFixed(2)}${m.isEstimated ? '<span style="font-size:0.65em;opacity:0.6" title="Cote estimée par IA"> ~</span>' : ''}</span>
-        <span style="font-size:0.72rem;color:var(--muted)">${m.time ? '🕐 ' + m.time : ''}</span>
+        ${m.status === 'live'
+          ? `<span class="live-chrono" data-chrono-aipick="${m.id}"><span class="ld"></span>${m.half==='HT'||m.half==='MI-TEMPS'?'MI-TEMPS':(m.minute!=null?m.minute+"'":'LIVE')}</span>`
+          : (m.time ? `<span style="font-size:0.72rem;color:var(--muted)">🕐 ${m.time}</span>` : '')}
         ${(() => { const sc = oddsCategory(b.o); return sc ? `<span class="odds-safety ${sc.cls}">${sc.emoji} ${sc.label}</span>` : ''; })()}
         <span class="ai-risk-pill rp-${m.risk}">${riskLabel(m.risk)}</span>
       </div>
@@ -4123,7 +4128,7 @@ function buildSheetHero(m) {
   else if (isLive) {
     const htLabel = m.half==='HT'||m.half==='MI-TEMPS' ? 'MI-TEMPS' : (m.minute!=null ? m.minute+"'" : 'LIVE');
     const scoreStr = m.score || '0-0';
-    centerHTML = `<div class="ds-vs" style="color:var(--red);font-size:0.85rem" data-chrono-sheet="${m.id}">🔴 ${htLabel}</div><div class="ds-score-big" data-sheet-score="${m.id}">${scoreStr}</div>`;
+    centerHTML = `<div class="ds-vs live-chrono" style="font-size:0.85rem" data-chrono-sheet="${m.id}"><span class="ld"></span>${htLabel}</div><div class="ds-score-big" data-sheet-score="${m.id}">${scoreStr}</div>`;
   }
   else
     centerHTML = `<div class="ds-vs">VS</div><div class="ds-time-badge">${m.time}</div>`;
@@ -5407,7 +5412,7 @@ function startChrono() {
 
       // ── Headers (heure) : TOUTES les pages (home + matchs) via querySelectorAll
       document.querySelectorAll(`[data-chrono-hdr="${m.id}"]`).forEach(el => {
-        el.innerHTML = `🔴 ${label}`;
+        el.innerHTML = `<span class="ld"></span>${label}`;
       });
       // ── Centre carte (minute + score) : TOUTES les pages
       document.querySelectorAll(`[data-chrono-ctr="${m.id}"]`).forEach(el => {
@@ -5415,7 +5420,7 @@ function startChrono() {
       });
       // ── Fenêtre détail (modal)
       document.querySelectorAll(`[data-chrono-sheet="${m.id}"]`).forEach(el => {
-        el.innerHTML = `🔴 ${labelSec}`;
+        el.innerHTML = `<span class="ld"></span>${labelSec}`;
       });
       // Score dans le modal — depuis DB (refresh API)
       const fresh = allMatches.find(x => x.id === m.id);
@@ -5424,7 +5429,7 @@ function startChrono() {
       });
       // ── Page coupon
       document.querySelectorAll(`[data-chrono-coupon="${m.id}"]`).forEach(el => {
-        el.innerHTML = `🔴 LIVE ${label}`;
+        el.innerHTML = `<span class="ld"></span>LIVE ${label}`;
       });
       document.querySelectorAll(`[data-coupon-score="${m.id}"]`).forEach(el => {
         if (fresh && fresh.score) el.textContent = fresh.score;
@@ -5432,6 +5437,10 @@ function startChrono() {
       // ── Page IA (badge activité)
       document.querySelectorAll(`[data-chrono-ai="${m.id}"]`).forEach(el => {
         el.innerHTML = label;
+      });
+      // ── Page IA (picks cards)
+      document.querySelectorAll(`[data-chrono-aipick="${m.id}"]`).forEach(el => {
+        el.innerHTML = `<span class="ld"></span>${label}`;
       });
     });
   }, 1000);
