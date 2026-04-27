@@ -1761,11 +1761,20 @@ function randomScore(prob) {
   return scores[winner][Math.floor(Math.random()*scores[winner].length)];
 }
 
+function formatDateShort(d) {
+  const dt = new Date(d + 'T12:00:00');
+  if (d === TODAY) return "Aujourd'hui";
+  if (d === offsetDate(TODAY, 1)) return 'Demain';
+  return dt.toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
+}
+
 // ============================================================
 // STATE
 // ============================================================
 let selectedDate = TODAY;
 let coupon = [];
+let couponLoadedDate = null;   // date pour laquelle le coupon IA a été chargé
+let couponLoadedMode = null;   // mode IA utilisé lors du dernier chargement
 let currentFilter = 'all';
 let weekOffset = 0;
 
@@ -1903,6 +1912,7 @@ function betclicToApp(m, idx) {
     lf: leagueFlag(m.league),
     comp: m.league,
     time: timeDisplay,
+    date: m.date || TODAY,   // ← champ date conservé pour filtres coupon/IA
     home: { name: m.home, emoji: teamEmoji(m.home), form: homeForm, logo: m.homeLogo || null },
     away: { name: m.away, emoji: teamEmoji(m.away), form: awayForm, logo: m.awayLogo || null },
     prob, risk, rec, bets,
@@ -2362,6 +2372,20 @@ function selectDate(key, animate=true) {
   const delay = animate ? 600 : 0;
   setTimeout(() => {
     updateAllViews();
+    // Si le coupon avait été chargé via IA pour une autre date, recharger auto
+    if (couponLoadedDate && couponLoadedDate !== selectedDate && couponLoadedMode) {
+      const newMatches = DB[selectedDate] || [];
+      const newPicks = getAIPicks(newMatches, couponLoadedMode);
+      if (newPicks.length) {
+        coupon = newPicks.map(({m, pick}) => ({
+          mid: m.id,
+          bi: pick.betIdx < 0 ? 0 : pick.betIdx,
+          matchData: { ...m, date: m.date || selectedDate, bets: pick.betIdx < 0 ? [pick.bet, ...m.bets] : m.bets }
+        }));
+        couponLoadedDate = selectedDate;
+        updateBtns(); updateBadge(); renderCoupon();
+      }
+    }
   }, delay);
 }
 
@@ -3309,9 +3333,29 @@ function updateBadge() {
 function renderCoupon() {
   const el=document.getElementById('couponContent');
   if (!coupon.length) {
-    el.innerHTML=`<div class="empty-coupon"><div class="empty-icon">🎯</div><div class="empty-text">Votre coupon est vide</div><div class="empty-sub">Ajoutez des paris depuis l'onglet Matchs</div></div>`;
+    el.innerHTML=`<div class="empty-coupon"><div class="empty-icon">🎯</div><div class="empty-text">Votre coupon est vide</div><div class="empty-sub">Ajoutez des paris depuis l'onglet Matchs ou chargez le Coupon IA</div></div>`;
     return;
   }
+  // Filtrer les items du coupon pour n'afficher que la date sélectionnée (si coupon IA)
+  const displayCoupon = couponLoadedDate
+    ? coupon.filter(c => !c.matchData.date || c.matchData.date === selectedDate)
+    : coupon;
+
+  // Si le coupon IA est pour une autre date, proposer de le recharger
+  if (couponLoadedDate && couponLoadedDate !== selectedDate) {
+    const otherItems = coupon.filter(c => c.matchData.date && c.matchData.date !== selectedDate);
+    if (otherItems.length > 0) {
+      el.innerHTML=`<div style="margin:16px;padding:14px;background:var(--bg3);border-radius:14px;border:1px solid var(--border);text-align:center">
+        <div style="font-size:1.1rem;margin-bottom:6px">📅</div>
+        <div style="font-size:0.88rem;font-weight:700;margin-bottom:4px">Coupon pour ${formatDateShort(couponLoadedDate)}</div>
+        <div style="font-size:0.76rem;color:var(--muted);margin-bottom:12px">Vous consultez ${formatDateShort(selectedDate)}. Recharger le coupon IA pour cette date ?</div>
+        <button onclick="loadAIMode()" style="background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;padding:10px 18px;border-radius:10px;font-size:0.82rem;font-weight:700;cursor:pointer;margin-right:8px">🤖 Charger ${formatDateShort(selectedDate)}</button>
+        <button onclick="showCouponAnyway()" style="background:var(--card2);color:var(--muted);border:1px solid var(--border);padding:10px 14px;border-radius:10px;font-size:0.78rem;cursor:pointer">Voir quand même</button>
+      </div>`;
+      return;
+    }
+  }
+
   const totalOdd=coupon.reduce((a,c)=>a*c.matchData.bets[c.bi].o,1);
   const conf=Math.max(20,82-coupon.length*9);
   const items=coupon.map((c,idx)=>{
@@ -3363,6 +3407,7 @@ function renderCoupon() {
 function removeCouponItem(mid, bi) {
   const idx=coupon.findIndex(c=>c.mid===mid&&c.bi===bi);
   if (idx>-1) coupon.splice(idx,1);
+  if (!coupon.length) { couponLoadedDate = null; couponLoadedMode = null; }
   updateBtns(); updateBadge(); renderCoupon();
 }
 
@@ -3625,7 +3670,9 @@ function isMatchOver(m) {
 }
 
 function getAIPicks(matches, mode) {
-  const available = matches.filter(m => !isMatchOver(m) && m.bets && m.bets.length);
+  // Filtrer strictement sur la date sélectionnée — aucun mélange today/tomorrow
+  const available = matches.filter(m => !isMatchOver(m) && m.bets && m.bets.length
+    && (!m.date || m.date === selectedDate));
   const withPick = available
     .map(m => ({ m, pick: pickBestBet(m, mode) }))
     .filter(x => x.pick !== null);
@@ -3739,7 +3786,8 @@ function renderAI(matches) {
   const picks = getAIPicksFiltered(matches, mode);
 
   // ── Update live scanner stats ───────────────────────��──────
-  const allAvail = matches.filter(m => !isMatchOver(m) && m.bets && m.bets.length);
+  const allAvail = matches.filter(m => !isMatchOver(m) && m.bets && m.bets.length
+    && (!m.date || m.date === selectedDate));
   const totalScanned = allAvail.length;
   const valueBetCount = allAvail.filter(m => hasValueBet(m)).length;
   const allWithPick = allAvail.map(m => ({ m, pick: pickBestBet(m, 'ia') })).filter(x => x.pick);
@@ -3868,15 +3916,26 @@ function loadAIMode() {
   const allPicks = getAIPicks(matches, mode);
   const picks = allPicks.filter((_, i) => selectedAIPicks.has(i));
   if (!picks.length) { showToast('⚠️', 'Sélectionnez au moins un match'); return; }
-  coupon = picks.map(({m, pick}) => ({mid: m.id, bi: pick.betIdx < 0 ? 0 : pick.betIdx, matchData: {...m, bets: pick.betIdx < 0 ? [pick.bet, ...m.bets] : m.bets}}));
+  coupon = picks.map(({m, pick}) => ({
+    mid: m.id,
+    bi: pick.betIdx < 0 ? 0 : pick.betIdx,
+    matchData: {
+      ...m,
+      date: m.date || selectedDate,   // garantit la date dans le coupon
+      bets: pick.betIdx < 0 ? [pick.bet, ...m.bets] : m.bets
+    }
+  }));
+  couponLoadedDate = selectedDate;    // mémoriser la date du coupon
+  couponLoadedMode = mode;
   updateBtns(); updateBadge(); renderCoupon();
   const labels = {ia:'Coupon IA', safe:'Coupon Safe 🛡️', cote15:'Coupon 1.5 ⚡', dc:'Coupon Vic./Nul 🔄'};
-  showToast('🤖', (labels[mode] || 'Coupon') + ` chargé — ${picks.length} paris !`);
+  showToast('🤖', (labels[mode] || 'Coupon') + ` chargé — ${picks.length} paris (${formatDateShort(selectedDate)}) !`);
   goTo('coupon');
 }
 
 // keep backward compat
 function loadAI() { loadAIMode(); }
+function showCouponAnyway() { couponLoadedDate = null; renderCoupon(); }
 
 // ============================================================
 // DATE MODAL
