@@ -1714,10 +1714,11 @@ function seedDB() {
     d.setDate(d.getDate() + i);
     const key = fmtDate(d);
     const dow = d.getDay();
-    // Clone en réattribuant des IDs uniques par date
+    // Clone en réattribuant des IDs uniques et la date explicite
     const dayMatches = (DAYS[dow] || DAYS[3]).map(m => ({
       ...m,
-      id: key + '_' + Math.random().toString(36).slice(2)
+      id: key + '_' + Math.random().toString(36).slice(2),
+      date: key   // ← champ date explicite pour que les filtres IA/coupon fonctionnent
     }));
 
     if (i < 0) {
@@ -1725,7 +1726,7 @@ function seedDB() {
     } else if (i === 0) {
       const now = new Date();
       DB[key] = dayMatches.map(m => {
-        const [hh,mm] = m.time.split(':').map(Number);
+        const [hh,mm] = (m.time||'23:59').split(':').map(Number);
         const mt = new Date(); mt.setHours(hh, mm, 0, 0);
         const diff = (now - mt) / 60000;
         if (diff > 90) return {...m, score: randomScore(m.prob), status:'finished'};
@@ -3675,9 +3676,9 @@ function isMatchOver(m) {
 }
 
 function getAIPicks(matches, mode) {
-  // Filtrer strictement sur la date sélectionnée — aucun mélange today/tomorrow
+  // Filtrer strictement sur la date sélectionnée — aucun mélange today/tomorrow/mock
   const available = matches.filter(m => !isMatchOver(m) && m.bets && m.bets.length
-    && (!m.date || m.date === selectedDate));
+    && m.date === selectedDate);
   const withPick = available
     .map(m => ({ m, pick: pickBestBet(m, mode) }))
     .filter(x => x.pick !== null);
@@ -3792,7 +3793,7 @@ function renderAI(matches) {
 
   // ── Update live scanner stats ───────────────────────��──────
   const allAvail = matches.filter(m => !isMatchOver(m) && m.bets && m.bets.length
-    && (!m.date || m.date === selectedDate));
+    && m.date === selectedDate);
   const totalScanned = allAvail.length;
   const valueBetCount = allAvail.filter(m => hasValueBet(m)).length;
   const allWithPick = allAvail.map(m => ({ m, pick: pickBestBet(m, 'ia') })).filter(x => x.pick);
