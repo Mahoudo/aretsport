@@ -1986,7 +1986,7 @@ function estimateOdds(homeForm, awayForm) {
   };
 }
 
-function betclicToApp(m, idx) {
+function betclicToApp(m, idx, serverFetchedAt) {
   const seed = m.id.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
   const homeForm = genForm(seed);
   const awayForm = genForm(seed + 7);
@@ -2054,7 +2054,9 @@ function betclicToApp(m, idx) {
     minute: m.minute,
     stoppage: m.stoppage || null,
     half: m.half || null,
-    _fetchedAt: m.status === 'live' ? Date.now() : null,
+    // Use the server scrape timestamp so the chrono starts from when
+    // Betclic was actually scraped, not when the client received the response.
+    _fetchedAt: m.status === 'live' ? (serverFetchedAt || Date.now()) : null,
     _minuteAtFetch: m.status === 'live' ? (m.minute != null ? m.minute : null) : null,
     _stoppageAtFetch: m.status === 'live' ? (m.stoppage || null) : null,
     sources: srcs,
@@ -2083,6 +2085,9 @@ async function fetchBetclicMatches(silent) {
     }
     const data = await res.json();
     if (data.ok && data.matches && data.matches.length > 0) {
+      // serverFetchedAt = timestamp of the actual Betclic/ESPN scrape on the server.
+      // Could be up to 30s before the client received this response (cache TTL).
+      const serverFetchedAt = data.serverFetchedAt || Date.now();
       const TOMORROW = offsetDate(TODAY, 1);
       const byDate = {};
       data.matches.forEach((m, i) => {
@@ -2090,7 +2095,7 @@ async function fetchBetclicMatches(silent) {
         const key = m.date || TODAY;
         if (key === TODAY || key === TOMORROW) {
           if (!byDate[key]) byDate[key] = [];
-          byDate[key].push(betclicToApp(m, i));
+          byDate[key].push(betclicToApp(m, i, serverFetchedAt));
         }
       });
       let loaded = 0;

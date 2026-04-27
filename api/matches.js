@@ -249,7 +249,9 @@ module.exports = async function handler(req, res) {
 
   // Renvoyer le cache si récent
   if (_cache && Date.now() - _cacheTs < CACHE_TTL) {
-    return res.status(200).json(_cache);
+    // Patch serverFetchedAt with the original cache timestamp so the client
+    // knows the exact moment Betclic/ESPN data was scraped (not served).
+    return res.status(200).json({ ..._cache, serverFetchedAt: _cacheTs });
   }
 
   try {
@@ -294,14 +296,15 @@ module.exports = async function handler(req, res) {
         return (a.date + (a.time || '')).localeCompare(b.date + (b.time || ''));
       });
 
+    _cacheTs = Date.now();
     const payload = {
       ok: true,
       matches: filtered,
       count: filtered.length,
       sources: { betclic: betclic.length, espn: espnAll.length },
+      serverFetchedAt: _cacheTs,   // timestamp of the actual Betclic/ESPN scrape
     };
     _cache = payload;
-    _cacheTs = Date.now();
     res.status(200).json(payload);
   } catch (e) {
     res.status(500).json({ ok: false, error: e.message, matches: [] });
