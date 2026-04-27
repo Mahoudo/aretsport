@@ -5347,35 +5347,50 @@ function getLiveSecond(m) {
   return Math.floor((Date.now() - m._fetchedAt) / 1000) % 60;
 }
 
-// getLiveLabel : label lisible pour les headers (pas de secondes pour éviter "45+1':10")
-// withSec=true seulement pour le centre du modal
+// getLiveLabel : retourne le label chrono pour un match live
+// withSec=true → secondes visibles (fenêtre détail uniquement)
 function getLiveLabel(m, withSec = false) {
-  // MI-TEMPS
+  // MI-TEMPS confirmée
   if (m.half === 'HT' || m.half === 'MI-TEMPS') {
     return `<span style="font-size:0.8em;color:var(--yellow)">MI-TEMPS</span>`;
   }
+
   const min = getLiveMinute(m);
-  // Minute inconnue : juste LIVE
-  if (min == null) {
-    return `<span style="color:var(--red)">LIVE</span>`;
-  }
-  const sec = getLiveSecond(m);
+  if (min == null) return `<span style="color:var(--red)">LIVE</span>`;
+
+  const sec    = getLiveSecond(m);
   const secStr = String(sec).padStart(2, '0');
-  // Arrêts de jeu
-  if (min >= 45 && m._minuteAtFetch != null && m._minuteAtFetch >= 44) {
-    const elapsedMs = Date.now() - m._fetchedAt;
-    const elapsedMin = Math.floor(elapsedMs / 60000);
-    const base = m._minuteAtFetch >= 86 ? 90 : 45;
-    const stopBase = m._stoppageAtFetch || 0;
-    const extra = Math.max(0, elapsedMin - Math.max(0, m._minuteAtFetch - base));
-    if (min >= base) {
-      const stop = Math.max(1, stopBase + extra);
-      const secPart = withSec ? `<span style="font-size:0.6em;opacity:0.6"> ${secStr}"</span>` : '';
-      return `${base}+${stop}'${secPart}`;
-    }
+  const sp     = (txt) => withSec ? `<span style="font-size:0.62em;opacity:0.55">${txt}</span>` : '';
+
+  // Détecter si on est réellement en arrêts de jeu :
+  // La minute est BLOQUÉE au plafond (45 ou 90) et le fetch était proche de ce plafond
+  const isSecondHalf = m.half === 'MT 2' || m.half === 'MT2' ||
+                       (m._minuteAtFetch != null && m._minuteAtFetch >= 46);
+
+  // ── Arrêts de jeu FIN DE 1RE MT (45') ────────────────────────
+  // Condition : minute bloquée à 45, fetch était ≥ 44, on est en 1re MT
+  if (!isSecondHalf && min === 45 && m._minuteAtFetch != null && m._minuteAtFetch >= 44 && m._fetchedAt) {
+    const elapsedMin  = Math.floor((Date.now() - m._fetchedAt) / 60000);
+    const stopBase    = m._stoppageAtFetch || 0;
+    const extra       = Math.max(0, elapsedMin - Math.max(0, m._minuteAtFetch - 45));
+    const stop        = stopBase + extra;
+    if (stop > 0) return `45+${stop}'${sp(' ' + secStr + '"')}`;
+    return `45'${sp(':' + secStr)}`;
   }
-  const secPart = withSec ? `<span style="font-size:0.65em;opacity:0.6">:${secStr}</span>` : '';
-  return `${min}'${secPart}`;
+
+  // ── Arrêts de jeu FIN DE 2E MT (90') ────────────────────────
+  // Condition : minute bloquée à 90, fetch était ≥ 86, on est en 2e MT
+  if (isSecondHalf && min === 90 && m._minuteAtFetch != null && m._minuteAtFetch >= 86 && m._fetchedAt) {
+    const elapsedMin  = Math.floor((Date.now() - m._fetchedAt) / 60000);
+    const stopBase    = m._stoppageAtFetch || 0;
+    const extra       = Math.max(0, elapsedMin - Math.max(0, m._minuteAtFetch - 90));
+    const stop        = stopBase + extra;
+    if (stop > 0) return `90+${stop}'${sp(' ' + secStr + '"')}`;
+    return `90'${sp(':' + secStr)}`;
+  }
+
+  // ── Minute normale (1'–89') ───────────────────────────────────
+  return `${min}'${sp(':' + secStr)}`;
 }
 
 function startChrono() {
