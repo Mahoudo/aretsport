@@ -87,8 +87,12 @@ async function fetchESPNLeague(league, dateStr) {
         const leagueName = data.leagues?.[0]?.name || league;
         const statusType = comp.status?.type?.name || 'STATUS_SCHEDULED';
         const matchStatus = ESPN_STATUS_MAP[statusType] || 'upcoming';
-        const dateStr2 = ev.date ? ev.date.slice(0, 10) : today();
-        const timeObj = new Date(ev.date || Date.now());
+        // Si ESPN ne fournit pas de date → ignorer ce match (évite les faux positifs sur aujourd'hui)
+        if (!ev.date) continue;
+        const dateStr2 = ev.date.slice(0, 10);
+        // Vérifier que la date du match correspond bien à la date demandée
+        if (dateStr2 !== dateStr) continue;
+        const timeObj = new Date(ev.date);
         const timeStr = timeObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Abidjan' });
         let score = null, minute = null, stoppage = null;
         if (matchStatus === 'live' || matchStatus === 'finished') {
